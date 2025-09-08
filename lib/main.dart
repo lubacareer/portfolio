@@ -35,6 +35,7 @@ class PortfolioHome extends StatelessWidget {
   Widget build(BuildContext context) {
     final tiles = <Widget>[
       const CvTile(),
+      const CoverLetterTile(),
       HoverTile(
         title: 'Introduction',
         subtitle: 'About me',
@@ -350,6 +351,113 @@ class _CvTileState extends State<CvTile> {
                       ),
                       OutlinedButton.icon(
                         onPressed: () => openPublic('/docs/CV1heb.pdf'),
+                        icon: const Icon(Icons.description, color: Colors.white70, size: 18),
+                        label: const Text('Hebrew'),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          side: const BorderSide(color: Colors.white24),
+                        ),
+                      ),
+                    ],
+                  )
+                else
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: const [
+                      Text('Hover to choose', style: TextStyle(color: Colors.white70)),
+                      Icon(Icons.folder_open, color: Colors.white70),
+                    ],
+                  ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class CoverLetterTile extends StatefulWidget {
+  const CoverLetterTile({super.key});
+
+  @override
+  State<CoverLetterTile> createState() => _CoverLetterTileState();
+}
+
+class _CoverLetterTileState extends State<CoverLetterTile> {
+  bool _hovered = false;
+  bool _pressed = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final hoverColor = const Color(0xFF7FFFD4).withOpacity(0.18); // aquamarine tint
+    final pressedColor = const Color(0xFFDA70D6).withOpacity(0.28); // orchid tint
+
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
+      child: GestureDetector(
+        onTap: () => setState(() => _hovered = !_hovered),
+        onTapDown: (_) => setState(() => _pressed = true),
+        onTapUp: (_) => setState(() => _pressed = false),
+        onTapCancel: () => setState(() => _pressed = false),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 150),
+          decoration: BoxDecoration(
+            color: _pressed
+                ? pressedColor
+                : _hovered
+                    ? hoverColor
+                    : Colors.black,
+            border: Border.all(
+              color: _pressed
+                  ? const Color(0xFFDA70D6).withOpacity(0.6)
+                  : _hovered
+                      ? const Color(0xFF7FFFD4).withOpacity(0.6)
+                      : Colors.white24,
+            ),
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: _hovered || _pressed
+                ? [
+                    BoxShadow(
+                      color: (_pressed
+                              ? const Color(0xFFDA70D6)
+                              : const Color(0xFF7FFFD4))
+                          .withOpacity(0.2),
+                      blurRadius: 18,
+                      spreadRadius: 1,
+                    )
+                  ]
+                : null,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Cover Letter',
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleLarge
+                      ?.copyWith(color: Colors.white),
+                ),
+                if (_hovered)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      OutlinedButton.icon(
+                        onPressed: () => openPublic('/docs/CL1.pdf'),
+                        icon: const Icon(Icons.description, color: Colors.white70, size: 18),
+                        label: const Text('English'),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          side: const BorderSide(color: Colors.white24),
+                        ),
+                      ),
+                      OutlinedButton.icon(
+                        onPressed: () => openPublic('/docs/CL1heb.pdf'),
                         icon: const Icon(Icons.description, color: Colors.white70, size: 18),
                         label: const Text('Hebrew'),
                         style: OutlinedButton.styleFrom(
