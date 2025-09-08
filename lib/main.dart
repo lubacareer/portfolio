@@ -193,25 +193,51 @@ class HoverTile extends StatefulWidget {
 
 class _HoverTileState extends State<HoverTile> {
   bool _hovered = false;
+  bool _pressed = false;
 
   @override
   Widget build(BuildContext context) {
+    final hoverColor = const Color(0xFF7FFFD4).withOpacity(0.18); // aquamarine tint
+    final pressedColor = const Color(0xFFDA70D6).withOpacity(0.28); // orchid tint
+
     return MouseRegion(
       onEnter: (_) => setState(() => _hovered = true),
       onExit: (_) => setState(() => _hovered = false),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 150),
         decoration: BoxDecoration(
-          color: _hovered ? Colors.white12 : Colors.black,
-          border: Border.all(color: Colors.white24),
+          color: _pressed
+              ? pressedColor
+              : _hovered
+                  ? hoverColor
+                  : Colors.black,
+          border: Border.all(
+            color: _pressed
+                ? const Color(0xFFDA70D6).withOpacity(0.6)
+                : _hovered
+                    ? const Color(0xFF7FFFD4).withOpacity(0.6)
+                    : Colors.white24,
+          ),
           borderRadius: BorderRadius.circular(12),
-          boxShadow: _hovered
-              ? [BoxShadow(color: Colors.white.withOpacity(0.08), blurRadius: 14)]
+          boxShadow: _hovered || _pressed
+              ? [
+                  BoxShadow(
+                    color: (_pressed
+                            ? const Color(0xFFDA70D6)
+                            : const Color(0xFF7FFFD4))
+                        .withOpacity(0.2),
+                    blurRadius: 18,
+                    spreadRadius: 1,
+                  )
+                ]
               : null,
         ),
         child: InkWell(
           borderRadius: BorderRadius.circular(12),
+          onHighlightChanged: (v) => setState(() => _pressed = v),
           onTap: widget.onTap,
+          splashColor: const Color(0xFFDA70D6).withOpacity(0.2),
+          highlightColor: Colors.transparent,
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -253,21 +279,47 @@ class CvTile extends StatefulWidget {
 
 class _CvTileState extends State<CvTile> {
   bool _hovered = false;
+  bool _pressed = false;
   @override
   Widget build(BuildContext context) {
+    final hoverColor = const Color(0xFF7FFFD4).withOpacity(0.18); // aquamarine tint
+    final pressedColor = const Color(0xFFDA70D6).withOpacity(0.28); // orchid tint
+
     return MouseRegion(
       onEnter: (_) => setState(() => _hovered = true),
       onExit: (_) => setState(() => _hovered = false),
       child: GestureDetector(
         onTap: () => setState(() => _hovered = !_hovered),
+        onTapDown: (_) => setState(() => _pressed = true),
+        onTapUp: (_) => setState(() => _pressed = false),
+        onTapCancel: () => setState(() => _pressed = false),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 150),
           decoration: BoxDecoration(
-            color: _hovered ? Colors.white12 : Colors.black,
-            border: Border.all(color: Colors.white24),
+            color: _pressed
+                ? pressedColor
+                : _hovered
+                    ? hoverColor
+                    : Colors.black,
+            border: Border.all(
+              color: _pressed
+                  ? const Color(0xFFDA70D6).withOpacity(0.6)
+                  : _hovered
+                      ? const Color(0xFF7FFFD4).withOpacity(0.6)
+                      : Colors.white24,
+            ),
             borderRadius: BorderRadius.circular(12),
-            boxShadow: _hovered
-                ? [BoxShadow(color: Colors.white.withOpacity(0.08), blurRadius: 14)]
+            boxShadow: _hovered || _pressed
+                ? [
+                    BoxShadow(
+                      color: (_pressed
+                              ? const Color(0xFFDA70D6)
+                              : const Color(0xFF7FFFD4))
+                          .withOpacity(0.2),
+                      blurRadius: 18,
+                      spreadRadius: 1,
+                    )
+                  ]
                 : null,
           ),
           child: Padding(
