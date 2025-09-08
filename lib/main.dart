@@ -46,7 +46,7 @@ class PortfolioHome extends StatelessWidget {
       HoverTile(
         title: 'Cover Letter',
         subtitle: 'Open PDF',
-        onTap: () => openPublic('/docs/cover-letter.pdf'),
+        onTap: () => openPublic('/docs/CL1.pdf'),
       ),
       HoverTile(
         title: 'Selfie',
@@ -174,4 +174,3 @@ class _HoverTileState extends State<HoverTile> {
     );
   }
 }
-

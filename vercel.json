@@ -2,6 +2,16 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
+    { "source": "/assets/(.*)", "destination": "/assets/$1" },
+    { "source": "/canvaskit/(.*)", "destination": "/canvaskit/$1" },
+    { "source": "/icons/(.*)", "destination": "/icons/$1" },
+    { "source": "/docs/(.*)", "destination": "/docs/$1" },
+    { "source": "/images/(.*)", "destination": "/images/$1" },
+    { "source": "/favicon.png", "destination": "/favicon.png" },
+    { "source": "/manifest.json", "destination": "/manifest.json" },
+    { "source": "/flutter(.*).js", "destination": "/flutter$1.js" },
+    { "source": "/flutter_service_worker.js", "destination": "/flutter_service_worker.js" },
+    { "source": "/version.json", "destination": "/version.json" },
     { "source": "/(.*)", "destination": "/index.html" }
   ],
   "headers": [
