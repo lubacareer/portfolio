@@ -10,7 +10,7 @@ class PortfolioApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'My Portfolio',
+      title: "Luba's Portfolio",
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         brightness: Brightness.dark,
@@ -20,6 +20,7 @@ class PortfolioApp extends StatelessWidget {
           primary: Colors.white,
           onPrimary: Colors.black,
         ),
+        fontFamily: 'PlaypenSansThai',
         useMaterial3: true,
       ),
       home: const PortfolioHome(),
@@ -88,18 +89,29 @@ class PortfolioHome extends StatelessWidget {
                 children: [
                   // Top-centered selfie image
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(100),
+                    borderRadius: BorderRadius.circular(32),
                     child: Image.network(
                       '/images/me2.jpg',
-                      width: 160,
-                      height: 160,
+                      width: 280,
+                      height: 180,
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stack) => Container(
-                        width: 160,
-                        height: 160,
+                        width: 280,
+                        height: 180,
+                        alignment: Alignment.center,
                         color: Colors.white12,
                         child: const Icon(Icons.person, color: Colors.white54, size: 80),
                       ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    "Luba's Portfolio",
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 32,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                   const SizedBox(height: 24),

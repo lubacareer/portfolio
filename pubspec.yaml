@@ -88,3 +88,11 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+  fonts:
+    - family: PlaypenSansThai
+      fonts:
+        - asset: web/assets/fonts/static/PlaypenSansThai-Regular.ttf
+          weight: 400
+        - asset: web/assets/fonts/static/PlaypenSansThai-Bold.ttf
+          weight: 700
