@@ -126,8 +126,7 @@ class PortfolioHome extends StatelessWidget {
           ),
         ),
       ),
-    ),
-  );
+    );
   }
 }
 
@@ -222,8 +221,7 @@ class _HoverTileState extends State<HoverTile> {
           ),
         ),
       ),
-    ),
-  );
+    );
   }
 }
 
