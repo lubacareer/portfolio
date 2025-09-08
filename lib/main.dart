@@ -242,15 +242,17 @@ class _CvTileState extends State<CvTile> {
     return MouseRegion(
       onEnter: (_) => setState(() => _hovered = true),
       onExit: (_) => setState(() => _hovered = false),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 150),
-        decoration: BoxDecoration(
-          color: _hovered ? Colors.white12 : Colors.black,
-          border: Border.all(color: Colors.white24),
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: _hovered
-              ? [BoxShadow(color: Colors.white.withOpacity(0.08), blurRadius: 14)]
-              : null,
+      child: GestureDetector(
+        onTap: () => setState(() => _hovered = !_hovered), // mobile support
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 150),
+          decoration: BoxDecoration(
+            color: _hovered ? Colors.white12 : Colors.black,
+            border: Border.all(color: Colors.white24),
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: _hovered
+                ? [BoxShadow(color: Colors.white.withOpacity(0.08), blurRadius: 14)]
+                : null,
         ),
         child: Padding(
           padding: const EdgeInsets.all(16),
