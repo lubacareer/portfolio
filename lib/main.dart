@@ -94,6 +94,12 @@ class PortfolioHome extends StatelessWidget {
                       width: 160,
                       height: 160,
                       fit: BoxFit.cover,
+                      errorBuilder: (context, error, stack) => Container(
+                        width: 160,
+                        height: 160,
+                        color: Colors.white12,
+                        child: const Icon(Icons.person, color: Colors.white54, size: 80),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 24),
@@ -125,6 +131,7 @@ class PortfolioHome extends StatelessWidget {
               ),
           ),
         ),
+      ),
       ),
     );
   }
