@@ -102,13 +102,11 @@ class PortfolioHome extends StatelessWidget {
                       final w = constraints.maxWidth;
                       int cols;
                       if (w >= 1100) {
-                        cols = 4;
-                      } else if (w >= 800) {
-                        cols = 3;
-                      } else if (w >= 520) {
-                        cols = 2;
+                        cols = 4; // wide screens: 4 per row (even)
+                      } else if (w >= 600) {
+                        cols = 2; // medium screens: 2 per row (even)
                       } else {
-                        cols = 1;
+                        cols = 1; // small screens: single column
                       }
                       return GridView.count(
                         crossAxisCount: cols,
