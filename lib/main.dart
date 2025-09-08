@@ -123,11 +123,11 @@ class PortfolioHome extends StatelessWidget {
                   ),
                 ],
               ),
-            ),
           ),
         ),
       ),
-    );
+    ),
+  );
   }
 }
 
@@ -222,7 +222,8 @@ class _HoverTileState extends State<HoverTile> {
           ),
         ),
       ),
-    );
+    ),
+  );
   }
 }
 
@@ -241,7 +242,7 @@ class _CvTileState extends State<CvTile> {
       onEnter: (_) => setState(() => _hovered = true),
       onExit: (_) => setState(() => _hovered = false),
       child: GestureDetector(
-        onTap: () => setState(() => _hovered = !_hovered), // mobile support
+        onTap: () => setState(() => _hovered = !_hovered),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 150),
           decoration: BoxDecoration(
@@ -251,51 +252,54 @@ class _CvTileState extends State<CvTile> {
             boxShadow: _hovered
                 ? [BoxShadow(color: Colors.white.withOpacity(0.08), blurRadius: 14)]
                 : null,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('CV',
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'CV',
                   style: Theme.of(context)
                       .textTheme
                       .titleLarge
-                      ?.copyWith(color: Colors.white)),
-              if (_hovered)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    OutlinedButton.icon(
-                      onPressed: () => openPublic('/docs/CV1.pdf'),
-                      icon: const Icon(Icons.description, color: Colors.white70, size: 18),
-                      label: const Text('English'),
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        side: const BorderSide(color: Colors.white24),
+                      ?.copyWith(color: Colors.white),
+                ),
+                if (_hovered)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      OutlinedButton.icon(
+                        onPressed: () => openPublic('/docs/CV1.pdf'),
+                        icon: const Icon(Icons.description, color: Colors.white70, size: 18),
+                        label: const Text('English'),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          side: const BorderSide(color: Colors.white24),
+                        ),
                       ),
-                    ),
-                    OutlinedButton.icon(
-                      onPressed: () => openPublic('/docs/CV1heb.pdf'),
-                      icon: const Icon(Icons.description, color: Colors.white70, size: 18),
-                      label: const Text('Hebrew'),
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        side: const BorderSide(color: Colors.white24),
+                      OutlinedButton.icon(
+                        onPressed: () => openPublic('/docs/CV1heb.pdf'),
+                        icon: const Icon(Icons.description, color: Colors.white70, size: 18),
+                        label: const Text('Hebrew'),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          side: const BorderSide(color: Colors.white24),
+                        ),
                       ),
-                    ),
-                  ],
-                )
-              else
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
-                    Text('Hover to choose', style: TextStyle(color: Colors.white70)),
-                    Icon(Icons.folder_open, color: Colors.white70),
-                  ],
-                )
-            ],
+                    ],
+                  )
+                else
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: const [
+                      Text('Hover to choose', style: TextStyle(color: Colors.white70)),
+                      Icon(Icons.folder_open, color: Colors.white70),
+                    ],
+                  ),
+              ],
+            ),
           ),
         ),
       ),
