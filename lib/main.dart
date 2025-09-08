@@ -170,10 +170,20 @@ void showIntro(BuildContext context) {
       backgroundColor: Colors.black,
       titleTextStyle: const TextStyle(color: Colors.white, fontSize: 20),
       contentTextStyle: const TextStyle(color: Colors.white70, fontSize: 14),
-      title: const Text('Hi!'),
-      content: const Text(
-        'This is my minimalist Flutter web portfolio.\n'
-        'Hover over the tiles to explore.',
+      title: const Text('Introduction'),
+      content: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: const [
+            SelectableText(
+              '''From a young age, curiosity guided me toward math, physics, and languages, nurturing an early passion for solving complex puzzles. However, my journey was far from smooth; high school was particularly challenging, marked by insomnia and personal struggles, ultimately preventing me from completing my matriculation exams (Bagrut). But resilience defined the next chapter of my story: after serving in Sherut Leumi, I rebuilt my academic foundation through a preparatory program at Sami Shamoon College of Engineering, paving the way for a Bachelor's and subsequently a Master's degree in Software Engineering, which I completed cum laude with a GPA of 96. My master's research was particularly fascinating—simulating lunar regolith melting using physics-informed neural networks and advanced numerical analysis.''',
+            ),
+            SizedBox(height: 12),
+            SelectableText(
+              '''Today, my professional journey reflects not only my technical expertise but also a profound commitment to giving back. For several years, I've dedicated myself to tutoring students with disabilities, helping them master software engineering, mathematics, and physics. Since January 2025, I've expanded my impact by taking on freelance software development projects, building tailored technological solutions for private clients. Now, in these challenging times, I'm eagerly looking for an entry-level, part-time position where I can blend my passion for technology, teaching, and problem-solving to contribute meaningfully to an innovative team.''',
+            ),
+          ],
+        ),
       ),
       actions: [
         TextButton.icon(
