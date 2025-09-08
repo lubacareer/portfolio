@@ -40,41 +40,49 @@ class PortfolioHome extends StatelessWidget {
         title: 'Introduction',
         subtitle: 'About me',
         onTap: () => showIntro(context),
+        icon: Icons.info_outline,
       ),
       HoverTile(
         title: 'Education',
         subtitle: 'Coming soon',
         onTap: () => showPlaceholder(context, 'Education'),
+        icon: Icons.school,
       ),
       HoverTile(
         title: 'Skills',
         subtitle: 'Coming soon',
         onTap: () => showPlaceholder(context, 'Skills'),
+        icon: Icons.handyman,
       ),
       HoverTile(
         title: 'Experience',
         subtitle: 'Coming soon',
         onTap: () => showPlaceholder(context, 'Experience'),
+        icon: Icons.work_outline,
       ),
       HoverTile(
         title: 'Research',
         subtitle: 'Coming soon',
         onTap: () => showPlaceholder(context, 'Research'),
+        icon: Icons.biotech,
       ),
       HoverTile(
         title: 'Projects',
         subtitle: 'Coming soon',
         onTap: () => showPlaceholder(context, 'Projects'),
+        icon: Icons.dashboard_customize,
       ),
       HoverTile(
         title: 'Hobbies',
         subtitle: 'Coming soon',
         onTap: () => showPlaceholder(context, 'Hobbies'),
+        icon: Icons.interests,
       ),
       HoverTile(
         title: 'Links',
         subtitle: 'Coming soon',
         onTap: () => showPlaceholder(context, 'Links'),
+        icon: Icons.link,
       ),
     ];
 
@@ -168,6 +176,11 @@ void showIntro(BuildContext context) {
         'Hover over the tiles to explore.',
       ),
       actions: [
+        TextButton.icon(
+          onPressed: () => Navigator.of(context).pop(),
+          icon: const Icon(Icons.home, color: Colors.white70),
+          label: const Text('Main menu'),
+        ),
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
           child: const Text('Close'),
@@ -181,11 +194,13 @@ class HoverTile extends StatefulWidget {
   final String title;
   final String subtitle;
   final VoidCallback onTap;
+  final IconData icon;
   const HoverTile({
     super.key,
     required this.title,
     required this.subtitle,
     required this.onTap,
+    required this.icon,
   });
 
   @override
@@ -245,11 +260,23 @@ class _HoverTileState extends State<HoverTile> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(widget.title,
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleLarge
-                        ?.copyWith(color: Colors.white)),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Icon(widget.icon, color: Colors.white70),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        widget.title,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleLarge
+                            ?.copyWith(color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -329,12 +356,18 @@ class _CvTileState extends State<CvTile> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'CV',
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleLarge
-                      ?.copyWith(color: Colors.white),
+                Row(
+                  children: [
+                    const Icon(Icons.picture_as_pdf, color: Colors.white70),
+                    const SizedBox(width: 8),
+                    Text(
+                      'CV',
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleLarge
+                          ?.copyWith(color: Colors.white),
+                    ),
+                  ],
                 ),
                 if (_hovered)
                   Row(
@@ -436,12 +469,18 @@ class _CoverLetterTileState extends State<CoverLetterTile> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'Cover Letter',
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleLarge
-                      ?.copyWith(color: Colors.white),
+                Row(
+                  children: [
+                    const Icon(Icons.edit_note, color: Colors.white70),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Cover Letter',
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleLarge
+                          ?.copyWith(color: Colors.white),
+                    ),
+                  ],
                 ),
                 if (_hovered)
                   Row(
@@ -494,6 +533,11 @@ void showPlaceholder(BuildContext context, String title) {
       title: Text(title),
       content: const Text('Content coming soon.'),
       actions: [
+        TextButton.icon(
+          onPressed: () => Navigator.of(context).pop(),
+          icon: const Icon(Icons.home, color: Colors.white70),
+          label: const Text('Main menu'),
+        ),
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
           child: const Text('Close'),
