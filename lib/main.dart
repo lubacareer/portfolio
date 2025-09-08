@@ -16,7 +16,7 @@ class PortfolioApp extends StatelessWidget {
         brightness: Brightness.dark,
         scaffoldBackgroundColor: Colors.black,
         colorScheme: const ColorScheme.dark(
-          background: Colors.black,
+          surface: Colors.black,
           primary: Colors.white,
           onPrimary: Colors.black,
         ),
@@ -39,19 +39,14 @@ class PortfolioHome extends StatelessWidget {
         onTap: () => openPublic('/docs/CV1.pdf'),
       ),
       HoverTile(
-        title: 'קורות חיים (Hebrew)',
-        subtitle: 'פתח PDF',
+        title: 'CV (Hebrew)',
+        subtitle: 'Open PDF',
         onTap: () => openPublic('/docs/CV1heb.pdf'),
       ),
       HoverTile(
         title: 'Cover Letter',
         subtitle: 'Open PDF',
         onTap: () => openPublic('/docs/CL1.pdf'),
-      ),
-      HoverTile(
-        title: 'Selfie',
-        subtitle: 'View image',
-        onTap: () => openPublic('/images/selfie.jpg'),
       ),
       HoverTile(
         title: 'Introduction',
@@ -62,16 +57,35 @@ class PortfolioHome extends StatelessWidget {
 
     return Scaffold(
       body: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 1100),
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Wrap(
-              spacing: 24,
-              runSpacing: 24,
-              children: tiles
-                  .map((t) => SizedBox(width: 260, height: 150, child: t))
-                  .toList(),
+        child: SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 1100),
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // Top-centered selfie image
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(100),
+                    child: Image.network(
+                      '/images/me2.jpg',
+                      width: 160,
+                      height: 160,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  Wrap(
+                    spacing: 24,
+                    runSpacing: 24,
+                    alignment: WrapAlignment.center,
+                    children: tiles
+                        .map((t) => SizedBox(width: 260, height: 150, child: t))
+                        .toList(),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
