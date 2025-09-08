@@ -13,8 +13,8 @@ void main() {
     await tester.pumpWidget(const PortfolioApp());
 
     // Verify some expected tiles are present
-    expect(find.text('CV (English)'), findsOneWidget);
-    expect(find.text('Cover Letter'), findsOneWidget);
+    expect(find.text('CV'), findsOneWidget);
     expect(find.text('Introduction'), findsOneWidget);
+    expect(find.text('Education'), findsOneWidget);
   });
 }

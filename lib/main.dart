@@ -32,26 +32,47 @@ class PortfolioHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final tiles = <HoverTile>[
-      HoverTile(
-        title: 'CV (English)',
-        subtitle: 'Open PDF',
-        onTap: () => openPublic('/docs/CV1.pdf'),
-      ),
-      HoverTile(
-        title: 'CV (Hebrew)',
-        subtitle: 'Open PDF',
-        onTap: () => openPublic('/docs/CV1heb.pdf'),
-      ),
-      HoverTile(
-        title: 'Cover Letter',
-        subtitle: 'Open PDF',
-        onTap: () => openPublic('/docs/CL1.pdf'),
-      ),
+    final tiles = <Widget>[
+      const CvTile(),
       HoverTile(
         title: 'Introduction',
         subtitle: 'About me',
         onTap: () => showIntro(context),
+      ),
+      HoverTile(
+        title: 'Education',
+        subtitle: 'Coming soon',
+        onTap: () => showPlaceholder(context, 'Education'),
+      ),
+      HoverTile(
+        title: 'Skills',
+        subtitle: 'Coming soon',
+        onTap: () => showPlaceholder(context, 'Skills'),
+      ),
+      HoverTile(
+        title: 'Experience',
+        subtitle: 'Coming soon',
+        onTap: () => showPlaceholder(context, 'Experience'),
+      ),
+      HoverTile(
+        title: 'Research',
+        subtitle: 'Coming soon',
+        onTap: () => showPlaceholder(context, 'Research'),
+      ),
+      HoverTile(
+        title: 'Projects',
+        subtitle: 'Coming soon',
+        onTap: () => showPlaceholder(context, 'Projects'),
+      ),
+      HoverTile(
+        title: 'Hobbies',
+        subtitle: 'Coming soon',
+        onTap: () => showPlaceholder(context, 'Hobbies'),
+      ),
+      HoverTile(
+        title: 'Links',
+        subtitle: 'Coming soon',
+        onTap: () => showPlaceholder(context, 'Links'),
       ),
     ];
 
@@ -76,13 +97,31 @@ class PortfolioHome extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 24),
-                  Wrap(
-                    spacing: 24,
-                    runSpacing: 24,
-                    alignment: WrapAlignment.center,
-                    children: tiles
-                        .map((t) => SizedBox(width: 260, height: 150, child: t))
-                        .toList(),
+                  LayoutBuilder(
+                    builder: (context, constraints) {
+                      final w = constraints.maxWidth;
+                      int cols;
+                      if (w >= 1100) {
+                        cols = 4;
+                      } else if (w >= 800) {
+                        cols = 3;
+                      } else if (w >= 520) {
+                        cols = 2;
+                      } else {
+                        cols = 1;
+                      }
+                      return GridView.count(
+                        crossAxisCount: cols,
+                        mainAxisSpacing: 24,
+                        crossAxisSpacing: 24,
+                        childAspectRatio: 260 / 150,
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        children: tiles
+                            .map((t) => SizedBox(width: 260, height: 150, child: t))
+                            .toList(),
+                      );
+                    },
                   ),
                 ],
               ),
@@ -187,4 +226,98 @@ class _HoverTileState extends State<HoverTile> {
       ),
     );
   }
+}
+
+class CvTile extends StatefulWidget {
+  const CvTile({super.key});
+
+  @override
+  State<CvTile> createState() => _CvTileState();
+}
+
+class _CvTileState extends State<CvTile> {
+  bool _hovered = false;
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 150),
+        decoration: BoxDecoration(
+          color: _hovered ? Colors.white12 : Colors.black,
+          border: Border.all(color: Colors.white24),
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: _hovered
+              ? [BoxShadow(color: Colors.white.withOpacity(0.08), blurRadius: 14)]
+              : null,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('CV',
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleLarge
+                      ?.copyWith(color: Colors.white)),
+              if (_hovered)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    OutlinedButton.icon(
+                      onPressed: () => openPublic('/docs/CV1.pdf'),
+                      icon: const Icon(Icons.description, color: Colors.white70, size: 18),
+                      label: const Text('English'),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        side: const BorderSide(color: Colors.white24),
+                      ),
+                    ),
+                    OutlinedButton.icon(
+                      onPressed: () => openPublic('/docs/CV1heb.pdf'),
+                      icon: const Icon(Icons.description, color: Colors.white70, size: 18),
+                      label: const Text('Hebrew'),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        side: const BorderSide(color: Colors.white24),
+                      ),
+                    ),
+                  ],
+                )
+              else
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: const [
+                    Text('Hover to choose', style: TextStyle(color: Colors.white70)),
+                    Icon(Icons.folder_open, color: Colors.white70),
+                  ],
+                )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+void showPlaceholder(BuildContext context, String title) {
+  showDialog(
+    context: context,
+    builder: (_) => AlertDialog(
+      backgroundColor: Colors.black,
+      titleTextStyle: const TextStyle(color: Colors.white, fontSize: 20),
+      contentTextStyle: const TextStyle(color: Colors.white70, fontSize: 14),
+      title: Text(title),
+      content: const Text('Content coming soon.'),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('Close'),
+        ),
+      ],
+    ),
+  );
 }
