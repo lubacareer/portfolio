@@ -34,8 +34,7 @@ class PortfolioHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tiles = <Widget>[
-      const CvTile(),
-      const CoverLetterTile(),
+      // Core sections
       HoverTile(
         title: 'Introduction',
         subtitle: 'About me',
@@ -44,8 +43,8 @@ class PortfolioHome extends StatelessWidget {
       ),
       HoverTile(
         title: 'Education',
-        subtitle: 'Coming soon',
-        onTap: () => showPlaceholder(context, 'Education'),
+        subtitle: 'My academic journey',
+        onTap: () => showEducation(context),
         icon: Icons.school,
       ),
       HoverTile(
@@ -79,11 +78,20 @@ class PortfolioHome extends StatelessWidget {
         icon: Icons.interests,
       ),
       HoverTile(
+        title: 'Contact',
+        subtitle: 'Email me',
+        onTap: () => showContact(context),
+        icon: Icons.email_outlined,
+      ),
+      HoverTile(
         title: 'Links',
         subtitle: 'Coming soon',
         onTap: () => showPlaceholder(context, 'Links'),
         icon: Icons.link,
       ),
+      // Move CV and Cover Letter to bottom row
+      const CvTile(),
+      const CoverLetterTile(),
     ];
 
     return Scaffold(
@@ -101,12 +109,12 @@ class PortfolioHome extends StatelessWidget {
                     borderRadius: BorderRadius.circular(32),
                     child: Image.network(
                       '/images/me2.jpg',
-                      width: 280,
-                      height: 180,
+                      width: 520,
+                      height: 320,
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stack) => Container(
-                        width: 280,
-                        height: 180,
+                        width: 520,
+                        height: 320,
                         alignment: Alignment.center,
                         color: Colors.white12,
                         child: const Icon(Icons.person, color: Colors.white54, size: 80),
@@ -163,6 +171,74 @@ Future<void> openPublic(String path) async {
   await launchUrl(uri, mode: LaunchMode.platformDefault);
 }
 
+void showContact(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (_) => AlertDialog(
+      backgroundColor: Colors.black,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: const BorderSide(color: Colors.white24),
+      ),
+      insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+      titleTextStyle: Theme.of(context)
+          .textTheme
+          .titleMedium
+          ?.copyWith(color: Colors.white, fontWeight: FontWeight.w700),
+      contentTextStyle: Theme.of(context)
+          .textTheme
+          .bodyMedium
+          ?.copyWith(color: Colors.white70, height: 1.35),
+      title: const Text('Contact Me'),
+      content: SizedBox(
+        width: 480,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Feel free to reach out via email:',
+              textAlign: TextAlign.justify,
+            ),
+            const SizedBox(height: 12),
+            SelectableText(
+              'lubacareer@gmail.com',
+              style: Theme.of(context)
+                  .textTheme
+                  .titleSmall
+                  ?.copyWith(color: Colors.white),
+            ),
+            const SizedBox(height: 12),
+            OutlinedButton.icon(
+              onPressed: () {
+                final uri = Uri(
+                  scheme: 'mailto',
+                  path: 'lubacareer@gmail.com',
+                  // You can prefill subject/body if you like:
+                  // query: Uri(queryParameters: {'subject': 'Hello Luba'}).query,
+                );
+                launchUrl(uri, mode: LaunchMode.platformDefault);
+              },
+              icon: const Icon(Icons.email_outlined, color: Colors.white70, size: 18),
+              label: const Text('Email me'),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: Colors.white,
+                side: const BorderSide(color: Colors.white24),
+              ),
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('Close'),
+        ),
+      ],
+    ),
+  );
+}
+
 void showIntro(BuildContext context) {
   showDialog(
     context: context,
@@ -190,21 +266,76 @@ void showIntro(BuildContext context) {
             children: const [
               SelectableText(
                 '''From a young age, curiosity guided me toward math, physics, and languages, nurturing an early passion for solving complex puzzles. However, my journey was far from smooth; high school was particularly challenging, marked by insomnia and personal struggles, ultimately preventing me from completing my matriculation exams (Bagrut). But resilience defined the next chapter of my story: after serving in Sherut Leumi, I rebuilt my academic foundation through a preparatory program at Sami Shamoon College of Engineering, paving the way for a Bachelor's and subsequently a Master's degree in Software Engineering, which I completed cum laude with a GPA of 96. My master's research was particularly fascinating—simulating lunar regolith melting using physics-informed neural networks and advanced numerical analysis.''',
+                textAlign: TextAlign.justify,
               ),
               SizedBox(height: 12),
               SelectableText(
                 '''Today, my professional journey reflects not only my technical expertise but also a profound commitment to giving back. For several years, I've dedicated myself to tutoring students with disabilities, helping them master software engineering, mathematics, and physics. Since January 2025, I've expanded my impact by taking on freelance software development projects, building tailored technological solutions for private clients. Now, in these challenging times, I'm eagerly looking for an entry-level, part-time position where I can blend my passion for technology, teaching, and problem-solving to contribute meaningfully to an innovative team.''',
+                textAlign: TextAlign.justify,
               ),
             ],
           ),
         ),
       ),
       actions: [
-        TextButton.icon(
+        TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          icon: const Icon(Icons.home, color: Colors.white70),
-          label: const Text('Main menu'),
+          child: const Text('Close'),
         ),
+      ],
+    ),
+  );
+}
+
+void showEducation(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (_) => AlertDialog(
+      backgroundColor: Colors.black,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: const BorderSide(color: Colors.white24),
+      ),
+      insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+      titleTextStyle: Theme.of(context)
+          .textTheme
+          .titleMedium
+          ?.copyWith(color: Colors.white, fontWeight: FontWeight.w700),
+      contentTextStyle: Theme.of(context)
+          .textTheme
+          .bodyMedium
+          ?.copyWith(color: Colors.white70, height: 1.35),
+      title: const Text('Education'),
+      content: SizedBox(
+        width: 520,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: const [
+              SelectableText(
+                '''My educational path has always been driven by curiosity and a deep passion for mathematics, physics, and computers—interests that captivated me from early childhood. Growing up in an era before the rise of generative AI tools, I embraced each academic challenge independently, dedicating countless hours to mastering complex concepts through sheer determination and persistence. Integrity defined every step: throughout my Bachelor’s studies in Software Engineering at Sami Shamoon College of Engineering (SCE), even amid the turbulent shift to remote learning during the COVID pandemic, I completed every task without compromising on honesty or seeking shortcuts.''',
+                textAlign: TextAlign.justify,
+              ),
+              SizedBox(height: 12),
+              SelectableText(
+                '''My initial ventures into the world of programming began with natural language processing (NLP). I vividly recall my excitement and struggles when exploring Python libraries such as the Sumy repository for text summarization. Navigating GitHub repositories for the first time was daunting but incredibly rewarding. This early NLP journey sparked a project close to my heart: developing a browser extension to summarize Hebrew texts. Through this endeavor, I encountered JavaScript—my very first experience with the language. While JavaScript continues to puzzle me occasionally, my proficiency and passion for other languages, especially Python, have always provided a reliable foundation.''',
+                textAlign: TextAlign.justify,
+              ),
+              SizedBox(height: 12),
+              SelectableText(
+                '''Pursuing my Master's degree at SCE marked a significant turning point. During a numerical analysis course, my professor introduced me to an intriguing concept: leveraging lunar regolith for future Moon settlements. Inspired by his vision, I delved deeply into research papers, books, and extensive scientific literature. Initially considering Julia for simulation, we soon transitioned to Python due to its robust long-term support and expansive ecosystem. After numerous iterations, we discovered Physics-Informed Neural Networks (PINNs)—an advanced approach integrating deep learning and physics-based modeling. Given my prior coursework in deep learning and machine learning, this discovery captivated me profoundly. Over the next two years, I meticulously developed, tested, and refined a PINN-based Python simulation to model lunar regolith melting processes. Ultimately, this rigorous effort culminated in a comprehensive thesis and a fully functional codebase, enabling me to graduate cum laude with a Master’s degree in Software Engineering.''',
+                textAlign: TextAlign.justify,
+              ),
+              SizedBox(height: 12),
+              SelectableText(
+                '''Today, my journey reflects not only technical knowledge but also resilience, creativity, and unwavering commitment to continuous learning and exploration.''',
+                textAlign: TextAlign.justify,
+              ),
+            ],
+          ),
+        ),
+      ),
+      actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
           child: const Text('Close'),
@@ -568,14 +699,12 @@ void showPlaceholder(BuildContext context, String title) {
       title: Text(title),
       content: const SizedBox(
         width: 420,
-        child: Text('Content coming soon.'),
+        child: Text(
+          'Content coming soon.',
+          textAlign: TextAlign.justify,
+        ),
       ),
       actions: [
-        TextButton.icon(
-          onPressed: () => Navigator.of(context).pop(),
-          icon: const Icon(Icons.home, color: Colors.white70),
-          label: const Text('Main menu'),
-        ),
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
           child: const Text('Close'),
