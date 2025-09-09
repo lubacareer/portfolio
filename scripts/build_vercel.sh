@@ -16,7 +16,22 @@ echo ":: Pub get"
 flutter pub get
 
 echo ":: Build web (release)"
-# Use CanvasKit for better typography/rendering; skip tree-shake icons to keep all icons
-flutter build web --release --web-renderer canvaskit --no-tree-shake-icons
+# Renderer selection can vary across Flutter versions.
+# Try --web-renderer first, then --renderer, then no flag.
+WEB_RENDERER="${WEB_RENDERER:-canvaskit}"
+set +e
+flutter build web --release --web-renderer "$WEB_RENDERER" --no-tree-shake-icons
+status=$?
+if [ $status -ne 0 ]; then
+  echo ":: '--web-renderer' not supported; trying '--renderer'"
+  flutter build web --release --renderer "$WEB_RENDERER" --no-tree-shake-icons
+  status=$?
+fi
+if [ $status -ne 0 ]; then
+  echo ":: Renderer flag unsupported; building without renderer flag"
+  flutter build web --release --no-tree-shake-icons
+  status=$?
+fi
+set -e
 
 echo ":: Build artifacts in build/web"
