@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-echo ":: Installing Flutter (stable)"
-git clone https://github.com/flutter/flutter.git -b stable --depth 1 .flutter
+FLUTTER_VERSION="${FLUTTER_VERSION:-stable}"
+echo ":: Installing Flutter ($FLUTTER_VERSION)"
+git clone https://github.com/flutter/flutter.git -b "$FLUTTER_VERSION" --depth 1 .flutter
 export PATH="$PATH:$(pwd)/.flutter/bin"
 
 echo ":: Flutter version"
