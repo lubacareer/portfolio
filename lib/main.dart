@@ -49,8 +49,8 @@ class PortfolioHome extends StatelessWidget {
       ),
       HoverTile(
         title: 'Skills',
-        subtitle: 'Coming soon',
-        onTap: () => showPlaceholder(context, 'Skills'),
+        subtitle: 'My skillset',
+        onTap: () => showSkills(context),
         icon: Icons.handyman,
       ),
       HoverTile(
@@ -271,6 +271,74 @@ void showIntro(BuildContext context) {
               SizedBox(height: 12),
               SelectableText(
                 '''Today, my professional journey reflects not only my technical expertise but also a profound commitment to giving back. For several years, I've dedicated myself to tutoring students with disabilities, helping them master software engineering, mathematics, and physics. Since January 2025, I've expanded my impact by taking on freelance software development projects, building tailored technological solutions for private clients. Now, in these challenging times, I'm eagerly looking for an entry-level, part-time position where I can blend my passion for technology, teaching, and problem-solving to contribute meaningfully to an innovative team.''',
+                textAlign: TextAlign.justify,
+              ),
+            ],
+          ),
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('Close'),
+        ),
+      ],
+    ),
+  );
+}
+
+void showSkills(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (_) => AlertDialog(
+      backgroundColor: Colors.black,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: const BorderSide(color: Colors.white24),
+      ),
+      insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+      titleTextStyle: Theme.of(context)
+          .textTheme
+          .titleMedium
+          ?.copyWith(color: Colors.white, fontWeight: FontWeight.w700),
+      contentTextStyle: Theme.of(context)
+          .textTheme
+          .bodyMedium
+          ?.copyWith(color: Colors.white70, height: 1.35),
+      title: const Text('Skills'),
+      content: SizedBox(
+        width: 520,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: const [
+              SelectableText(
+                '''My journey with computers started early—in fact, as early as three or four years old when I first encountered the command-line interface of MS-DOS. Even then, typing short commands sparked a lifelong passion for technology. Throughout the 90s, with Microsoft Windows dominating the landscape, I eagerly explored office software, particularly MS Word, where I channeled my love for storytelling and verbal expression.''',
+                textAlign: TextAlign.justify,
+              ),
+              SizedBox(height: 12),
+              SelectableText(
+                '''In high school, my curiosity deepened as I tackled analytical subjects like math, physics, and computer science. My first experience with databases came through Microsoft Access, followed by my introduction to programming with Java—an experience that was both enjoyable and formative.''',
+                textAlign: TextAlign.justify,
+              ),
+              SizedBox(height: 12),
+              SelectableText(
+                '''Entering my bachelor's degree in Software Engineering, I dove headfirst into learning programming languages, beginning with C. It was challenging yet rewarding, embedding syntax into my memory. Languages like C++, Python, and Java quickly followed. In my third year, the complexity escalated with compiler design using Lex, Yacc, Linux, and Bash scripting. This exposure ignited a profound interest in Unix-based systems and virtual machines, tools I integrate into my workflow to this day—every new laptop promptly receives a VMware installation running a Linux distribution.''',
+                textAlign: TextAlign.justify,
+              ),
+              SizedBox(height: 12),
+              SelectableText(
+                '''My undergraduate studies culminated in an NLP-focused project using Python, marking my deep dive into machine learning. During this time, I also honed my database skills, learning and later teaching SQL and MySQL.''',
+                textAlign: TextAlign.justify,
+              ),
+              SizedBox(height: 12),
+              SelectableText(
+                '''In my master's degree, I specialized further in Python, applying numerical analysis and physics-informed neural networks (PINNs) to simulate thermodynamics—specifically, lunar regolith melting for resource utilization in future lunar colonies.''',
+                textAlign: TextAlign.justify,
+              ),
+              SizedBox(height: 12),
+              SelectableText(
+                '''Today, as a freelancer and educator, my skillset has expanded to include cross-platform mobile app development with Flutter and Dart, which allows me to build visually appealing, modern apps efficiently. I find Flutter’s elegance a refreshing alternative to traditional HTML and CSS, aligning perfectly with my passion for creating innovative, user-friendly software solutions.''',
                 textAlign: TextAlign.justify,
               ),
             ],
