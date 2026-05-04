@@ -5,16 +5,76 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
+import 'dart:ui';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:port/main.dart';
 
 void main() {
-  testWidgets('Portfolio renders key tiles', (tester) async {
+  Future<void> pumpPortfolio(WidgetTester tester) async {
+    tester.view.physicalSize = const Size(1400, 1200);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
     await tester.pumpWidget(const PortfolioApp());
+  }
+
+  testWidgets('Portfolio renders key tiles', (tester) async {
+    await pumpPortfolio(tester);
 
     // Verify some expected tiles are present
     expect(find.text('CV'), findsOneWidget);
     expect(find.text('Introduction'), findsOneWidget);
     expect(find.text('Education'), findsOneWidget);
   });
+
+  testWidgets('Contact dialog lists both email addresses', (tester) async {
+    await pumpPortfolio(tester);
+
+    await tester.ensureVisible(find.text('Contact'));
+    await tester.tap(find.text('Contact'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('lubacareer@gmail.com'), findsWidgets);
+    expect(find.text('lubani@lubacorp.com'), findsWidgets);
+  });
+
+  testWidgets(
+    'Projects dialog lists public GitHub repositories for both accounts',
+    (tester) async {
+      await pumpPortfolio(tester);
+
+      await tester.tap(find.text('Projects'));
+      await tester.pumpAndSettle();
+
+      const expectedProjects = [
+        'ast2',
+        'Mazilon',
+        'HeatEquationSimulator',
+        'portfolio',
+        'ccomp',
+        'astro',
+        'Portfolio',
+        'math',
+        'scientificProject',
+        'HebSum',
+        'MySoftware',
+        'DevOps2412',
+        'hw6',
+        '2412-first-repo2',
+        'IRCourse',
+        'DeepStefan',
+        'DjangoMS',
+        'DjangoMSA',
+        'Summarizer-Extension',
+        'bert-extractive-summarizer',
+        'HebrewSumy',
+      ];
+
+      for (final project in expectedProjects) {
+        expect(find.text(project), findsOneWidget);
+      }
+    },
+  );
 }

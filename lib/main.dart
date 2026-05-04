@@ -55,20 +55,20 @@ class PortfolioHome extends StatelessWidget {
       ),
       HoverTile(
         title: 'Experience',
-        subtitle: 'Coming soon',
-        onTap: () => showPlaceholder(context, 'Experience'),
+        subtitle: 'My professional journey',
+        onTap: () => showExperience(context),
         icon: Icons.work_outline,
       ),
       HoverTile(
         title: 'Research',
-        subtitle: 'Coming soon',
-        onTap: () => showPlaceholder(context, 'Research'),
+        subtitle: 'Lunar ISRU focus',
+        onTap: () => showResearch(context),
         icon: Icons.biotech,
       ),
       HoverTile(
         title: 'Projects',
-        subtitle: 'Coming soon',
-        onTap: () => showPlaceholder(context, 'Projects'),
+        subtitle: 'My builds',
+        onTap: () => showProjects(context),
         icon: Icons.dashboard_customize,
       ),
       HoverTile(
@@ -117,7 +117,11 @@ class PortfolioHome extends StatelessWidget {
                         height: 320,
                         alignment: Alignment.center,
                         color: Colors.white12,
-                        child: const Icon(Icons.person, color: Colors.white54, size: 80),
+                        child: const Icon(
+                          Icons.person,
+                          color: Colors.white54,
+                          size: 80,
+                        ),
                       ),
                     ),
                   ),
@@ -151,16 +155,19 @@ class PortfolioHome extends StatelessWidget {
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         children: tiles
-                            .map((t) => SizedBox(width: 260, height: 150, child: t))
+                            .map(
+                              (t) =>
+                                  SizedBox(width: 260, height: 150, child: t),
+                            )
                             .toList(),
                       );
                     },
                   ),
                 ],
               ),
+            ),
           ),
         ),
-      ),
       ),
     );
   }
@@ -171,7 +178,14 @@ Future<void> openPublic(String path) async {
   await launchUrl(uri, mode: LaunchMode.platformDefault);
 }
 
+Future<void> openEmail(String email) async {
+  final uri = Uri(scheme: 'mailto', path: email);
+  await launchUrl(uri, mode: LaunchMode.platformDefault);
+}
+
 void showContact(BuildContext context) {
+  const contactEmails = ['lubacareer@gmail.com', 'lubani@lubacorp.com'];
+
   showDialog(
     context: context,
     builder: (_) => AlertDialog(
@@ -181,14 +195,13 @@ void showContact(BuildContext context) {
         side: const BorderSide(color: Colors.white24),
       ),
       insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-      titleTextStyle: Theme.of(context)
-          .textTheme
-          .titleMedium
-          ?.copyWith(color: Colors.white, fontWeight: FontWeight.w700),
-      contentTextStyle: Theme.of(context)
-          .textTheme
-          .bodyMedium
-          ?.copyWith(color: Colors.white70, height: 1.35),
+      titleTextStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
+        color: Colors.white,
+        fontWeight: FontWeight.w700,
+      ),
+      contentTextStyle: Theme.of(
+        context,
+      ).textTheme.bodyMedium?.copyWith(color: Colors.white70, height: 1.35),
       title: const Text('Contact Me'),
       content: SizedBox(
         width: 480,
@@ -201,30 +214,35 @@ void showContact(BuildContext context) {
               textAlign: TextAlign.justify,
             ),
             const SizedBox(height: 12),
-            SelectableText(
-              'lubacareer@gmail.com',
-              style: Theme.of(context)
-                  .textTheme
-                  .titleSmall
-                  ?.copyWith(color: Colors.white),
-            ),
-            const SizedBox(height: 12),
-            OutlinedButton.icon(
-              onPressed: () {
-                final uri = Uri(
-                  scheme: 'mailto',
-                  path: 'lubacareer@gmail.com',
-                  // You can prefill subject/body if you like:
-                  // query: Uri(queryParameters: {'subject': 'Hello Luba'}).query,
-                );
-                launchUrl(uri, mode: LaunchMode.platformDefault);
-              },
-              icon: const Icon(Icons.email_outlined, color: Colors.white70, size: 18),
-              label: const Text('Email me'),
-              style: OutlinedButton.styleFrom(
-                foregroundColor: Colors.white,
-                side: const BorderSide(color: Colors.white24),
+            for (final email in contactEmails) ...[
+              SelectableText(
+                email,
+                style: Theme.of(
+                  context,
+                ).textTheme.titleSmall?.copyWith(color: Colors.white),
               ),
+              const SizedBox(height: 8),
+            ],
+            const SizedBox(height: 4),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                for (final email in contactEmails)
+                  OutlinedButton.icon(
+                    onPressed: () => openEmail(email),
+                    icon: const Icon(
+                      Icons.email_outlined,
+                      color: Colors.white70,
+                      size: 18,
+                    ),
+                    label: Text(email),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      side: const BorderSide(color: Colors.white24),
+                    ),
+                  ),
+              ],
             ),
           ],
         ),
@@ -249,14 +267,13 @@ void showIntro(BuildContext context) {
         side: const BorderSide(color: Colors.white24),
       ),
       insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-      titleTextStyle: Theme.of(context)
-          .textTheme
-          .titleMedium
-          ?.copyWith(color: Colors.white, fontWeight: FontWeight.w700),
-      contentTextStyle: Theme.of(context)
-          .textTheme
-          .bodyMedium
-          ?.copyWith(color: Colors.white70, height: 1.35),
+      titleTextStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
+        color: Colors.white,
+        fontWeight: FontWeight.w700,
+      ),
+      contentTextStyle: Theme.of(
+        context,
+      ).textTheme.bodyMedium?.copyWith(color: Colors.white70, height: 1.35),
       title: const Text('Introduction'),
       content: SizedBox(
         width: 520,
@@ -297,14 +314,13 @@ void showSkills(BuildContext context) {
         side: const BorderSide(color: Colors.white24),
       ),
       insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-      titleTextStyle: Theme.of(context)
-          .textTheme
-          .titleMedium
-          ?.copyWith(color: Colors.white, fontWeight: FontWeight.w700),
-      contentTextStyle: Theme.of(context)
-          .textTheme
-          .bodyMedium
-          ?.copyWith(color: Colors.white70, height: 1.35),
+      titleTextStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
+        color: Colors.white,
+        fontWeight: FontWeight.w700,
+      ),
+      contentTextStyle: Theme.of(
+        context,
+      ).textTheme.bodyMedium?.copyWith(color: Colors.white70, height: 1.35),
       title: const Text('Skills'),
       content: SizedBox(
         width: 520,
@@ -365,14 +381,13 @@ void showEducation(BuildContext context) {
         side: const BorderSide(color: Colors.white24),
       ),
       insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-      titleTextStyle: Theme.of(context)
-          .textTheme
-          .titleMedium
-          ?.copyWith(color: Colors.white, fontWeight: FontWeight.w700),
-      contentTextStyle: Theme.of(context)
-          .textTheme
-          .bodyMedium
-          ?.copyWith(color: Colors.white70, height: 1.35),
+      titleTextStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
+        color: Colors.white,
+        fontWeight: FontWeight.w700,
+      ),
+      contentTextStyle: Theme.of(
+        context,
+      ).textTheme.bodyMedium?.copyWith(color: Colors.white70, height: 1.35),
       title: const Text('Education'),
       content: SizedBox(
         width: 520,
@@ -413,6 +428,494 @@ void showEducation(BuildContext context) {
   );
 }
 
+void showResearch(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (_) => AlertDialog(
+      backgroundColor: Colors.black,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: const BorderSide(color: Colors.white24),
+      ),
+      insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+      titleTextStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
+        color: Colors.white,
+        fontWeight: FontWeight.w700,
+      ),
+      contentTextStyle: Theme.of(
+        context,
+      ).textTheme.bodyMedium?.copyWith(color: Colors.white70, height: 1.35),
+      title: const Text('Research'),
+      content: SizedBox(
+        width: 520,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: const [
+              SelectableText(
+                '''In my master's research I've explored an innovative approach to In-Situ Resource Utilization (ISRU) aimed at supporting future lunar settlements. Our research focused on harnessing latent heat thermal energy storage within lunar regolith, addressing critical challenges in energy management on the Moon.''',
+                textAlign: TextAlign.justify,
+              ),
+              SizedBox(height: 12),
+              SelectableText(
+                '''By developing Python-based simulations, we tackled complex heat transfer problems, specifically solving the Stefan problem and general heat equations. To push the boundaries further, we implemented a Physics-Informed Neural Network (PINN), validating its accuracy against classical analytical and numerical solutions. This work bridges traditional computational modeling with modern machine learning, paving the way for sustainable human presence on the lunar surface.''',
+                textAlign: TextAlign.justify,
+              ),
+            ],
+          ),
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('Close'),
+        ),
+      ],
+    ),
+  );
+}
+
+class PortfolioProject {
+  final String owner;
+  final String name;
+  final String? description;
+  final String? language;
+  final String githubUrl;
+  final bool isFork;
+
+  const PortfolioProject({
+    required this.owner,
+    required this.name,
+    required this.githubUrl,
+    this.description,
+    this.language,
+    this.isFork = false,
+  });
+
+  String get summary {
+    final value = description?.trim();
+    if (value == null || value.isEmpty) {
+      return 'Public GitHub repository.';
+    }
+    return value;
+  }
+
+  String get metadata {
+    final parts = <String>[owner];
+    if (language != null && language!.isNotEmpty) {
+      parts.add(language!);
+    }
+    if (isFork) {
+      parts.add('Fork');
+    }
+    return parts.join(' - ');
+  }
+}
+
+const _githubProjects = <PortfolioProject>[
+  PortfolioProject(
+    owner: 'lubacareer',
+    name: 'ast2',
+    description: 'All-in-one Astrology app',
+    language: 'Dart',
+    githubUrl: 'https://github.com/lubacareer/ast2',
+  ),
+  PortfolioProject(
+    owner: 'lubacareer',
+    name: 'Mazilon',
+    description:
+        'Mezilon is a Flutter-based mobile application designed to provide mental health support and personal planning tools.',
+    language: 'Dart',
+    githubUrl: 'https://github.com/lubacareer/Mazilon',
+    isFork: true,
+  ),
+  PortfolioProject(
+    owner: 'lubacareer',
+    name: 'HeatEquationSimulator',
+    description: 'Heat equation and Stefan problem addressed.',
+    language: 'Python',
+    githubUrl: 'https://github.com/lubacareer/HeatEquationSimulator',
+  ),
+  PortfolioProject(
+    owner: 'lubacareer',
+    name: 'portfolio',
+    description: 'My new portfolio website',
+    language: 'Dart',
+    githubUrl: 'https://github.com/lubacareer/portfolio',
+  ),
+  PortfolioProject(
+    owner: 'lubacareer',
+    name: 'ccomp',
+    description: 'A robust C compiler',
+    language: 'C',
+    githubUrl: 'https://github.com/lubacareer/ccomp',
+  ),
+  PortfolioProject(
+    owner: 'lubani',
+    name: 'astro',
+    description: 'An Astrology App',
+    language: 'C++',
+    githubUrl: 'https://github.com/lubani/astro',
+  ),
+  PortfolioProject(
+    owner: 'lubani',
+    name: 'Portfolio',
+    description: 'My personal portfolio source code.',
+    language: 'JavaScript',
+    githubUrl: 'https://github.com/lubani/Portfolio',
+  ),
+  PortfolioProject(
+    owner: 'lubani',
+    name: 'math',
+    description: 'Some Python scripts for mathematical demonstrations',
+    language: 'Python',
+    githubUrl: 'https://github.com/lubani/math',
+  ),
+  PortfolioProject(
+    owner: 'lubani',
+    name: 'scientificProject',
+    language: 'Python',
+    githubUrl: 'https://github.com/lubani/scientificProject',
+  ),
+  PortfolioProject(
+    owner: 'lubani',
+    name: 'HebSum',
+    language: 'Python',
+    githubUrl: 'https://github.com/lubani/HebSum',
+  ),
+  PortfolioProject(
+    owner: 'lubani',
+    name: 'MySoftware',
+    language: 'Python',
+    githubUrl: 'https://github.com/lubani/MySoftware',
+  ),
+  PortfolioProject(
+    owner: 'lubani',
+    name: 'DevOps2412',
+    language: 'Python',
+    githubUrl: 'https://github.com/lubani/DevOps2412',
+  ),
+  PortfolioProject(
+    owner: 'lubani',
+    name: 'hw6',
+    description: 'A repository for the 6th lesson in the DevOps course',
+    language: 'Python',
+    githubUrl: 'https://github.com/lubani/hw6',
+  ),
+  PortfolioProject(
+    owner: 'lubani',
+    name: '2412-first-repo2',
+    githubUrl: 'https://github.com/lubani/2412-first-repo2',
+  ),
+  PortfolioProject(
+    owner: 'lubani',
+    name: 'IRCourse',
+    description: 'Information Retrieval Course',
+    language: 'Python',
+    githubUrl: 'https://github.com/lubani/IRCourse',
+  ),
+  PortfolioProject(
+    owner: 'lubani',
+    name: 'DeepStefan',
+    githubUrl: 'https://github.com/lubani/DeepStefan',
+    isFork: true,
+  ),
+  PortfolioProject(
+    owner: 'lubani',
+    name: 'DjangoMS',
+    language: 'Python',
+    githubUrl: 'https://github.com/lubani/DjangoMS',
+  ),
+  PortfolioProject(
+    owner: 'lubani',
+    name: 'DjangoMSA',
+    description: 'Microservices Website',
+    language: 'Python',
+    githubUrl: 'https://github.com/lubani/DjangoMSA',
+  ),
+  PortfolioProject(
+    owner: 'lubani',
+    name: 'Summarizer-Extension',
+    description: 'Accessability Plugin',
+    language: 'JavaScript',
+    githubUrl: 'https://github.com/lubani/Summarizer-Extension',
+  ),
+  PortfolioProject(
+    owner: 'lubani',
+    name: 'bert-extractive-summarizer',
+    description: 'Easy to use extractive text summarization with BERT',
+    githubUrl: 'https://github.com/lubani/bert-extractive-summarizer',
+    isFork: true,
+  ),
+  PortfolioProject(
+    owner: 'lubani',
+    name: 'HebrewSumy',
+    description: 'A Hebrew Summarizer',
+    language: 'Python',
+    githubUrl: 'https://github.com/lubani/HebrewSumy',
+  ),
+];
+
+void showProjects(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (_) => AlertDialog(
+      backgroundColor: Colors.black,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: const BorderSide(color: Colors.white24),
+      ),
+      insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+      titleTextStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
+        color: Colors.white,
+        fontWeight: FontWeight.w700,
+      ),
+      contentTextStyle: Theme.of(
+        context,
+      ).textTheme.bodyMedium?.copyWith(color: Colors.white70, height: 1.35),
+      title: const Text('Projects'),
+      content: SizedBox(
+        width: 560,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height * 0.72,
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: const [
+                Text(
+                  'Public GitHub repositories from lubacareer and lubani.',
+                  textAlign: TextAlign.justify,
+                ),
+                SizedBox(height: 16),
+                _ProjectOwnerSection(owner: 'lubacareer'),
+                SizedBox(height: 18),
+                _ProjectOwnerSection(owner: 'lubani'),
+              ],
+            ),
+          ),
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('Close'),
+        ),
+      ],
+    ),
+  );
+}
+
+class _ProjectOwnerSection extends StatelessWidget {
+  final String owner;
+
+  const _ProjectOwnerSection({required this.owner});
+
+  @override
+  Widget build(BuildContext context) {
+    final projects = _githubProjects
+        .where((project) => project.owner == owner)
+        .toList();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '$owner (${projects.length})',
+          style: Theme.of(context).textTheme.titleSmall?.copyWith(
+            color: Colors.white,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        const SizedBox(height: 8),
+        for (final project in projects) _ProjectListItem(project: project),
+      ],
+    );
+  }
+}
+
+class _ProjectListItem extends StatelessWidget {
+  final PortfolioProject project;
+
+  const _ProjectListItem({required this.project});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: OutlinedButton(
+        onPressed: () => showProjectDetails(context, project),
+        style: OutlinedButton.styleFrom(
+          foregroundColor: Colors.white,
+          side: const BorderSide(color: Colors.white24),
+          alignment: Alignment.centerLeft,
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Icon(Icons.code, color: Colors.white70, size: 20),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    project.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(
+                      context,
+                    ).textTheme.titleSmall?.copyWith(color: Colors.white),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    project.metadata,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodySmall?.copyWith(color: Colors.white60),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    project.summary,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodySmall?.copyWith(color: Colors.white70),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 8),
+            const Icon(Icons.open_in_new, color: Colors.white54, size: 18),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+void showProjectDetails(BuildContext context, PortfolioProject project) {
+  showDialog(
+    context: context,
+    builder: (_) => AlertDialog(
+      backgroundColor: Colors.black,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: const BorderSide(color: Colors.white24),
+      ),
+      insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+      titleTextStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
+        color: Colors.white,
+        fontWeight: FontWeight.w700,
+      ),
+      contentTextStyle: Theme.of(
+        context,
+      ).textTheme.bodyMedium?.copyWith(color: Colors.white70, height: 1.35),
+      title: Text(project.name),
+      content: SizedBox(
+        width: 520,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                project.metadata,
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(color: Colors.white60),
+              ),
+              const SizedBox(height: 12),
+              SelectableText(project.summary, textAlign: TextAlign.justify),
+              const SizedBox(height: 12),
+              Center(
+                child: OutlinedButton.icon(
+                  onPressed: () => openPublic(project.githubUrl),
+                  icon: const Icon(Icons.link, color: Colors.white70, size: 18),
+                  label: const Text('View on GitHub'),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    side: const BorderSide(color: Colors.white24),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('Close'),
+        ),
+      ],
+    ),
+  );
+}
+
+void showExperience(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (_) => AlertDialog(
+      backgroundColor: Colors.black,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: const BorderSide(color: Colors.white24),
+      ),
+      insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+      titleTextStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
+        color: Colors.white,
+        fontWeight: FontWeight.w700,
+      ),
+      contentTextStyle: Theme.of(
+        context,
+      ).textTheme.bodyMedium?.copyWith(color: Colors.white70, height: 1.35),
+      title: const Text('Experience'),
+      content: SizedBox(
+        width: 520,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: const [
+              SelectableText(
+                '''My formal teaching experience began in 2021 at Achva Academic College, where I led database practice sessions for Information Systems students. In that role, I helped students strengthen their understanding of SQL and normalization through focused exercises and step-by-step guidance. This early position established the foundation for my approach as an educator: combining technical clarity with practical problem-solving.''',
+                textAlign: TextAlign.justify,
+              ),
+              SizedBox(height: 12),
+              SelectableText(
+                '''From 2023 to 2024, I continued this path at Sami Shamoon College, tutoring both individuals and small groups in core Software Engineering subjects such as algorithms, data structures, and object-oriented programming. Alongside that work, from 2023 to 2025 I served at the Aleh Association as both a tutor and transcriber, supporting students with disabilities in computer science and software engineering courses. This role required me to adapt explanations to different learning needs, create accessible learning materials and concise technical summaries, and refine academic content so that it remained clear, accurate, and approachable.''',
+                textAlign: TextAlign.justify,
+              ),
+              SizedBox(height: 12),
+              SelectableText(
+                '''Since 2025, my experience has expanded into several parallel roles. As a tutor at Alut Organization and Ono Academic College, I teach students on the spectrum in computer science and mathematics, with a strong emphasis on hands-on practice and guided exercise solving. In parallel, I work as an instructor at the Cyber Education Centre, where I teach a communication networks course for high-achieving high school students in the Magshimim program. There, I focus on building strong foundations in networking and cybersecurity while making the material concrete through practical work.''',
+                textAlign: TextAlign.justify,
+              ),
+              SizedBox(height: 12),
+              SelectableText(
+                '''Alongside my educational roles, since 2025 I have also been working as a freelance software developer as a registered sole proprietor. I deliver end-to-end projects for private clients, including mobile applications, websites, and backend systems, and I also provide consultation and implementation support in mathematics, algorithms, and software engineering. Taken together, these experiences reflect a professional path built around teaching, accessibility, and software development, with a consistent focus on helping others solve complex technical problems in a practical way.''',
+                textAlign: TextAlign.justify,
+              ),
+            ],
+          ),
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('Close'),
+        ),
+      ],
+    ),
+  );
+}
+
 class HoverTile extends StatefulWidget {
   final String title;
   final String subtitle;
@@ -436,8 +939,12 @@ class _HoverTileState extends State<HoverTile> {
 
   @override
   Widget build(BuildContext context) {
-    final hoverColor = const Color(0xFF7FFFD4).withOpacity(0.18); // aquamarine tint
-    final pressedColor = const Color(0xFFDA70D6).withOpacity(0.28); // orchid tint
+    final hoverColor = const Color(
+      0xFF7FFFD4,
+    ).withOpacity(0.18); // aquamarine tint
+    final pressedColor = const Color(
+      0xFFDA70D6,
+    ).withOpacity(0.28); // orchid tint
 
     return MouseRegion(
       onEnter: (_) => setState(() => _hovered = true),
@@ -448,26 +955,27 @@ class _HoverTileState extends State<HoverTile> {
           color: _pressed
               ? pressedColor
               : _hovered
-                  ? hoverColor
-                  : Colors.black,
+              ? hoverColor
+              : Colors.black,
           border: Border.all(
             color: _pressed
                 ? const Color(0xFFDA70D6).withOpacity(0.6)
                 : _hovered
-                    ? const Color(0xFF7FFFD4).withOpacity(0.6)
-                    : Colors.white24,
+                ? const Color(0xFF7FFFD4).withOpacity(0.6)
+                : Colors.white24,
           ),
           borderRadius: BorderRadius.circular(12),
           boxShadow: _hovered || _pressed
               ? [
                   BoxShadow(
-                    color: (_pressed
-                            ? const Color(0xFFDA70D6)
-                            : const Color(0xFF7FFFD4))
-                        .withOpacity(0.2),
+                    color:
+                        (_pressed
+                                ? const Color(0xFFDA70D6)
+                                : const Color(0xFF7FFFD4))
+                            .withOpacity(0.2),
                     blurRadius: 18,
                     spreadRadius: 1,
-                  )
+                  ),
                 ]
               : null,
         ),
@@ -492,10 +1000,9 @@ class _HoverTileState extends State<HoverTile> {
                       child: Text(
                         widget.title,
                         overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleLarge
-                            ?.copyWith(color: Colors.white),
+                        style: Theme.of(
+                          context,
+                        ).textTheme.titleLarge?.copyWith(color: Colors.white),
                       ),
                     ),
                   ],
@@ -503,15 +1010,20 @@ class _HoverTileState extends State<HoverTile> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(widget.subtitle,
-                        style: const TextStyle(color: Colors.white70)),
+                    Text(
+                      widget.subtitle,
+                      style: const TextStyle(color: Colors.white70),
+                    ),
                     AnimatedOpacity(
                       opacity: _hovered ? 1 : 0,
                       duration: const Duration(milliseconds: 120),
-                      child: const Icon(Icons.open_in_new, color: Colors.white70),
+                      child: const Icon(
+                        Icons.open_in_new,
+                        color: Colors.white70,
+                      ),
                     ),
                   ],
-                )
+                ),
               ],
             ),
           ),
@@ -533,8 +1045,12 @@ class _CvTileState extends State<CvTile> {
   bool _pressed = false;
   @override
   Widget build(BuildContext context) {
-    final hoverColor = const Color(0xFF7FFFD4).withOpacity(0.18); // aquamarine tint
-    final pressedColor = const Color(0xFFDA70D6).withOpacity(0.28); // orchid tint
+    final hoverColor = const Color(
+      0xFF7FFFD4,
+    ).withOpacity(0.18); // aquamarine tint
+    final pressedColor = const Color(
+      0xFFDA70D6,
+    ).withOpacity(0.28); // orchid tint
 
     return MouseRegion(
       onEnter: (_) => setState(() => _hovered = true),
@@ -550,26 +1066,27 @@ class _CvTileState extends State<CvTile> {
             color: _pressed
                 ? pressedColor
                 : _hovered
-                    ? hoverColor
-                    : Colors.black,
+                ? hoverColor
+                : Colors.black,
             border: Border.all(
               color: _pressed
                   ? const Color(0xFFDA70D6).withOpacity(0.6)
                   : _hovered
-                      ? const Color(0xFF7FFFD4).withOpacity(0.6)
-                      : Colors.white24,
+                  ? const Color(0xFF7FFFD4).withOpacity(0.6)
+                  : Colors.white24,
             ),
             borderRadius: BorderRadius.circular(12),
             boxShadow: _hovered || _pressed
                 ? [
                     BoxShadow(
-                      color: (_pressed
-                              ? const Color(0xFFDA70D6)
-                              : const Color(0xFF7FFFD4))
-                          .withOpacity(0.2),
+                      color:
+                          (_pressed
+                                  ? const Color(0xFFDA70D6)
+                                  : const Color(0xFF7FFFD4))
+                              .withOpacity(0.2),
                       blurRadius: 18,
                       spreadRadius: 1,
-                    )
+                    ),
                   ]
                 : null,
           ),
@@ -585,10 +1102,9 @@ class _CvTileState extends State<CvTile> {
                     const SizedBox(width: 8),
                     Text(
                       'CV',
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleLarge
-                          ?.copyWith(color: Colors.white),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.titleLarge?.copyWith(color: Colors.white),
                     ),
                   ],
                 ),
@@ -598,7 +1114,11 @@ class _CvTileState extends State<CvTile> {
                     children: [
                       OutlinedButton.icon(
                         onPressed: () => openPublic('/docs/CV1.pdf'),
-                        icon: const Icon(Icons.description, color: Colors.white70, size: 18),
+                        icon: const Icon(
+                          Icons.description,
+                          color: Colors.white70,
+                          size: 18,
+                        ),
                         label: const Text('English'),
                         style: OutlinedButton.styleFrom(
                           foregroundColor: Colors.white,
@@ -607,7 +1127,11 @@ class _CvTileState extends State<CvTile> {
                       ),
                       OutlinedButton.icon(
                         onPressed: () => openPublic('/docs/CV1heb.pdf'),
-                        icon: const Icon(Icons.description, color: Colors.white70, size: 18),
+                        icon: const Icon(
+                          Icons.description,
+                          color: Colors.white70,
+                          size: 18,
+                        ),
                         label: const Text('Hebrew'),
                         style: OutlinedButton.styleFrom(
                           foregroundColor: Colors.white,
@@ -620,7 +1144,10 @@ class _CvTileState extends State<CvTile> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: const [
-                      Text('Hover to choose', style: TextStyle(color: Colors.white70)),
+                      Text(
+                        'Hover to choose',
+                        style: TextStyle(color: Colors.white70),
+                      ),
                       Icon(Icons.folder_open, color: Colors.white70),
                     ],
                   ),
@@ -646,8 +1173,12 @@ class _CoverLetterTileState extends State<CoverLetterTile> {
 
   @override
   Widget build(BuildContext context) {
-    final hoverColor = const Color(0xFF7FFFD4).withOpacity(0.18); // aquamarine tint
-    final pressedColor = const Color(0xFFDA70D6).withOpacity(0.28); // orchid tint
+    final hoverColor = const Color(
+      0xFF7FFFD4,
+    ).withOpacity(0.18); // aquamarine tint
+    final pressedColor = const Color(
+      0xFFDA70D6,
+    ).withOpacity(0.28); // orchid tint
 
     return MouseRegion(
       onEnter: (_) => setState(() => _hovered = true),
@@ -663,26 +1194,27 @@ class _CoverLetterTileState extends State<CoverLetterTile> {
             color: _pressed
                 ? pressedColor
                 : _hovered
-                    ? hoverColor
-                    : Colors.black,
+                ? hoverColor
+                : Colors.black,
             border: Border.all(
               color: _pressed
                   ? const Color(0xFFDA70D6).withOpacity(0.6)
                   : _hovered
-                      ? const Color(0xFF7FFFD4).withOpacity(0.6)
-                      : Colors.white24,
+                  ? const Color(0xFF7FFFD4).withOpacity(0.6)
+                  : Colors.white24,
             ),
             borderRadius: BorderRadius.circular(12),
             boxShadow: _hovered || _pressed
                 ? [
                     BoxShadow(
-                      color: (_pressed
-                              ? const Color(0xFFDA70D6)
-                              : const Color(0xFF7FFFD4))
-                          .withOpacity(0.2),
+                      color:
+                          (_pressed
+                                  ? const Color(0xFFDA70D6)
+                                  : const Color(0xFF7FFFD4))
+                              .withOpacity(0.2),
                       blurRadius: 18,
                       spreadRadius: 1,
-                    )
+                    ),
                   ]
                 : null,
           ),
@@ -698,10 +1230,9 @@ class _CoverLetterTileState extends State<CoverLetterTile> {
                     const SizedBox(width: 8),
                     Text(
                       'Cover Letter',
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleLarge
-                          ?.copyWith(color: Colors.white),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.titleLarge?.copyWith(color: Colors.white),
                     ),
                   ],
                 ),
@@ -711,7 +1242,11 @@ class _CoverLetterTileState extends State<CoverLetterTile> {
                     children: [
                       OutlinedButton.icon(
                         onPressed: () => openPublic('/docs/CL1.pdf'),
-                        icon: const Icon(Icons.description, color: Colors.white70, size: 18),
+                        icon: const Icon(
+                          Icons.description,
+                          color: Colors.white70,
+                          size: 18,
+                        ),
                         label: const Text('English'),
                         style: OutlinedButton.styleFrom(
                           foregroundColor: Colors.white,
@@ -720,7 +1255,11 @@ class _CoverLetterTileState extends State<CoverLetterTile> {
                       ),
                       OutlinedButton.icon(
                         onPressed: () => openPublic('/docs/CL1heb.pdf'),
-                        icon: const Icon(Icons.description, color: Colors.white70, size: 18),
+                        icon: const Icon(
+                          Icons.description,
+                          color: Colors.white70,
+                          size: 18,
+                        ),
                         label: const Text('Hebrew'),
                         style: OutlinedButton.styleFrom(
                           foregroundColor: Colors.white,
@@ -733,7 +1272,10 @@ class _CoverLetterTileState extends State<CoverLetterTile> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: const [
-                      Text('Hover to choose', style: TextStyle(color: Colors.white70)),
+                      Text(
+                        'Hover to choose',
+                        style: TextStyle(color: Colors.white70),
+                      ),
                       Icon(Icons.folder_open, color: Colors.white70),
                     ],
                   ),
@@ -756,21 +1298,17 @@ void showPlaceholder(BuildContext context, String title) {
         side: const BorderSide(color: Colors.white24),
       ),
       insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-      titleTextStyle: Theme.of(context)
-          .textTheme
-          .titleMedium
-          ?.copyWith(color: Colors.white, fontWeight: FontWeight.w700),
-      contentTextStyle: Theme.of(context)
-          .textTheme
-          .bodyMedium
-          ?.copyWith(color: Colors.white70, height: 1.35),
+      titleTextStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
+        color: Colors.white,
+        fontWeight: FontWeight.w700,
+      ),
+      contentTextStyle: Theme.of(
+        context,
+      ).textTheme.bodyMedium?.copyWith(color: Colors.white70, height: 1.35),
       title: Text(title),
       content: const SizedBox(
         width: 420,
-        child: Text(
-          'Content coming soon.',
-          textAlign: TextAlign.justify,
-        ),
+        child: Text('Content coming soon.', textAlign: TextAlign.justify),
       ),
       actions: [
         TextButton(
