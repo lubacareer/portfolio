@@ -34,6 +34,11 @@ jobs:
           {
             "cleanUrls": true,
             "trailingSlash": false,
+            "git": {
+              "deploymentEnabled": {
+                "vercel": false
+              }
+            },
             "rewrites": [
               { "source": "/assets/(.*)", "destination": "/assets/$1" },
               { "source": "/canvaskit/(.*)", "destination": "/canvaskit/$1" },
