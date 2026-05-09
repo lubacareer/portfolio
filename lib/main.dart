@@ -197,22 +197,24 @@ class PortfolioHome extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     // Top-centered selfie image
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(32),
-                      child: Image.network(
-                        '/images/me2.jpg',
-                        width: 520,
-                        height: 320,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stack) => Container(
-                          width: 520,
-                          height: 320,
-                          alignment: Alignment.center,
-                          color: AppPalette.imageFallback,
-                          child: const Icon(
-                            Icons.person,
-                            color: AppPalette.subtleText,
-                            size: 80,
+                    ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 520),
+                      child: AspectRatio(
+                        aspectRatio: 2048 / 1136,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(32),
+                          child: Image.network(
+                            '/images/meformal.png',
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stack) => Container(
+                              alignment: Alignment.center,
+                              color: AppPalette.imageFallback,
+                              child: const Icon(
+                                Icons.person,
+                                color: AppPalette.subtleText,
+                                size: 80,
+                              ),
+                            ),
                           ),
                         ),
                       ),
@@ -239,19 +241,31 @@ class PortfolioHome extends StatelessWidget {
                         } else {
                           cols = 1; // small screens: single column
                         }
-                        return GridView.count(
-                          crossAxisCount: cols,
-                          mainAxisSpacing: 24,
-                          crossAxisSpacing: 24,
-                          childAspectRatio: 260 / 150,
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          children: tiles
-                              .map(
-                                (t) =>
-                                    SizedBox(width: 260, height: 150, child: t),
-                              )
-                              .toList(),
+                        const spacing = 24.0;
+                        const tileHeight = 150.0;
+                        final tileWidth = (w - (spacing * (cols - 1))) / cols;
+                        final documentTileWidth = cols >= 4
+                            ? (w - tileWidth - (spacing * 2)) / 2
+                            : cols == 2
+                            ? w
+                            : tileWidth;
+
+                        return Wrap(
+                          alignment: WrapAlignment.center,
+                          spacing: spacing,
+                          runSpacing: spacing,
+                          children: tiles.map((tile) {
+                            final isDocumentTile =
+                                tile is CvTile || tile is CoverLetterTile;
+
+                            return SizedBox(
+                              width: isDocumentTile
+                                  ? documentTileWidth
+                                  : tileWidth,
+                              height: tileHeight,
+                              child: tile,
+                            );
+                          }).toList(),
                         );
                       },
                     ),
@@ -1185,7 +1199,7 @@ class _CvTileState extends State<CvTile> {
                             color: AppPalette.mutedText,
                             size: 18,
                           ),
-                          label: const Text('English'),
+                          label: const Text('English', softWrap: false),
                           style: OutlinedButton.styleFrom(
                             foregroundColor: AppPalette.primaryDeep,
                             side: const BorderSide(color: AppPalette.border),
@@ -1201,7 +1215,7 @@ class _CvTileState extends State<CvTile> {
                             color: AppPalette.mutedText,
                             size: 18,
                           ),
-                          label: const Text('Hebrew'),
+                          label: const Text('Hebrew', softWrap: false),
                           style: OutlinedButton.styleFrom(
                             foregroundColor: AppPalette.primaryDeep,
                             side: const BorderSide(color: AppPalette.border),
@@ -1300,7 +1314,7 @@ class _CoverLetterTileState extends State<CoverLetterTile> {
                             color: AppPalette.mutedText,
                             size: 18,
                           ),
-                          label: const Text('English'),
+                          label: const Text('English', softWrap: false),
                           style: OutlinedButton.styleFrom(
                             foregroundColor: AppPalette.primaryDeep,
                             side: const BorderSide(color: AppPalette.border),
@@ -1316,7 +1330,7 @@ class _CoverLetterTileState extends State<CoverLetterTile> {
                             color: AppPalette.mutedText,
                             size: 18,
                           ),
-                          label: const Text('Hebrew'),
+                          label: const Text('Hebrew', softWrap: false),
                           style: OutlinedButton.styleFrom(
                             foregroundColor: AppPalette.primaryDeep,
                             side: const BorderSide(color: AppPalette.border),
