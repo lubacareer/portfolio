@@ -1,6 +1,70 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+class AppPalette {
+  static const background = Color(0xFFEAFBF2);
+  static const backgroundWarm = Color(0xFFFFFAEA);
+  static const backgroundCool = Color(0xFFDFF7FF);
+  static const surface = Color(0xFFF8FFF9);
+  static const tileSurface = Color(0xF2FFFFFF);
+  static const tileHover = Color(0xFFE0FFF3);
+  static const tilePressed = Color(0xFFFFECE7);
+  static const primary = Color(0xFF0EAD8B);
+  static const primaryDeep = Color(0xFF103C36);
+  static const accent = Color(0xFFFF7F6E);
+  static const text = Color(0xFF123B35);
+  static const mutedText = Color(0xFF4C7068);
+  static const subtleText = Color(0xFF78918A);
+  static const border = Color(0x6637C8A2);
+  static const hoverBorder = Color(0x9937C8A2);
+  static const pressedBorder = Color(0x99FF7F6E);
+  static const primaryGlow = Color(0x3337C8A2);
+  static const accentGlow = Color(0x33FF7F6E);
+  static const tileShadow = Color(0x1F0EAD8B);
+  static const imageFallback = Color(0xFFE3F8EF);
+  static const onAccent = Color(0xFFFFFFFF);
+}
+
+const _dialogRadius = 24.0;
+const _tileRadius = 22.0;
+const _buttonRadius = 14.0;
+
+Color _tileFill({required bool hovered, required bool pressed}) {
+  if (pressed) {
+    return AppPalette.tilePressed;
+  }
+  if (hovered) {
+    return AppPalette.tileHover;
+  }
+  return AppPalette.tileSurface;
+}
+
+Color _tileBorder({required bool hovered, required bool pressed}) {
+  if (pressed) {
+    return AppPalette.pressedBorder;
+  }
+  if (hovered) {
+    return AppPalette.hoverBorder;
+  }
+  return AppPalette.border;
+}
+
+List<BoxShadow> _tileShadows({required bool hovered, required bool pressed}) {
+  return [
+    const BoxShadow(
+      color: AppPalette.tileShadow,
+      blurRadius: 22,
+      offset: Offset(0, 10),
+    ),
+    if (hovered || pressed)
+      BoxShadow(
+        color: pressed ? AppPalette.accentGlow : AppPalette.primaryGlow,
+        blurRadius: 22,
+        spreadRadius: 1,
+      ),
+  ];
+}
+
 void main() {
   runApp(const PortfolioApp());
 }
@@ -13,15 +77,31 @@ class PortfolioApp extends StatelessWidget {
       title: "Luba's Portfolio",
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        brightness: Brightness.dark,
-        scaffoldBackgroundColor: Colors.black,
-        colorScheme: const ColorScheme.dark(
-          surface: Colors.black,
-          primary: Colors.white,
-          onPrimary: Colors.black,
+        brightness: Brightness.light,
+        scaffoldBackgroundColor: AppPalette.background,
+        colorScheme: const ColorScheme.light(
+          surface: AppPalette.surface,
+          primary: AppPalette.primary,
+          onPrimary: AppPalette.onAccent,
+          secondary: AppPalette.accent,
+          onSecondary: AppPalette.primaryDeep,
+          onSurface: AppPalette.text,
+          outline: AppPalette.border,
         ),
         fontFamily: 'PlaypenSansThai',
         useMaterial3: true,
+        textButtonTheme: TextButtonThemeData(
+          style: TextButton.styleFrom(foregroundColor: AppPalette.primaryDeep),
+        ),
+        outlinedButtonTheme: OutlinedButtonThemeData(
+          style: OutlinedButton.styleFrom(
+            foregroundColor: AppPalette.primaryDeep,
+            side: const BorderSide(color: AppPalette.border),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(_buttonRadius),
+            ),
+          ),
+        ),
       ),
       home: const PortfolioHome(),
     );
@@ -95,75 +175,88 @@ class PortfolioHome extends StatelessWidget {
     ];
 
     return Scaffold(
-      body: Center(
-        child: SingleChildScrollView(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 1100),
-            child: Padding(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  // Top-centered selfie image
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(32),
-                    child: Image.network(
-                      '/images/me2.jpg',
-                      width: 520,
-                      height: 320,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stack) => Container(
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              AppPalette.background,
+              AppPalette.backgroundWarm,
+              AppPalette.backgroundCool,
+            ],
+          ),
+        ),
+        child: Center(
+          child: SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 1100),
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    // Top-centered selfie image
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(32),
+                      child: Image.network(
+                        '/images/me2.jpg',
                         width: 520,
                         height: 320,
-                        alignment: Alignment.center,
-                        color: Colors.white12,
-                        child: const Icon(
-                          Icons.person,
-                          color: Colors.white54,
-                          size: 80,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stack) => Container(
+                          width: 520,
+                          height: 320,
+                          alignment: Alignment.center,
+                          color: AppPalette.imageFallback,
+                          child: const Icon(
+                            Icons.person,
+                            color: AppPalette.subtleText,
+                            size: 80,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    "Luba's Portfolio",
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 32,
-                      fontWeight: FontWeight.w700,
+                    const SizedBox(height: 16),
+                    Text(
+                      "Luba's Portfolio",
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: AppPalette.primaryDeep,
+                        fontSize: 32,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 24),
-                  LayoutBuilder(
-                    builder: (context, constraints) {
-                      final w = constraints.maxWidth;
-                      int cols;
-                      if (w >= 1100) {
-                        cols = 4; // wide screens: 4 per row (even)
-                      } else if (w >= 600) {
-                        cols = 2; // medium screens: 2 per row (even)
-                      } else {
-                        cols = 1; // small screens: single column
-                      }
-                      return GridView.count(
-                        crossAxisCount: cols,
-                        mainAxisSpacing: 24,
-                        crossAxisSpacing: 24,
-                        childAspectRatio: 260 / 150,
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        children: tiles
-                            .map(
-                              (t) =>
-                                  SizedBox(width: 260, height: 150, child: t),
-                            )
-                            .toList(),
-                      );
-                    },
-                  ),
-                ],
+                    const SizedBox(height: 24),
+                    LayoutBuilder(
+                      builder: (context, constraints) {
+                        final w = constraints.maxWidth;
+                        int cols;
+                        if (w >= 1000) {
+                          cols = 4; // wide screens: 4 per row (even)
+                        } else if (w >= 600) {
+                          cols = 2; // medium screens: 2 per row (even)
+                        } else {
+                          cols = 1; // small screens: single column
+                        }
+                        return GridView.count(
+                          crossAxisCount: cols,
+                          mainAxisSpacing: 24,
+                          crossAxisSpacing: 24,
+                          childAspectRatio: 260 / 150,
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          children: tiles
+                              .map(
+                                (t) =>
+                                    SizedBox(width: 260, height: 150, child: t),
+                              )
+                              .toList(),
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -189,19 +282,20 @@ void showContact(BuildContext context) {
   showDialog(
     context: context,
     builder: (_) => AlertDialog(
-      backgroundColor: Colors.black,
+      backgroundColor: AppPalette.surface,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-        side: const BorderSide(color: Colors.white24),
+        borderRadius: BorderRadius.circular(_dialogRadius),
+        side: const BorderSide(color: AppPalette.border),
       ),
       insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
       titleTextStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
-        color: Colors.white,
+        color: AppPalette.text,
         fontWeight: FontWeight.w700,
       ),
-      contentTextStyle: Theme.of(
-        context,
-      ).textTheme.bodyMedium?.copyWith(color: Colors.white70, height: 1.35),
+      contentTextStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
+        color: AppPalette.mutedText,
+        height: 1.35,
+      ),
       title: const Text('Contact Me'),
       content: SizedBox(
         width: 480,
@@ -219,7 +313,7 @@ void showContact(BuildContext context) {
                 email,
                 style: Theme.of(
                   context,
-                ).textTheme.titleSmall?.copyWith(color: Colors.white),
+                ).textTheme.titleSmall?.copyWith(color: AppPalette.text),
               ),
               const SizedBox(height: 8),
             ],
@@ -233,13 +327,13 @@ void showContact(BuildContext context) {
                     onPressed: () => openEmail(email),
                     icon: const Icon(
                       Icons.email_outlined,
-                      color: Colors.white70,
+                      color: AppPalette.mutedText,
                       size: 18,
                     ),
                     label: Text(email),
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      side: const BorderSide(color: Colors.white24),
+                      foregroundColor: AppPalette.primaryDeep,
+                      side: const BorderSide(color: AppPalette.border),
                     ),
                   ),
               ],
@@ -261,19 +355,20 @@ void showIntro(BuildContext context) {
   showDialog(
     context: context,
     builder: (_) => AlertDialog(
-      backgroundColor: Colors.black,
+      backgroundColor: AppPalette.surface,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-        side: const BorderSide(color: Colors.white24),
+        borderRadius: BorderRadius.circular(_dialogRadius),
+        side: const BorderSide(color: AppPalette.border),
       ),
       insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
       titleTextStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
-        color: Colors.white,
+        color: AppPalette.text,
         fontWeight: FontWeight.w700,
       ),
-      contentTextStyle: Theme.of(
-        context,
-      ).textTheme.bodyMedium?.copyWith(color: Colors.white70, height: 1.35),
+      contentTextStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
+        color: AppPalette.mutedText,
+        height: 1.35,
+      ),
       title: const Text('Introduction'),
       content: SizedBox(
         width: 520,
@@ -308,19 +403,20 @@ void showSkills(BuildContext context) {
   showDialog(
     context: context,
     builder: (_) => AlertDialog(
-      backgroundColor: Colors.black,
+      backgroundColor: AppPalette.surface,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-        side: const BorderSide(color: Colors.white24),
+        borderRadius: BorderRadius.circular(_dialogRadius),
+        side: const BorderSide(color: AppPalette.border),
       ),
       insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
       titleTextStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
-        color: Colors.white,
+        color: AppPalette.text,
         fontWeight: FontWeight.w700,
       ),
-      contentTextStyle: Theme.of(
-        context,
-      ).textTheme.bodyMedium?.copyWith(color: Colors.white70, height: 1.35),
+      contentTextStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
+        color: AppPalette.mutedText,
+        height: 1.35,
+      ),
       title: const Text('Skills'),
       content: SizedBox(
         width: 520,
@@ -375,19 +471,20 @@ void showEducation(BuildContext context) {
   showDialog(
     context: context,
     builder: (_) => AlertDialog(
-      backgroundColor: Colors.black,
+      backgroundColor: AppPalette.surface,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-        side: const BorderSide(color: Colors.white24),
+        borderRadius: BorderRadius.circular(_dialogRadius),
+        side: const BorderSide(color: AppPalette.border),
       ),
       insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
       titleTextStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
-        color: Colors.white,
+        color: AppPalette.text,
         fontWeight: FontWeight.w700,
       ),
-      contentTextStyle: Theme.of(
-        context,
-      ).textTheme.bodyMedium?.copyWith(color: Colors.white70, height: 1.35),
+      contentTextStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
+        color: AppPalette.mutedText,
+        height: 1.35,
+      ),
       title: const Text('Education'),
       content: SizedBox(
         width: 520,
@@ -432,19 +529,20 @@ void showResearch(BuildContext context) {
   showDialog(
     context: context,
     builder: (_) => AlertDialog(
-      backgroundColor: Colors.black,
+      backgroundColor: AppPalette.surface,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-        side: const BorderSide(color: Colors.white24),
+        borderRadius: BorderRadius.circular(_dialogRadius),
+        side: const BorderSide(color: AppPalette.border),
       ),
       insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
       titleTextStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
-        color: Colors.white,
+        color: AppPalette.text,
         fontWeight: FontWeight.w700,
       ),
-      contentTextStyle: Theme.of(
-        context,
-      ).textTheme.bodyMedium?.copyWith(color: Colors.white70, height: 1.35),
+      contentTextStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
+        color: AppPalette.mutedText,
+        height: 1.35,
+      ),
       title: const Text('Research'),
       content: SizedBox(
         width: 520,
@@ -660,19 +758,20 @@ void showProjects(BuildContext context) {
   showDialog(
     context: context,
     builder: (_) => AlertDialog(
-      backgroundColor: Colors.black,
+      backgroundColor: AppPalette.surface,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-        side: const BorderSide(color: Colors.white24),
+        borderRadius: BorderRadius.circular(_dialogRadius),
+        side: const BorderSide(color: AppPalette.border),
       ),
       insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
       titleTextStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
-        color: Colors.white,
+        color: AppPalette.text,
         fontWeight: FontWeight.w700,
       ),
-      contentTextStyle: Theme.of(
-        context,
-      ).textTheme.bodyMedium?.copyWith(color: Colors.white70, height: 1.35),
+      contentTextStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
+        color: AppPalette.mutedText,
+        height: 1.35,
+      ),
       title: const Text('Projects'),
       content: SizedBox(
         width: 560,
@@ -725,7 +824,7 @@ class _ProjectOwnerSection extends StatelessWidget {
         Text(
           '$owner (${projects.length})',
           style: Theme.of(context).textTheme.titleSmall?.copyWith(
-            color: Colors.white,
+            color: AppPalette.text,
             fontWeight: FontWeight.w700,
           ),
         ),
@@ -748,16 +847,18 @@ class _ProjectListItem extends StatelessWidget {
       child: OutlinedButton(
         onPressed: () => showProjectDetails(context, project),
         style: OutlinedButton.styleFrom(
-          foregroundColor: Colors.white,
-          side: const BorderSide(color: Colors.white24),
+          foregroundColor: AppPalette.primaryDeep,
+          side: const BorderSide(color: AppPalette.border),
           alignment: Alignment.centerLeft,
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(_buttonRadius),
+          ),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Icon(Icons.code, color: Colors.white70, size: 20),
+            const Icon(Icons.code, color: AppPalette.mutedText, size: 20),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
@@ -769,31 +870,35 @@ class _ProjectListItem extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(
                       context,
-                    ).textTheme.titleSmall?.copyWith(color: Colors.white),
+                    ).textTheme.titleSmall?.copyWith(color: AppPalette.text),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     project.metadata,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: Theme.of(
-                      context,
-                    ).textTheme.bodySmall?.copyWith(color: Colors.white60),
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: AppPalette.subtleText,
+                    ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     project.summary,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: Theme.of(
-                      context,
-                    ).textTheme.bodySmall?.copyWith(color: Colors.white70),
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: AppPalette.mutedText,
+                    ),
                   ),
                 ],
               ),
             ),
             const SizedBox(width: 8),
-            const Icon(Icons.open_in_new, color: Colors.white54, size: 18),
+            const Icon(
+              Icons.open_in_new,
+              color: AppPalette.subtleText,
+              size: 18,
+            ),
           ],
         ),
       ),
@@ -805,19 +910,20 @@ void showProjectDetails(BuildContext context, PortfolioProject project) {
   showDialog(
     context: context,
     builder: (_) => AlertDialog(
-      backgroundColor: Colors.black,
+      backgroundColor: AppPalette.surface,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-        side: const BorderSide(color: Colors.white24),
+        borderRadius: BorderRadius.circular(_dialogRadius),
+        side: const BorderSide(color: AppPalette.border),
       ),
       insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
       titleTextStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
-        color: Colors.white,
+        color: AppPalette.text,
         fontWeight: FontWeight.w700,
       ),
-      contentTextStyle: Theme.of(
-        context,
-      ).textTheme.bodyMedium?.copyWith(color: Colors.white70, height: 1.35),
+      contentTextStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
+        color: AppPalette.mutedText,
+        height: 1.35,
+      ),
       title: Text(project.name),
       content: SizedBox(
         width: 520,
@@ -829,7 +935,7 @@ void showProjectDetails(BuildContext context, PortfolioProject project) {
                 project.metadata,
                 style: Theme.of(
                   context,
-                ).textTheme.bodySmall?.copyWith(color: Colors.white60),
+                ).textTheme.bodySmall?.copyWith(color: AppPalette.subtleText),
               ),
               const SizedBox(height: 12),
               SelectableText(project.summary, textAlign: TextAlign.justify),
@@ -837,11 +943,15 @@ void showProjectDetails(BuildContext context, PortfolioProject project) {
               Center(
                 child: OutlinedButton.icon(
                   onPressed: () => openPublic(project.githubUrl),
-                  icon: const Icon(Icons.link, color: Colors.white70, size: 18),
+                  icon: const Icon(
+                    Icons.link,
+                    color: AppPalette.mutedText,
+                    size: 18,
+                  ),
                   label: const Text('View on GitHub'),
                   style: OutlinedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    side: const BorderSide(color: Colors.white24),
+                    foregroundColor: AppPalette.primaryDeep,
+                    side: const BorderSide(color: AppPalette.border),
                   ),
                 ),
               ),
@@ -863,19 +973,20 @@ void showExperience(BuildContext context) {
   showDialog(
     context: context,
     builder: (_) => AlertDialog(
-      backgroundColor: Colors.black,
+      backgroundColor: AppPalette.surface,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-        side: const BorderSide(color: Colors.white24),
+        borderRadius: BorderRadius.circular(_dialogRadius),
+        side: const BorderSide(color: AppPalette.border),
       ),
       insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
       titleTextStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
-        color: Colors.white,
+        color: AppPalette.text,
         fontWeight: FontWeight.w700,
       ),
-      contentTextStyle: Theme.of(
-        context,
-      ).textTheme.bodyMedium?.copyWith(color: Colors.white70, height: 1.35),
+      contentTextStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
+        color: AppPalette.mutedText,
+        height: 1.35,
+      ),
       title: const Text('Experience'),
       content: SizedBox(
         width: 520,
@@ -939,51 +1050,24 @@ class _HoverTileState extends State<HoverTile> {
 
   @override
   Widget build(BuildContext context) {
-    final hoverColor = const Color(
-      0xFF7FFFD4,
-    ).withOpacity(0.18); // aquamarine tint
-    final pressedColor = const Color(
-      0xFFDA70D6,
-    ).withOpacity(0.28); // orchid tint
-
     return MouseRegion(
       onEnter: (_) => setState(() => _hovered = true),
       onExit: (_) => setState(() => _hovered = false),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 150),
         decoration: BoxDecoration(
-          color: _pressed
-              ? pressedColor
-              : _hovered
-              ? hoverColor
-              : Colors.black,
+          color: _tileFill(hovered: _hovered, pressed: _pressed),
           border: Border.all(
-            color: _pressed
-                ? const Color(0xFFDA70D6).withOpacity(0.6)
-                : _hovered
-                ? const Color(0xFF7FFFD4).withOpacity(0.6)
-                : Colors.white24,
+            color: _tileBorder(hovered: _hovered, pressed: _pressed),
           ),
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: _hovered || _pressed
-              ? [
-                  BoxShadow(
-                    color:
-                        (_pressed
-                                ? const Color(0xFFDA70D6)
-                                : const Color(0xFF7FFFD4))
-                            .withOpacity(0.2),
-                    blurRadius: 18,
-                    spreadRadius: 1,
-                  ),
-                ]
-              : null,
+          borderRadius: BorderRadius.circular(_tileRadius),
+          boxShadow: _tileShadows(hovered: _hovered, pressed: _pressed),
         ),
         child: InkWell(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(_tileRadius),
           onHighlightChanged: (v) => setState(() => _pressed = v),
           onTap: widget.onTap,
-          splashColor: const Color(0xFFDA70D6).withOpacity(0.2),
+          splashColor: AppPalette.accentGlow,
           highlightColor: Colors.transparent,
           child: Padding(
             padding: const EdgeInsets.all(16),
@@ -994,15 +1078,15 @@ class _HoverTileState extends State<HoverTile> {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Icon(widget.icon, color: Colors.white70),
+                    Icon(widget.icon, color: AppPalette.mutedText),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
                         widget.title,
                         overflow: TextOverflow.ellipsis,
-                        style: Theme.of(
-                          context,
-                        ).textTheme.titleLarge?.copyWith(color: Colors.white),
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          color: AppPalette.text,
+                        ),
                       ),
                     ),
                   ],
@@ -1010,16 +1094,21 @@ class _HoverTileState extends State<HoverTile> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      widget.subtitle,
-                      style: const TextStyle(color: Colors.white70),
+                    Expanded(
+                      child: Text(
+                        widget.subtitle,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(color: AppPalette.mutedText),
+                      ),
                     ),
+                    const SizedBox(width: 8),
                     AnimatedOpacity(
                       opacity: _hovered ? 1 : 0,
                       duration: const Duration(milliseconds: 120),
                       child: const Icon(
                         Icons.open_in_new,
-                        color: Colors.white70,
+                        color: AppPalette.mutedText,
                       ),
                     ),
                   ],
@@ -1045,13 +1134,6 @@ class _CvTileState extends State<CvTile> {
   bool _pressed = false;
   @override
   Widget build(BuildContext context) {
-    final hoverColor = const Color(
-      0xFF7FFFD4,
-    ).withOpacity(0.18); // aquamarine tint
-    final pressedColor = const Color(
-      0xFFDA70D6,
-    ).withOpacity(0.28); // orchid tint
-
     return MouseRegion(
       onEnter: (_) => setState(() => _hovered = true),
       onExit: (_) => setState(() => _hovered = false),
@@ -1063,32 +1145,12 @@ class _CvTileState extends State<CvTile> {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 150),
           decoration: BoxDecoration(
-            color: _pressed
-                ? pressedColor
-                : _hovered
-                ? hoverColor
-                : Colors.black,
+            color: _tileFill(hovered: _hovered, pressed: _pressed),
             border: Border.all(
-              color: _pressed
-                  ? const Color(0xFFDA70D6).withOpacity(0.6)
-                  : _hovered
-                  ? const Color(0xFF7FFFD4).withOpacity(0.6)
-                  : Colors.white24,
+              color: _tileBorder(hovered: _hovered, pressed: _pressed),
             ),
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: _hovered || _pressed
-                ? [
-                    BoxShadow(
-                      color:
-                          (_pressed
-                                  ? const Color(0xFFDA70D6)
-                                  : const Color(0xFF7FFFD4))
-                              .withOpacity(0.2),
-                      blurRadius: 18,
-                      spreadRadius: 1,
-                    ),
-                  ]
-                : null,
+            borderRadius: BorderRadius.circular(_tileRadius),
+            boxShadow: _tileShadows(hovered: _hovered, pressed: _pressed),
           ),
           child: Padding(
             padding: const EdgeInsets.all(16),
@@ -1098,13 +1160,16 @@ class _CvTileState extends State<CvTile> {
               children: [
                 Row(
                   children: [
-                    const Icon(Icons.picture_as_pdf, color: Colors.white70),
+                    const Icon(
+                      Icons.picture_as_pdf,
+                      color: AppPalette.mutedText,
+                    ),
                     const SizedBox(width: 8),
                     Text(
                       'CV',
                       style: Theme.of(
                         context,
-                      ).textTheme.titleLarge?.copyWith(color: Colors.white),
+                      ).textTheme.titleLarge?.copyWith(color: AppPalette.text),
                     ),
                   ],
                 ),
@@ -1112,30 +1177,35 @@ class _CvTileState extends State<CvTile> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      OutlinedButton.icon(
-                        onPressed: () => openPublic('/docs/CV1.pdf'),
-                        icon: const Icon(
-                          Icons.description,
-                          color: Colors.white70,
-                          size: 18,
-                        ),
-                        label: const Text('English'),
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor: Colors.white,
-                          side: const BorderSide(color: Colors.white24),
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          onPressed: () => openPublic('/docs/CV1.pdf'),
+                          icon: const Icon(
+                            Icons.description,
+                            color: AppPalette.mutedText,
+                            size: 18,
+                          ),
+                          label: const Text('English'),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: AppPalette.primaryDeep,
+                            side: const BorderSide(color: AppPalette.border),
+                          ),
                         ),
                       ),
-                      OutlinedButton.icon(
-                        onPressed: () => openPublic('/docs/CV1heb.pdf'),
-                        icon: const Icon(
-                          Icons.description,
-                          color: Colors.white70,
-                          size: 18,
-                        ),
-                        label: const Text('Hebrew'),
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor: Colors.white,
-                          side: const BorderSide(color: Colors.white24),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          onPressed: () => openPublic('/docs/CV1heb.pdf'),
+                          icon: const Icon(
+                            Icons.description,
+                            color: AppPalette.mutedText,
+                            size: 18,
+                          ),
+                          label: const Text('Hebrew'),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: AppPalette.primaryDeep,
+                            side: const BorderSide(color: AppPalette.border),
+                          ),
                         ),
                       ),
                     ],
@@ -1144,11 +1214,16 @@ class _CvTileState extends State<CvTile> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: const [
-                      Text(
-                        'Hover to choose',
-                        style: TextStyle(color: Colors.white70),
+                      Expanded(
+                        child: Text(
+                          'Hover to choose',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(color: AppPalette.mutedText),
+                        ),
                       ),
-                      Icon(Icons.folder_open, color: Colors.white70),
+                      SizedBox(width: 8),
+                      Icon(Icons.folder_open, color: AppPalette.mutedText),
                     ],
                   ),
               ],
@@ -1173,13 +1248,6 @@ class _CoverLetterTileState extends State<CoverLetterTile> {
 
   @override
   Widget build(BuildContext context) {
-    final hoverColor = const Color(
-      0xFF7FFFD4,
-    ).withOpacity(0.18); // aquamarine tint
-    final pressedColor = const Color(
-      0xFFDA70D6,
-    ).withOpacity(0.28); // orchid tint
-
     return MouseRegion(
       onEnter: (_) => setState(() => _hovered = true),
       onExit: (_) => setState(() => _hovered = false),
@@ -1191,32 +1259,12 @@ class _CoverLetterTileState extends State<CoverLetterTile> {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 150),
           decoration: BoxDecoration(
-            color: _pressed
-                ? pressedColor
-                : _hovered
-                ? hoverColor
-                : Colors.black,
+            color: _tileFill(hovered: _hovered, pressed: _pressed),
             border: Border.all(
-              color: _pressed
-                  ? const Color(0xFFDA70D6).withOpacity(0.6)
-                  : _hovered
-                  ? const Color(0xFF7FFFD4).withOpacity(0.6)
-                  : Colors.white24,
+              color: _tileBorder(hovered: _hovered, pressed: _pressed),
             ),
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: _hovered || _pressed
-                ? [
-                    BoxShadow(
-                      color:
-                          (_pressed
-                                  ? const Color(0xFFDA70D6)
-                                  : const Color(0xFF7FFFD4))
-                              .withOpacity(0.2),
-                      blurRadius: 18,
-                      spreadRadius: 1,
-                    ),
-                  ]
-                : null,
+            borderRadius: BorderRadius.circular(_tileRadius),
+            boxShadow: _tileShadows(hovered: _hovered, pressed: _pressed),
           ),
           child: Padding(
             padding: const EdgeInsets.all(16),
@@ -1226,13 +1274,17 @@ class _CoverLetterTileState extends State<CoverLetterTile> {
               children: [
                 Row(
                   children: [
-                    const Icon(Icons.edit_note, color: Colors.white70),
+                    const Icon(Icons.edit_note, color: AppPalette.mutedText),
                     const SizedBox(width: 8),
-                    Text(
-                      'Cover Letter',
-                      style: Theme.of(
-                        context,
-                      ).textTheme.titleLarge?.copyWith(color: Colors.white),
+                    Expanded(
+                      child: Text(
+                        'Cover Letter',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          color: AppPalette.text,
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -1240,30 +1292,35 @@ class _CoverLetterTileState extends State<CoverLetterTile> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      OutlinedButton.icon(
-                        onPressed: () => openPublic('/docs/CL1.pdf'),
-                        icon: const Icon(
-                          Icons.description,
-                          color: Colors.white70,
-                          size: 18,
-                        ),
-                        label: const Text('English'),
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor: Colors.white,
-                          side: const BorderSide(color: Colors.white24),
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          onPressed: () => openPublic('/docs/CL1.pdf'),
+                          icon: const Icon(
+                            Icons.description,
+                            color: AppPalette.mutedText,
+                            size: 18,
+                          ),
+                          label: const Text('English'),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: AppPalette.primaryDeep,
+                            side: const BorderSide(color: AppPalette.border),
+                          ),
                         ),
                       ),
-                      OutlinedButton.icon(
-                        onPressed: () => openPublic('/docs/CL1heb.pdf'),
-                        icon: const Icon(
-                          Icons.description,
-                          color: Colors.white70,
-                          size: 18,
-                        ),
-                        label: const Text('Hebrew'),
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor: Colors.white,
-                          side: const BorderSide(color: Colors.white24),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          onPressed: () => openPublic('/docs/CL1heb.pdf'),
+                          icon: const Icon(
+                            Icons.description,
+                            color: AppPalette.mutedText,
+                            size: 18,
+                          ),
+                          label: const Text('Hebrew'),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: AppPalette.primaryDeep,
+                            side: const BorderSide(color: AppPalette.border),
+                          ),
                         ),
                       ),
                     ],
@@ -1272,11 +1329,16 @@ class _CoverLetterTileState extends State<CoverLetterTile> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: const [
-                      Text(
-                        'Hover to choose',
-                        style: TextStyle(color: Colors.white70),
+                      Expanded(
+                        child: Text(
+                          'Hover to choose',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(color: AppPalette.mutedText),
+                        ),
                       ),
-                      Icon(Icons.folder_open, color: Colors.white70),
+                      SizedBox(width: 8),
+                      Icon(Icons.folder_open, color: AppPalette.mutedText),
                     ],
                   ),
               ],
@@ -1292,19 +1354,20 @@ void showPlaceholder(BuildContext context, String title) {
   showDialog(
     context: context,
     builder: (_) => AlertDialog(
-      backgroundColor: Colors.black,
+      backgroundColor: AppPalette.surface,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-        side: const BorderSide(color: Colors.white24),
+        borderRadius: BorderRadius.circular(_dialogRadius),
+        side: const BorderSide(color: AppPalette.border),
       ),
       insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
       titleTextStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
-        color: Colors.white,
+        color: AppPalette.text,
         fontWeight: FontWeight.w700,
       ),
-      contentTextStyle: Theme.of(
-        context,
-      ).textTheme.bodyMedium?.copyWith(color: Colors.white70, height: 1.35),
+      contentTextStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
+        color: AppPalette.mutedText,
+        height: 1.35,
+      ),
       title: Text(title),
       content: const SizedBox(
         width: 420,
