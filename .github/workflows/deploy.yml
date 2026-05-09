@@ -4,6 +4,9 @@ on:
   push:
     branches: [ main ]
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -35,4 +38,3 @@ jobs:
           publish_branch: vercel
           publish_dir: build/web
           force_orphan: true
-
