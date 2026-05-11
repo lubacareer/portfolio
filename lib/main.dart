@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AppPalette {
@@ -130,8 +130,8 @@ class _PortfolioAppState extends State<PortfolioApp> {
   Widget build(BuildContext context) {
     final title = _localized(
       _language,
-      english: "Luba's Portfolio",
-      hebrew: 'הפורטפוליו של לובה',
+      english: "Luba Ira Korlat",
+      hebrew: 'לובה אירה קורלט',
     );
 
     return MaterialApp(
@@ -291,8 +291,8 @@ class PortfolioHome extends StatelessWidget {
                     Text(
                       _localized(
                         language,
-                        english: "Luba's Portfolio",
-                        hebrew: 'הפורטפוליו של לובה',
+                        english: "Luba Ira Korlat",
+                        hebrew: 'לובה אירה קורלט',
                       ),
                       textAlign: TextAlign.center,
                       style: const TextStyle(
