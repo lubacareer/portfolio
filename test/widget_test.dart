@@ -7,11 +7,20 @@
 
 import 'dart:ui';
 
+import 'package:flutter/material.dart' as material;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/widgets.dart' as widgets;
 import 'package:port/main.dart';
 
 void main() {
+  Finder selectableTextContaining(String value) {
+    return find.byWidgetPredicate(
+      (widget) =>
+          widget is material.SelectableText &&
+          (widget.data?.contains(value) ?? false),
+    );
+  }
+
   Future<void> pumpPortfolio(WidgetTester tester) async {
     tester.view.physicalSize = const Size(1400, 1200);
     tester.view.devicePixelRatio = 1;
@@ -28,6 +37,8 @@ void main() {
     expect(find.text('CV'), findsOneWidget);
     expect(find.text('Introduction'), findsOneWidget);
     expect(find.text('Education'), findsOneWidget);
+    expect(find.text('English'), findsOneWidget);
+    expect(find.text('עברית'), findsOneWidget);
 
     final heroImage = tester.widget<widgets.Image>(
       find.byType(widgets.Image).first,
@@ -51,7 +62,7 @@ void main() {
     await tester.tap(find.text('CV'));
     await tester.pumpAndSettle();
 
-    expect(find.text('English'), findsOneWidget);
+    expect(find.text('English'), findsWidgets);
     expect(find.text('Hebrew'), findsOneWidget);
 
     await tester.ensureVisible(find.text('Cover Letter'));
@@ -110,4 +121,68 @@ void main() {
       }
     },
   );
+
+  testWidgets('Language toggle switches home labels and direction', (
+    tester,
+  ) async {
+    await pumpPortfolio(tester);
+
+    await tester.tap(find.text('עברית'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('מבוא'), findsOneWidget);
+    expect(find.text('השכלה'), findsOneWidget);
+    expect(find.text('יצירת קשר'), findsOneWidget);
+    expect(
+      widgets.Directionality.of(tester.element(find.text('מבוא'))),
+      TextDirection.rtl,
+    );
+  });
+
+  testWidgets('Long section dialog shows TLDR and can collapse full text', (
+    tester,
+  ) async {
+    await pumpPortfolio(tester);
+
+    await tester.tap(find.text('Introduction'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('TL;DR'), findsOneWidget);
+    expect(
+      selectableTextContaining('Resilient software engineer'),
+      findsOneWidget,
+    );
+    expect(selectableTextContaining('From a young age'), findsOneWidget);
+
+    await tester.tap(find.text('TL;DR only'));
+    await tester.pumpAndSettle();
+
+    expect(
+      selectableTextContaining('Resilient software engineer'),
+      findsOneWidget,
+    );
+    expect(selectableTextContaining('From a young age'), findsNothing);
+    expect(find.text('Show full text'), findsOneWidget);
+
+    await tester.tap(find.text('Show full text'));
+    await tester.pumpAndSettle();
+
+    expect(selectableTextContaining('From a young age'), findsOneWidget);
+  });
+
+  testWidgets('Hebrew long section dialog uses Hebrew copy and controls', (
+    tester,
+  ) async {
+    await pumpPortfolio(tester);
+
+    await tester.tap(find.text('עברית'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('מבוא'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('מבוא'), findsWidgets);
+    expect(find.text('בקצרה'), findsOneWidget);
+    expect(find.text('בקצרה בלבד'), findsOneWidget);
+    expect(selectableTextContaining('מסלול לא שגרתי'), findsOneWidget);
+  });
 }
