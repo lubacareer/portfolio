@@ -84,6 +84,26 @@ void main() {
     expect(find.text('lubani@lubacorp.com'), findsWidgets);
   });
 
+  testWidgets('Hobbies dialog is populated and Links tile is removed', (
+    tester,
+  ) async {
+    await pumpPortfolio(tester);
+
+    expect(find.text('Links'), findsNothing);
+
+    await tester.ensureVisible(find.text('Hobbies'));
+    await tester.tap(find.text('Hobbies'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('TL;DR'), findsOneWidget);
+    expect(selectableTextContaining('I enjoy Yin yoga'), findsOneWidget);
+    expect(
+      selectableTextContaining('Amazon Polly and S3 buckets'),
+      findsOneWidget,
+    );
+    expect(selectableTextContaining('detective stories'), findsOneWidget);
+  });
+
   testWidgets(
     'Projects dialog lists public GitHub repositories for both accounts',
     (tester) async {

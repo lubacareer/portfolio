@@ -211,12 +211,12 @@ class PortfolioHome extends StatelessWidget {
       ),
       HoverTile(
         title: _localized(language, english: 'Hobbies', hebrew: 'תחביבים'),
-        subtitle: _localized(language, english: 'Coming soon', hebrew: 'בקרוב'),
-        onTap: () => showPlaceholder(
-          context,
-          _localized(language, english: 'Hobbies', hebrew: 'תחביבים'),
+        subtitle: _localized(
           language,
+          english: 'Yoga, audio, and books',
+          hebrew: 'יוגה, אודיו וספרים',
         ),
+        onTap: () => showLongSection(context, language, _hobbiesSection),
         icon: Icons.interests,
       ),
       HoverTile(
@@ -228,16 +228,6 @@ class PortfolioHome extends StatelessWidget {
         ),
         onTap: () => showContact(context, language),
         icon: Icons.email_outlined,
-      ),
-      HoverTile(
-        title: _localized(language, english: 'Links', hebrew: 'קישורים'),
-        subtitle: _localized(language, english: 'Coming soon', hebrew: 'בקרוב'),
-        onTap: () => showPlaceholder(
-          context,
-          _localized(language, english: 'Links', hebrew: 'קישורים'),
-          language,
-        ),
-        icon: Icons.link,
       ),
       CvTile(language: language),
       CoverLetterTile(language: language),
@@ -443,9 +433,9 @@ const _introSection = PortfolioSection(
     ),
     LocalizedString(
       english:
-          '''Today, my professional journey reflects not only my technical expertise but also a profound commitment to giving back. For several years, I've dedicated myself to tutoring students with disabilities, helping them master software engineering, mathematics, and physics. Since January 2025, I've expanded my impact by taking on freelance software development projects, building tailored technological solutions for private clients. Now, in these challenging times, I'm eagerly looking for an entry-level, part-time position where I can blend my passion for technology, teaching, and problem-solving to contribute meaningfully to an innovative team.''',
+          '''Today, my professional journey reflects not only my technical expertise but also a profound commitment to giving back. For several years, I've dedicated myself to tutoring students with disabilities, helping them master software engineering, mathematics, and physics. Since January 2025, I've expanded my impact by taking on freelance software development projects, building tailored technological solutions for private clients. Now, in these challenging times, I'm eagerly looking for a position where I can blend my passion for technology, teaching, and problem-solving to contribute meaningfully to an innovative team.''',
       hebrew:
-          '''כיום הדרך המקצועית שלי משקפת לא רק יכולות טכניות אלא גם מחויבות עמוקה לעזרה לאחרים. במשך כמה שנים אני מלמדת סטודנטים עם מוגבלויות ומסייעת להם להשתלט על הנדסת תוכנה, מתמטיקה ופיזיקה. מאז ינואר 2025 הרחבתי את העשייה שלי גם לפרויקטים עצמאיים בפיתוח תוכנה, שבהם אני בונה פתרונות טכנולוגיים מותאמים ללקוחות פרטיים. כעת אני מחפשת משרה התחלתית וחלקית שבה אוכל לשלב בין אהבתי לטכנולוגיה, הוראה ופתרון בעיות, ולתרום באופן משמעותי לצוות חדשני.''',
+          '''כיום הדרך המקצועית שלי משקפת לא רק יכולות טכניות אלא גם מחויבות עמוקה לעזרה לאחרים. במשך כמה שנים אני מלמדת סטודנטים עם מוגבלויות ומסייעת להם להשתלט על הנדסת תוכנה, מתמטיקה ופיזיקה. מאז ינואר 2025 הרחבתי את העשייה שלי גם לפרויקטים עצמאיים בפיתוח תוכנה, שבהם אני בונה פתרונות טכנולוגיים מותאמים ללקוחות פרטיים. כעת אני מחפשת משרה שבה אוכל לשלב בין אהבתי לטכנולוגיה, הוראה ופתרון בעיות, ולתרום באופן משמעותי לצוות חדשני.''',
     ),
   ],
 );
@@ -607,6 +597,35 @@ const _researchSection = PortfolioSection(
           '''By developing Python-based simulations, we tackled complex heat transfer problems, specifically solving the Stefan problem and general heat equations. To push the boundaries further, we implemented a Physics-Informed Neural Network (PINN), validating its accuracy against classical analytical and numerical solutions. This work bridges traditional computational modeling with modern machine learning, paving the way for sustainable human presence on the lunar surface.''',
       hebrew:
           '''באמצעות פיתוח סימולציות מבוססות Python התמודדנו עם בעיות מורכבות במעבר חום, ובפרט עם פתרון בעיית סטפן ומשוואות חום כלליות. כדי להרחיב את גבולות המודל יישמנו רשת עצבית מוכוונת פיזיקה, PINN, ואימתנו את הדיוק שלה מול פתרונות אנליטיים ונומריים קלאסיים. העבודה מחברת בין מידול חישובי מסורתי ללמידת מכונה מודרנית, ויכולה לתרום לנוכחות אנושית בת קיימא על פני הירח.''',
+    ),
+  ],
+);
+
+const _hobbiesSection = PortfolioSection(
+  title: LocalizedString(english: 'Hobbies', hebrew: 'תחביבים'),
+  subtitle: LocalizedString(
+    english: 'Yoga, audio, and books',
+    hebrew: 'יוגה, אודיו וספרים',
+  ),
+  icon: Icons.interests,
+  summary: LocalizedString(
+    english:
+        'I enjoy Yin yoga, long-form audio, and books that make me think. I also built an Amazon Polly and S3 text-to-speech workflow with a custom lexicon so written yoga routines could become clear audio instructions.',
+    hebrew:
+        'אני אוהבת יין יוגה, אודיו ארוך וספרים שגורמים לי לחשוב. בנוסף, בניתי תהליך text-to-speech עם Amazon Polly ו-S3, כולל קובץ lexicon מותאם, כדי להפוך רוטינות יוגה כתובות להוראות אודיו ברורות.',
+  ),
+  paragraphs: [
+    LocalizedString(
+      english:
+          '''Outside software work, yoga is one of the practices that helps me slow down, listen more carefully, and stay connected to the body rather than only to the screen. I especially like Yin yoga because it is quiet, patient, and precise in a different way from programming: it asks for stillness, attention, and respect for small changes over time.''',
+      hebrew:
+          '''מחוץ לעבודה עם תוכנה, יוגה היא אחת מהרוטינות שעוזרות לי להאט, להקשיב טוב יותר ולהישאר מחוברת לגוף ולא רק למסך. אני אוהבת במיוחד יין יוגה, כי יש בה שקט, סבלנות ודיוק מסוג אחר מתכנות: היא מבקשת שהייה, תשומת לב וכבוד לשינויים קטנים לאורך זמן.''',
+    ),
+    LocalizedString(
+      english:
+          '''That interest also led me to create a text-to-speech service for routine scripts, using Amazon Polly and S3 buckets with a custom lexicon file so the generated audio would pronounce terms naturally and turn written routines into usable spoken instructions. In the same spirit, I enjoy audiobooks, podcasts, and reading books, especially detective stories, mysteries, psychological novels, and clever classics that reward attention and layered thinking.''',
+      hebrew:
+          '''העניין הזה ברוטינות מוקלטות הוביל אותי גם לבנות שירות text-to-speech לתסריטי תרגול, באמצעות Amazon Polly ו-S3 buckets יחד עם קובץ lexicon מותאם, כדי שהאודיו שנוצר יבטא מונחים בצורה טבעית ויהפוך רוטינות כתובות להוראות קוליות שימושיות. באותה רוח אני אוהבת גם ספרי אודיו, פודקאסטים וקריאת ספרים, במיוחד ספרי בלש, מסתורין, רומנים פסיכולוגיים וקלאסיקות חכמות שמתגמלות תשומת לב וחשיבה בשכבות.''',
     ),
   ],
 );
@@ -1666,42 +1685,4 @@ class _CoverLetterTileState extends State<CoverLetterTile> {
       ),
     );
   }
-}
-
-void showPlaceholder(
-  BuildContext context,
-  String title,
-  PortfolioLanguage language,
-) {
-  showDialog(
-    context: context,
-    builder: (_) => Directionality(
-      textDirection: language.direction,
-      child: AlertDialog(
-        backgroundColor: AppPalette.surface,
-        shape: _dialogShape(),
-        insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-        titleTextStyle: _dialogTitleStyle(context),
-        contentTextStyle: _dialogContentStyle(context),
-        title: Text(title),
-        content: SizedBox(
-          width: 420,
-          child: Text(
-            _localized(
-              language,
-              english: 'Content coming soon.',
-              hebrew: 'התוכן יתווסף בקרוב.',
-            ),
-            textAlign: language.paragraphAlign,
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text(_closeLabel(language)),
-          ),
-        ],
-      ),
-    ),
-  );
 }
