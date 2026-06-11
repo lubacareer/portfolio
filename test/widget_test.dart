@@ -113,6 +113,9 @@ void main() {
       await tester.pumpAndSettle();
 
       const expectedProjects = [
+        'ExitViolet',
+        'CML',
+        'spritebury',
         'ast2',
         'Mazilon',
         'HeatEquationSimulator',

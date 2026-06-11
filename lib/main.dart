@@ -889,6 +889,42 @@ class PortfolioProject {
 const _githubProjects = <PortfolioProject>[
   PortfolioProject(
     owner: 'lubacareer',
+    name: 'ExitViolet',
+    description: LocalizedString(
+      english:
+          'Browser-first isometric psychological thriller prototype built with Phaser, TypeScript, and Vite. It presents a playable vertical slice with a DOM menu overlay, opening video, exploration, scene blockers, interactive hotspots, and Playwright smoke coverage.',
+      hebrew:
+          'אב-טיפוס למשחק מתח פסיכולוגי איזומטרי בדפדפן, שנבנה עם Phaser, TypeScript ו-Vite. כולל חתך משחקי עם תפריט DOM, סרטון פתיחה, חקירה, חסימות סצנה, נקודות אינטראקציה וכיסוי smoke tests ב-Playwright.',
+    ),
+    programmingLanguage: 'TypeScript',
+    githubUrl: 'https://github.com/lubacareer/ExitViolet',
+  ),
+  PortfolioProject(
+    owner: 'lubacareer',
+    name: 'CML',
+    description: LocalizedString(
+      english:
+          'The Case of the Missing Logic is a 2D point-and-click comedy mystery built with Phaser, TypeScript, and Vite. The current slice includes scene navigation, character movement, branching dialogue, inventory, map gating, and a playable puzzle chain.',
+      hebrew:
+          'The Case of the Missing Logic הוא משחק מסתורין קומי דו-ממדי בסגנון point-and-click, שנבנה עם Phaser, TypeScript ו-Vite. החתך הנוכחי כולל ניווט בין סצנות, תנועת דמות, דיאלוג מסתעף, מלאי, פתיחת מפה ושרשרת חידות משחקית.',
+    ),
+    programmingLanguage: 'TypeScript',
+    githubUrl: 'https://github.com/lubacareer/CML',
+  ),
+  PortfolioProject(
+    owner: 'lubacareer',
+    name: 'spritebury',
+    description: LocalizedString(
+      english:
+          'A nostalgic browser-based virtual city and social web game in early Next.js/Supabase development. The design focuses on accounts, static pixel avatars, profiles, inventory ownership, shops, jobs, fake currency, homes, presence, and server-authoritative game actions.',
+      hebrew:
+          'משחק עיר וירטואלית וחברתית בדפדפן, בסגנון נוסטלגי, בשלבי פיתוח ראשונים עם Next.js ו-Supabase. התכנון מתמקד בחשבונות, אווטארים סטטיים בפיקסל-ארט, פרופילים, בעלות על מלאי, חנויות, עבודות, מטבע משחקי, בתים, נוכחות ופעולות משחק שמאומתות בשרת.',
+    ),
+    programmingLanguage: 'TypeScript',
+    githubUrl: 'https://github.com/lubacareer/spritebury',
+  ),
+  PortfolioProject(
+    owner: 'lubacareer',
     name: 'ast2',
     description: LocalizedString(
       english: 'All-in-one Astrology app',
