@@ -1,0 +1,172 @@
+% Luba Ira Korlat
+% ATS-friendly LaTeX resume
+% Compile with: xelatex or lualatex
+
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=1.25cm]{geometry}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xurl}
+\usepackage{enumitem}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\usepackage{titlesec}
+\usepackage{ragged2e}
+\usepackage{needspace}
+
+\setdefaultlanguage{english}
+\setotherlanguage{hebrew}
+
+% Improves copy/paste and parser readability in XeLaTeX when available.
+\ifdefined\XeTeXgenerateactualtext
+  \XeTeXgenerateactualtext=1
+\fi
+
+% ATS-safe font fallback chain.
+\IfFontExistsTF{Calibri}{
+  \setmainfont{Calibri}
+}{
+  \setmainfont{Arial}
+}
+
+% Hebrew font fallback. Arial usually supports Hebrew on Windows.
+\IfFontExistsTF{Noto Sans Hebrew}{
+  \newfontfamily\hebrewfont[Script=Hebrew]{Noto Sans Hebrew}
+}{
+  \IfFontExistsTF{Arial}{
+    \newfontfamily\hebrewfont[Script=Hebrew]{Arial}
+  }{
+    \newfontfamily\hebrewfont[Script=Hebrew]{FreeSans}
+  }
+}
+
+\urlstyle{same}
+\pagestyle{empty}
+\justifying
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1pt}
+\setlist[itemize]{leftmargin=1.15em,itemsep=0pt,topsep=1pt,parsep=0pt,partopsep=0pt}
+
+\titleformat{\section}{\large\bfseries}{}{0pt}{}[\vspace{-3pt}\hrule\vspace{3pt}]
+\titlespacing*{\section}{0pt}{6pt}{2pt}
+
+\newcommand{\workentry}[5]{%
+  \Needspace{5\baselineskip}
+  \textbf{#1} | #2 | #3 | #4\par
+  \begin{itemize}
+    #5
+  \end{itemize}
+}
+
+\newcommand{\projectentry}[4]{%
+  \Needspace{4\baselineskip}
+  \textbf{#1} | #2\par
+  GitHub: #3\par
+  \begin{itemize}
+    #4
+  \end{itemize}
+}
+
+\newcommand{\educationentry}[6]{%
+  \Needspace{4\baselineskip}
+  \textbf{#1} | #2 | #3\par
+  #4 | GPA: #5 | #6\par
+}
+
+\begin{document}
+
+{\LARGE\textbf{Luba Ira Korlat}}\par
+\vspace{2pt}
+Software Engineer | Python | TypeScript | Flutter | Backend | AI/NLP\par
+\vspace{3pt}
+Beersheba, Israel | +972 52-704-4577 | \href{mailto:lubacareer@gmail.com}{lubacareer@gmail.com} | \href{mailto:lubani@lubacorp.com}{lubani@lubacorp.com}\par
+Portfolio: \href{https://portfolio-blush-five-82.vercel.app/}{portfolio-blush-five-82.vercel.app} | GitHub: \href{https://github.com/lubacareer}{github.com/lubacareer} | Academic GitHub: \href{https://github.com/lubani}{github.com/lubani} | LinkedIn: \href{https://www.linkedin.com/in/luba-ira}{linkedin.com/in/luba-ira}\par
+
+\section*{Professional Summary}
+Software Engineer and registered freelance developer with an M.Sc. in Software Engineering and hands-on delivery across Python, TypeScript, Dart/Flutter, backend APIs, mobile apps, and web projects. Build practical software from requirements to tested releases, with experience in AI/NLP, numerical modeling, databases, debugging, and technical teaching. Known for quickly understanding complex systems, explaining technical ideas clearly, and turning ambiguous problems into working implementations.
+
+\section*{Technical Skills}
+\textbf{Languages:} Python, TypeScript, Dart, Java, C, C++, C\#, SQL, R, HTML, CSS\par
+\textbf{Backend and APIs:} FastAPI, Django, Node.js, NestJS, REST APIs, authentication concepts, testing\par
+\textbf{Frontend and Mobile:} Flutter, React, React Native, Next.js, Phaser, Android development\par
+\textbf{AI, NLP, and Data:} TensorFlow, Keras, PINNs, NLP, RAG concepts, OpenCV, model evaluation\par
+\textbf{Databases and Tools:} PostgreSQL, MySQL, MongoDB, Firebase, Supabase, CouchDB, Git, Docker, Linux, CI/CD
+
+\section*{Work Experience}
+\workentry{Software Developer}{Self-Employed}{Beersheba, Israel}{January 2025 - Present}{
+  \item Delivered mobile apps, websites, backend systems, and technical prototypes for private clients as a registered Sole Proprietor.
+  \item Built full-stack and Flutter solutions using Python, Dart, databases, APIs, and deployment-oriented project workflows.
+}
+
+\workentry{Instructor}{Cyber Education Centre}{Beersheba, Israel}{November 2025 - Present}{
+  \item Teach networks, sockets, client-server programming, and cybersecurity fundamentals in the Magshimim Program.
+  \item Review student code and provide direct feedback on correctness, debugging, protocol logic, and software structure.
+}
+
+\workentry{Computer Science and Mathematics Tutor}{Alut Organization and Ono Academic College}{Beersheba, Israel}{January 2026 - Present}{
+  \item Teach computer science and mathematics to students on the autism spectrum using structured explanations and practical examples.
+}
+
+\workentry{Tutor and Academic Transcriber}{Aleh Association}{Beersheba, Israel}{September 2023 - December 2025}{
+  \item Tutored students with disabilities in software engineering, programming, mathematics, and academic technical subjects.
+  \item Created accessible summaries and clarified course material so students could follow complex technical content independently.
+}
+
+\workentry{Software Engineering Tutor}{Sami Shamoon College of Engineering}{Beersheba, Israel}{April 2023 - May 2024}{
+  \item Taught algorithms, data structures, object-oriented programming, and core software engineering topics to undergraduate students.
+}
+
+\workentry{Database Practice Tutor}{Achva Academic College}{Beersheba, Israel}{November 2021 - April 2022}{
+  \item Led SQL, relational modeling, and normalization practice sessions for Information Systems students.
+}
+
+\section*{Selected Projects}
+\projectentry{HeatEquationSimulator}{Python, TensorFlow, Keras, CUDA, Tkinter, PINNs}{\href{https://github.com/lubacareer/HeatEquationSimulator}{github.com/lubacareer/HeatEquationSimulator}}{
+  \item Developed a desktop simulation tool for the heat equation and two-phase Stefan problem with PINNs, numerical methods, analytical baselines, and a Tkinter interface.
+}
+
+\projectentry{ExitViolet}{TypeScript, Phaser, Vite, Playwright}{\href{https://github.com/lubacareer/ExitViolet}{github.com/lubacareer/ExitViolet}}{
+  \item Built a browser-first isometric psychological thriller vertical slice with menu overlays, opening video flow, room exploration, blockers, interactive hotspots, asset processing, and Playwright smoke tests.
+}
+
+\projectentry{The Case of the Missing Logic (CML)}{TypeScript, Phaser, Vite}{\href{https://github.com/lubacareer/CML}{github.com/lubacareer/CML}}{
+  \item Implemented a 2D point-and-click comedy mystery slice with scene navigation, character movement, branching dialogue, inventory, map gating, item use, and a playable puzzle chain.
+}
+
+\projectentry{spritebury}{TypeScript, Next.js, Supabase}{\href{https://github.com/lubacareer/spritebury}{github.com/lubacareer/spritebury}}{
+  \item Prototyped an early-stage browser virtual city and social web game concept focused on accounts, pixel avatars, profiles, inventory ownership, shops, jobs, homes, presence, and server-authoritative actions.
+}
+
+\projectentry{ast2}{Dart, Flutter, Firebase, AI integrations}{\href{https://github.com/lubacareer/ast2}{github.com/lubacareer/ast2}}{
+  \item Built an all-in-one astrology, Feng Shui, and crystal identification app with AI-generated interpretations, local fallback content, Firebase-backed flows, and a local vision-service integration.
+}
+
+\projectentry{ccomp}{C, Flex, Bison, compiler construction}{\href{https://github.com/lubacareer/ccomp}{github.com/lubacareer/ccomp}}{
+  \item Implemented a teaching-oriented C compiler that lexes and parses a C subset, builds an AST, performs semantic checks, emits TAC, and generates x86-64 AT\&T assembly.
+}
+
+\projectentry{IRCourse}{Python, machine learning, NLP}{\href{https://github.com/lubani/IRCourse}{github.com/lubani/IRCourse}}{
+  \item Completed academic information-retrieval and NLP work including sentiment analysis with Logistic Regression and Naive Bayes, plus an abstractive summarization flow using BART.
+}
+
+\section*{Education}
+\educationentry{Master of Science in Software Engineering}{Sami Shamoon College of Engineering}{Beersheba, Israel}{Software Engineering, graduated cum laude}{96/100}{2022 - 2024}
+Thesis: 2-Phase Stefan Problem for Lunar Regolith Melting. Relevant coursework: Deep Learning, Advanced Algorithms, Natural Language Processing, Computer Vision, Advanced Databases.\par
+\vspace{1pt}
+\educationentry{Bachelor of Science in Software Engineering}{Sami Shamoon College of Engineering}{Beersheba, Israel}{Software Engineering}{80/100}{2018 - 2022}
+Final project: Hebrew text summarization using natural language processing.\par
+
+\section*{Research Experience}
+\workentry{Research Student}{Sami Shamoon College of Engineering}{Beersheba, Israel}{2022 - 2024}{
+  \item Developed Python simulations, numerical methods, and Physics-Informed Neural Networks for heat-transfer and phase-change research.
+}
+
+\section*{Military Service}
+\workentry{National Service Secretary}{Beersheba Magistrate Court}{Beersheba, Israel}{September 2011 - September 2012}{
+  \item Completed one year of Sherut Leumi National Service in an administrative role using court information systems and legal-administrative workflows.
+}
+
+\section*{Languages}
+English: Fluent | Hebrew: Fluent | Russian: Fluent
+
+\end{document}
