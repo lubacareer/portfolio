@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AppPalette {
@@ -231,6 +231,20 @@ class PortfolioHome extends StatelessWidget {
       ),
       CvTile(language: language),
       CoverLetterTile(language: language),
+      HoverTile(
+        title: _localized(
+          language,
+          english: "Master's Diploma",
+          hebrew: 'תעודת תואר שני',
+        ),
+        subtitle: _localized(
+          language,
+          english: 'M.Sc. certificate',
+          hebrew: 'אישור תואר M.Sc.',
+        ),
+        onTap: () => openPublic('/docs/masters_public.pdf'),
+        icon: Icons.workspace_premium_outlined,
+      ),
     ];
 
     return Scaffold(
@@ -289,6 +303,39 @@ class PortfolioHome extends StatelessWidget {
                         color: AppPalette.primaryDeep,
                         fontSize: 32,
                         fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      _localized(
+                        language,
+                        english:
+                            'Software Engineer | Python | TypeScript | Flutter | Backend | AI/NLP',
+                        hebrew:
+                            'מהנדסת תוכנה | Python | TypeScript | Flutter | Backend | AI/NLP',
+                      ),
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: AppPalette.text,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 720),
+                      child: Text(
+                        _localized(
+                          language,
+                          english:
+                              'M.Sc. Software Engineering graduate building practical apps, backend systems, AI/NLP tools, and polished client projects.',
+                          hebrew:
+                              'בוגרת תואר שני בהנדסת תוכנה שבונה אפליקציות, מערכות Backend, כלי AI/NLP ופרויקטים מלוטשים ללקוחות.',
+                        ),
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: AppPalette.mutedText,
+                          height: 1.35,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -420,22 +467,22 @@ const _introSection = PortfolioSection(
   icon: Icons.info_outline,
   summary: LocalizedString(
     english:
-        'Resilient software engineer, educator, and freelancer with a non-linear path through academic recovery, cum laude graduate studies, and applied software work.',
+        'Hard-working and technically talented software engineer, educator, and freelancer with cum laude graduate studies and practical delivery across Python, Flutter, backend, AI/NLP, and web projects.',
     hebrew:
-        'מהנדסת תוכנה, מורה ומפתחת עצמאית שעברה מסלול לא שגרתי של בנייה אקדמית מחדש, תואר שני בהצטיינות ועשייה מעשית בתוכנה.',
+        'מהנדסת תוכנה, מורה ומפתחת עצמאית עם מוסר עבודה גבוה, כישרון טכני, תואר שני בהצטיינות וניסיון מעשי ב-Python, Flutter, Backend, AI/NLP ופרויקטי Web.',
   ),
   paragraphs: [
     LocalizedString(
       english:
-          '''From a young age, curiosity guided me toward math, physics, and languages, nurturing an early passion for solving complex puzzles. However, my journey was far from smooth; high school was particularly challenging, marked by insomnia and personal struggles, ultimately preventing me from completing my matriculation exams (Bagrut). But resilience defined the next chapter of my story: after serving in Sherut Leumi, I rebuilt my academic foundation through a preparatory program at Sami Shamoon College of Engineering, paving the way for a Bachelor's and subsequently a Master's degree in Software Engineering, which I completed cum laude with a GPA of 96. My master's research was particularly fascinating: simulating lunar regolith melting using physics-informed neural networks and advanced numerical analysis.''',
+          '''From a young age, curiosity guided me toward math, physics, languages, and computers, nurturing an early passion for solving complex puzzles. I have always been a hard-working and self-directed learner, drawn to problems that require patience, precision, and clear thinking. After serving in Sherut Leumi, I completed a preparatory program at Sami Shamoon College of Engineering, then earned both a Bachelor's degree and a Master's degree in Software Engineering, completing the master's cum laude with a GPA of 96. My master's research focused on simulating lunar regolith melting using physics-informed neural networks and advanced numerical analysis.''',
       hebrew:
-          '''מגיל צעיר הסקרנות הובילה אותי אל מתמטיקה, פיזיקה ושפות, וטיפחה אצלי אהבה לפתרון בעיות מורכבות. הדרך לא הייתה חלקה: תקופת התיכון הייתה מאתגרת מאוד וכללה נדודי שינה והתמודדויות אישיות, ובסופו של דבר לא השלמתי את בחינות הבגרות. אבל הפרק הבא הוגדר על ידי התמדה. לאחר שירות לאומי בניתי מחדש את הבסיס האקדמי שלי במכינה במכללה האקדמית להנדסה סמי שמעון, ומשם המשכתי לתואר ראשון ולאחר מכן לתואר שני בהנדסת תוכנה, שאותו סיימתי בהצטיינות עם ממוצע 96. המחקר שלי בתואר השני עסק בסימולציה של התכת רגולית ירחי באמצעות רשתות עצביות מוכוונות פיזיקה וניתוח נומרי מתקדם.''',
+          '''מגיל צעיר הסקרנות הובילה אותי אל מתמטיקה, פיזיקה, שפות ומחשבים, וטיפחה אצלי אהבה לפתרון בעיות מורכבות. תמיד הייתי לומדת חרוצה ועצמאית, שנמשכת לבעיות שדורשות סבלנות, דיוק וחשיבה בהירה. לאחר שירות לאומי השלמתי מכינה במכללה האקדמית להנדסה סמי שמעון, ובהמשך סיימתי תואר ראשון ותואר שני בהנדסת תוכנה. את התואר השני סיימתי בהצטיינות עם ממוצע 96. המחקר שלי בתואר השני עסק בסימולציה של התכת רגולית ירחי באמצעות רשתות עצביות מוכוונות פיזיקה וניתוח נומרי מתקדם.''',
     ),
     LocalizedString(
       english:
-          '''Today, my professional journey reflects not only my technical expertise but also a profound commitment to giving back. For several years, I've dedicated myself to tutoring students with disabilities, helping them master software engineering, mathematics, and physics. Since January 2025, I've expanded my impact by taking on freelance software development projects, building tailored technological solutions for private clients. Now, in these challenging times, I'm eagerly looking for a position where I can blend my passion for technology, teaching, and problem-solving to contribute meaningfully to an innovative team.''',
+          '''Today, my professional profile combines software development, teaching, and client-focused delivery. I tutor students in software engineering, mathematics, and physics, teach practical networking and cybersecurity concepts, and build tailored software solutions for private clients. Since January 2025, I have worked as a registered freelance developer, delivering mobile apps, websites, backend systems, and technical prototypes. I am now looking for a software engineering role where I can contribute strong problem-solving, disciplined implementation, and clear technical communication to an innovative team.''',
       hebrew:
-          '''כיום הדרך המקצועית שלי משקפת לא רק יכולות טכניות אלא גם מחויבות עמוקה לעזרה לאחרים. במשך כמה שנים אני מלמדת סטודנטים עם מוגבלויות ומסייעת להם להשתלט על הנדסת תוכנה, מתמטיקה ופיזיקה. מאז ינואר 2025 הרחבתי את העשייה שלי גם לפרויקטים עצמאיים בפיתוח תוכנה, שבהם אני בונה פתרונות טכנולוגיים מותאמים ללקוחות פרטיים. כעת אני מחפשת משרה שבה אוכל לשלב בין אהבתי לטכנולוגיה, הוראה ופתרון בעיות, ולתרום באופן משמעותי לצוות חדשני.''',
+          '''כיום הפרופיל המקצועי שלי משלב פיתוח תוכנה, הוראה וביצוע פרויקטים ללקוחות. אני מלמדת הנדסת תוכנה, מתמטיקה ופיזיקה, מדריכה נושאים מעשיים ברשתות ובסייבר, ובונה פתרונות תוכנה מותאמים ללקוחות פרטיים. מאז ינואר 2025 אני עובדת כמפתחת עצמאית רשומה, ומספקת אפליקציות מובייל, אתרים, מערכות Backend ואבות-טיפוס טכניים. כעת אני מחפשת תפקיד בהנדסת תוכנה שבו אוכל להביא פתרון בעיות חזק, יישום מסודר ותקשורת טכנית ברורה לצוות חדשני.''',
     ),
   ],
 );
@@ -462,9 +509,9 @@ const _educationSection = PortfolioSection(
     ),
     LocalizedString(
       english:
-          '''My initial ventures into the world of programming began with natural language processing (NLP). I vividly recall my excitement and struggles when exploring Python libraries such as the Sumy repository for text summarization. Navigating GitHub repositories for the first time was daunting but incredibly rewarding. This early NLP journey sparked a project close to my heart: developing a browser extension to summarize Hebrew texts. Through this endeavor, I encountered JavaScript: my very first experience with the language. While JavaScript continues to puzzle me occasionally, my proficiency and passion for other languages, especially Python, have always provided a reliable foundation.''',
+          '''My initial ventures into the world of programming began with natural language processing (NLP). I vividly remember the excitement of exploring Python libraries such as the Sumy repository for text summarization and learning how open-source GitHub projects are structured. This early NLP journey sparked a project close to my heart: developing a browser extension to summarize Hebrew texts. Through this work, I encountered JavaScript for the first time while continuing to build on my strongest foundation: Python, algorithms, and structured problem solving.''',
       hebrew:
-          '''הכניסה הראשונית שלי לעולם התכנות החלה בעיבוד שפה טבעית. אני זוכרת היטב את ההתרגשות וגם את הקושי כשחקרתי ספריות Python כמו Sumy לסיכום טקסטים. ההתמצאות הראשונה במאגרי GitHub הייתה מאתגרת אך מתגמלת מאוד. המסע הזה ב-NLP הוביל לפרויקט שקרוב ללבי: פיתוח תוסף דפדפן לסיכום טקסטים בעברית. דרך הפרויקט הזה פגשתי לראשונה את JavaScript. אף על פי ש-JavaScript עדיין מצליחה להפתיע אותי מדי פעם, הידע והאהבה שלי לשפות אחרות, במיוחד Python, תמיד סיפקו לי בסיס יציב.''',
+          '''הכניסה הראשונית שלי לעולם התכנות החלה בעיבוד שפה טבעית. אני זוכרת היטב את ההתרגשות כשחקרתי ספריות Python כמו Sumy לסיכום טקסטים ולמדתי איך בנויים פרויקטי קוד פתוח ב-GitHub. המסע הזה ב-NLP הוביל לפרויקט שקרוב ללבי: פיתוח תוסף דפדפן לסיכום טקסטים בעברית. דרך העבודה הזו פגשתי לראשונה את JavaScript, תוך שאני ממשיכה לבנות על הבסיס החזק ביותר שלי: Python, אלגוריתמים ופתרון בעיות מסודר.''',
     ),
     LocalizedString(
       english:
@@ -474,9 +521,9 @@ const _educationSection = PortfolioSection(
     ),
     LocalizedString(
       english:
-          '''Today, my journey reflects not only technical knowledge but also resilience, creativity, and unwavering commitment to continuous learning and exploration.''',
+          '''Today, my academic path reflects strong technical ability, creativity, disciplined work habits, and a long-term commitment to continuous learning and exploration.''',
       hebrew:
-          '''כיום המסע שלי משקף לא רק ידע טכני, אלא גם חוסן, יצירתיות ומחויבות מתמשכת ללמידה ולחקירה.''',
+          '''כיום הדרך האקדמית שלי משקפת יכולת טכנית חזקה, יצירתיות, הרגלי עבודה מסודרים ומחויבות ארוכת טווח ללמידה ולחקירה.''',
     ),
   ],
 );

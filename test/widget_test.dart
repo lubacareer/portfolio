@@ -35,8 +35,15 @@ void main() {
 
     // Verify some expected tiles are present
     expect(find.text('CV'), findsOneWidget);
+    expect(find.text("Master's Diploma"), findsOneWidget);
     expect(find.text('Introduction'), findsOneWidget);
     expect(find.text('Education'), findsOneWidget);
+    expect(
+      find.text(
+        'Software Engineer | Python | TypeScript | Flutter | Backend | AI/NLP',
+      ),
+      findsOneWidget,
+    );
     expect(find.text('English'), findsOneWidget);
     expect(find.text('עברית'), findsOneWidget);
 
@@ -172,25 +179,34 @@ void main() {
 
     expect(find.text('TL;DR'), findsOneWidget);
     expect(
-      selectableTextContaining('Resilient software engineer'),
+      selectableTextContaining('Hard-working and technically talented'),
       findsOneWidget,
     );
-    expect(selectableTextContaining('From a young age'), findsOneWidget);
+    expect(
+      selectableTextContaining('hard-working and self-directed'),
+      findsOneWidget,
+    );
 
     await tester.tap(find.text('TL;DR only'));
     await tester.pumpAndSettle();
 
     expect(
-      selectableTextContaining('Resilient software engineer'),
+      selectableTextContaining('Hard-working and technically talented'),
       findsOneWidget,
     );
-    expect(selectableTextContaining('From a young age'), findsNothing);
+    expect(
+      selectableTextContaining('hard-working and self-directed'),
+      findsNothing,
+    );
     expect(find.text('Show full text'), findsOneWidget);
 
     await tester.tap(find.text('Show full text'));
     await tester.pumpAndSettle();
 
-    expect(selectableTextContaining('From a young age'), findsOneWidget);
+    expect(
+      selectableTextContaining('hard-working and self-directed'),
+      findsOneWidget,
+    );
   });
 
   testWidgets('Hebrew long section dialog uses Hebrew copy and controls', (
@@ -206,6 +222,6 @@ void main() {
     expect(find.text('מבוא'), findsWidgets);
     expect(find.text('בקצרה'), findsOneWidget);
     expect(find.text('בקצרה בלבד'), findsOneWidget);
-    expect(selectableTextContaining('מסלול לא שגרתי'), findsOneWidget);
+    expect(selectableTextContaining('מוסר עבודה גבוה'), findsOneWidget);
   });
 }
