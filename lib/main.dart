@@ -321,9 +321,9 @@ class PortfolioHome extends StatelessWidget {
                       _localized(
                         language,
                         english:
-                            'Software Engineer | Python | TypeScript | Flutter | Backend | AI/NLP',
+                            'AOI | Software Engineer | Python | TypeScript | Flutter | Backend | AI/NLP',
                         hebrew:
-                            'מהנדסת תוכנה | Python | TypeScript | Flutter | Backend | AI/NLP',
+                            'AOI | מהנדסת תוכנה | Python | TypeScript | Flutter | Backend | AI/NLP',
                       ),
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -545,11 +545,17 @@ const _skillsSection = PortfolioSection(
   icon: Icons.handyman,
   summary: LocalizedString(
     english:
-        'Broad software foundation across Python, C, C++, Java, SQL, Linux, machine learning, Flutter, and practical teaching-oriented problem solving.',
+        'AOI process support and program threshold configuration, alongside a broad software foundation across Python, C, C++, Java, SQL, Linux, machine learning, Flutter, and practical teaching-oriented problem solving.',
     hebrew:
-        'בסיס תוכנה רחב הכולל Python, C, C++, Java, SQL, Linux, למידת מכונה, Flutter ופתרון בעיות מעשי עם אוריינטציה להוראה.',
+        'תמיכה בתהליכי AOI והגדרת ערכי סף בתוכניות, לצד בסיס תוכנה רחב הכולל Python, C, C++, Java, SQL, Linux, למידת מכונה, Flutter ופתרון בעיות מעשי עם אוריינטציה להוראה.',
   ),
   paragraphs: [
+    LocalizedString(
+      english:
+          '''My skills include AOI process support, handling PCBAs, and configuring program thresholds.''',
+      hebrew:
+          '''הכישורים שלי כוללים תמיכה בתהליכי AOI, טיפול בכרטיסים אלקטרוניים מורכבים (PCBAs) והגדרת ערכי סף בתוכניות.''',
+    ),
     LocalizedString(
       english:
           '''My journey with computers started early: in fact, as early as three or four years old when I first encountered the command-line interface of MS-DOS. Even then, typing short commands sparked a lifelong passion for technology. Throughout the 90s, with Microsoft Windows dominating the landscape, I eagerly explored office software, particularly MS Word, where I channeled my love for storytelling and verbal expression.''',
@@ -605,9 +611,9 @@ const _experienceSection = PortfolioSection(
   paragraphs: [
     LocalizedString(
       english:
-          '''At Flex, I work in Process Support AOI (24 June 2026–Present). My role includes handling PCBAs and configuring program thresholds.''',
+          '''At Flex, I’m excited to work in Process Support AOI (24 June 2026–Present), handling PCBAs and configuring program thresholds. This hands-on role brings together electronics and automated optical inspection, with an emphasis on careful, detail-oriented configuration. I enjoy developing my skills in a field where technology and precision meet.''',
       hebrew:
-          '''ב-Flex אני עובדת בתפקיד תמיכה בתהליכי AOI (24 ביוני 2026–היום). התפקיד כולל טיפול בכרטיסים אלקטרוניים מורכבים (PCBAs) והגדרת ערכי סף בתוכניות.''',
+          '''ב-Flex אני שמחה לעבוד בתפקיד תמיכה בתהליכי AOI (24 ביוני 2026–היום). התפקיד כולל טיפול בכרטיסים אלקטרוניים מורכבים (PCBAs) והגדרת ערכי סף בתוכניות. העבודה המעשית משלבת אלקטרוניקה ובדיקה אופטית אוטומטית, עם דגש על הגדרות מדויקות ותשומת לב לפרטים. אני נהנית לפתח את הכישורים שלי בתחום שמחבר בין טכנולוגיה לדיוק.''',
     ),
     LocalizedString(
       english:
@@ -968,9 +974,9 @@ const _githubProjects = <PortfolioProject>[
     name: 'CML',
     description: LocalizedString(
       english:
-          'The Case of the Missing Logic is a 2D point-and-click comedy mystery built with Phaser, TypeScript, and Vite. The current slice includes scene navigation, character movement, branching dialogue, inventory, map gating, and a playable puzzle chain.',
+          'A point-and-click comedy mystery built with Phaser and TypeScript, featuring interactive scenes, dialogue, inventory, and puzzles.',
       hebrew:
-          'The Case of the Missing Logic הוא משחק מסתורין קומי דו-ממדי בסגנון point-and-click, שנבנה עם Phaser, TypeScript ו-Vite. החתך הנוכחי כולל ניווט בין סצנות, תנועת דמות, דיאלוג מסתעף, מלאי, פתיחת מפה ושרשרת חידות משחקית.',
+          'משחק תעלומת קומדיה בסגנון הצבעה ולחיצה, שנבנה עם Phaser ו־TypeScript ומשלב סצנות אינטראקטיביות, דיאלוגים, מלאי וחידות.',
     ),
     programmingLanguage: 'TypeScript',
     githubUrl: 'https://github.com/lubacareer/CML',
@@ -980,9 +986,9 @@ const _githubProjects = <PortfolioProject>[
     name: 'spritebury',
     description: LocalizedString(
       english:
-          'A nostalgic browser-based virtual city and social web game in early Next.js/Supabase development. The design focuses on accounts, static pixel avatars, profiles, inventory ownership, shops, jobs, fake currency, homes, presence, and server-authoritative game actions.',
+          'A virtual city web game with avatar creation, profiles, and a marketplace, built with Next.js and TypeScript.',
       hebrew:
-          'משחק עיר וירטואלית וחברתית בדפדפן, בסגנון נוסטלגי, בשלבי פיתוח ראשונים עם Next.js ו-Supabase. התכנון מתמקד בחשבונות, אווטארים סטטיים בפיקסל-ארט, פרופילים, בעלות על מלאי, חנויות, עבודות, מטבע משחקי, בתים, נוכחות ופעולות משחק שמאומתות בשרת.',
+          'משחק עיר וירטואלית ברשת הכולל יצירת דמויות, פרופילים ושוק מקוון, שנבנה עם Next.js ו־TypeScript.',
     ),
     programmingLanguage: 'TypeScript',
     githubUrl: 'https://github.com/lubacareer/spritebury',
@@ -1014,8 +1020,10 @@ const _githubProjects = <PortfolioProject>[
     owner: 'lubacareer',
     name: 'HeatEquationSimulator',
     description: LocalizedString(
-      english: 'Heat equation and Stefan problem addressed.',
-      hebrew: 'סימולציה ופתרון של משוואת החום ובעיית סטפן.',
+      english:
+          'An experimental Python desktop simulator for exploring heat transfer, phase changes, and related physics through interactive visualizations.',
+      hebrew:
+          'סימולטור ניסיוני למחשב ב־Python לחקר מעבר חום, שינויי פאזה ותופעות פיזיקליות קשורות באמצעות הדמיות אינטראקטיביות.',
     ),
     programmingLanguage: 'Python',
     githubUrl: 'https://github.com/lubacareer/HeatEquationSimulator',
@@ -1024,8 +1032,10 @@ const _githubProjects = <PortfolioProject>[
     owner: 'lubacareer',
     name: 'portfolio',
     description: LocalizedString(
-      english: 'My new portfolio website',
-      hebrew: 'אתר הפורטפוליו החדש שלי',
+      english:
+          'A bilingual Flutter portfolio presenting professional experience, projects, education, and contact information.',
+      hebrew:
+          'אתר תיק עבודות דו־לשוני ב־Flutter המציג ניסיון מקצועי, פרויקטים, השכלה ופרטי קשר.',
     ),
     programmingLanguage: 'Dart',
     githubUrl: 'https://github.com/lubacareer/portfolio',
@@ -1034,8 +1044,10 @@ const _githubProjects = <PortfolioProject>[
     owner: 'lubacareer',
     name: 'ccomp',
     description: LocalizedString(
-      english: 'A robust C compiler',
-      hebrew: 'מהדר C יציב ורחב יכולות',
+      english:
+          'An educational C compiler that parses a subset of C, performs semantic checks, and generates intermediate code and x86-64 assembly.',
+      hebrew:
+          'מהדר לימודי לשפת C שמנתח תת־קבוצה של השפה, מבצע בדיקות סמנטיות ומפיק קוד ביניים ואסמבלי ל־x86-64.',
     ),
     programmingLanguage: 'C',
     githubUrl: 'https://github.com/lubacareer/ccomp',
@@ -1044,8 +1056,10 @@ const _githubProjects = <PortfolioProject>[
     owner: 'lubani',
     name: 'astro',
     description: LocalizedString(
-      english: 'An Astrology App',
-      hebrew: 'אפליקציית אסטרולוגיה',
+      english:
+          'A Flutter astrology app with screens for natal charts and aspects.',
+      hebrew:
+          'אפליקציית אסטרולוגיה ב־Flutter עם מסכים למפות לידה ולהיבטים אסטרולוגיים.',
     ),
     programmingLanguage: 'C++',
     githubUrl: 'https://github.com/lubani/astro',
@@ -1054,8 +1068,8 @@ const _githubProjects = <PortfolioProject>[
     owner: 'lubani',
     name: 'Portfolio',
     description: LocalizedString(
-      english: 'My personal portfolio source code.',
-      hebrew: 'קוד המקור של הפורטפוליו האישי שלי.',
+      english: 'An earlier personal portfolio built with Next.js and React.',
+      hebrew: 'גרסה קודמת של תיק עבודות אישי שנבנתה באמצעות Next.js ו־React.',
     ),
     programmingLanguage: 'JavaScript',
     githubUrl: 'https://github.com/lubani/Portfolio',
@@ -1064,8 +1078,9 @@ const _githubProjects = <PortfolioProject>[
     owner: 'lubani',
     name: 'math',
     description: LocalizedString(
-      english: 'Some Python scripts for mathematical demonstrations',
-      hebrew: 'סקריפטים ב-Python להדגמות מתמטיות',
+      english:
+          'Python scripts illustrating mathematical concepts, calculations, and visualizations.',
+      hebrew: 'אוסף סקריפטים ב־Python להמחשת מושגים מתמטיים, חישובים והדמיות.',
     ),
     programmingLanguage: 'Python',
     githubUrl: 'https://github.com/lubani/math',
@@ -1073,24 +1088,46 @@ const _githubProjects = <PortfolioProject>[
   PortfolioProject(
     owner: 'lubani',
     name: 'scientificProject',
+    description: LocalizedString(
+      english:
+          'A Python desktop research application exploring two-phase Stefan problems with physics-informed neural networks and analytical and numerical methods.',
+      hebrew:
+          'יישום מחקרי לשולחן העבודה ב־Python לחקר בעיית סטפן דו־פאזית באמצעות רשתות נוירונים מונחות פיזיקה ושיטות אנליטיות ונומריות.',
+    ),
     programmingLanguage: 'Python',
     githubUrl: 'https://github.com/lubani/scientificProject',
   ),
   PortfolioProject(
     owner: 'lubani',
     name: 'HebSum',
+    description: LocalizedString(
+      english:
+          'A Hebrew text summarization prototype with a Flask service and browser extension.',
+      hebrew: 'אב־טיפוס לסיכום טקסט בעברית הכולל שירות Flask ותוסף לדפדפן.',
+    ),
     programmingLanguage: 'Python',
     githubUrl: 'https://github.com/lubani/HebSum',
   ),
   PortfolioProject(
     owner: 'lubani',
     name: 'MySoftware',
+    description: LocalizedString(
+      english:
+          'A small Python practice repository with simple interaction functions.',
+      hebrew:
+          'מאגר תרגול קטן ב־Python עם פונקציות בסיסיות המדמות פעולות משתמש.',
+    ),
     programmingLanguage: 'Python',
     githubUrl: 'https://github.com/lubani/MySoftware',
   ),
   PortfolioProject(
     owner: 'lubani',
     name: 'DevOps2412',
+    description: LocalizedString(
+      english:
+          'DevOps course exercises featuring Python scripts and a Jenkins pipeline.',
+      hebrew: 'תרגילי קורס DevOps הכוללים סקריפטים ב־Python ותהליך Jenkins.',
+    ),
     programmingLanguage: 'Python',
     githubUrl: 'https://github.com/lubani/DevOps2412',
   ),
@@ -1098,8 +1135,9 @@ const _githubProjects = <PortfolioProject>[
     owner: 'lubani',
     name: 'hw6',
     description: LocalizedString(
-      english: 'A repository for the 6th lesson in the DevOps course',
-      hebrew: 'מאגר לשיעור השישי בקורס DevOps',
+      english:
+          'A small Python exercise from the sixth lesson of a DevOps course.',
+      hebrew: 'תרגיל Python קצר מהשיעור השישי בקורס DevOps.',
     ),
     programmingLanguage: 'Python',
     githubUrl: 'https://github.com/lubani/hw6',
@@ -1107,14 +1145,20 @@ const _githubProjects = <PortfolioProject>[
   PortfolioProject(
     owner: 'lubani',
     name: '2412-first-repo2',
+    description: LocalizedString(
+      english: 'An introductory Git repository containing a simple text file.',
+      hebrew: 'מאגר Git ראשוני הכולל קובץ טקסט פשוט.',
+    ),
     githubUrl: 'https://github.com/lubani/2412-first-repo2',
   ),
   PortfolioProject(
     owner: 'lubani',
     name: 'IRCourse',
     description: LocalizedString(
-      english: 'Information Retrieval Course',
-      hebrew: 'קורס אחזור מידע',
+      english:
+          'An information retrieval course project exploring review sentiment classification and BART-based text summarization.',
+      hebrew:
+          'פרויקט בקורס אחזור מידע הבוחן סיווג רגשות בביקורות וסיכום טקסט באמצעות BART.',
     ),
     programmingLanguage: 'Python',
     githubUrl: 'https://github.com/lubani/IRCourse',
@@ -1122,12 +1166,23 @@ const _githubProjects = <PortfolioProject>[
   PortfolioProject(
     owner: 'lubani',
     name: 'DeepStefan',
+    description: LocalizedString(
+      english:
+          'A fork of research code by Sifan Wang and Paris Perdikaris exploring physics-informed neural networks for Stefan problems.',
+      hebrew:
+          'עותק מפוצל של קוד מחקר מאת Sifan Wang ו־Paris Perdikaris, הבוחן רשתות נוירונים מונחות פיזיקה לפתרון בעיות סטפן.',
+    ),
     githubUrl: 'https://github.com/lubani/DeepStefan',
     isFork: true,
   ),
   PortfolioProject(
     owner: 'lubani',
     name: 'DjangoMS',
+    description: LocalizedString(
+      english:
+          'A Django REST API for managing countries and their local currencies.',
+      hebrew: 'ממשק REST ב־Django לניהול מדינות והמטבעות המקומיים שלהן.',
+    ),
     programmingLanguage: 'Python',
     githubUrl: 'https://github.com/lubani/DjangoMS',
   ),
@@ -1135,8 +1190,9 @@ const _githubProjects = <PortfolioProject>[
     owner: 'lubani',
     name: 'DjangoMSA',
     description: LocalizedString(
-      english: 'Microservices Website',
-      hebrew: 'אתר מבוסס מיקרו-שירותים',
+      english:
+          'A Django website prototype with registration, authentication, and a user forum.',
+      hebrew: 'אב־טיפוס לאתר Django הכולל הרשמה, אימות משתמשים ופורום.',
     ),
     programmingLanguage: 'Python',
     githubUrl: 'https://github.com/lubani/DjangoMSA',
@@ -1145,8 +1201,10 @@ const _githubProjects = <PortfolioProject>[
     owner: 'lubani',
     name: 'Summarizer-Extension',
     description: LocalizedString(
-      english: 'Accessability Plugin',
-      hebrew: 'תוסף נגישות לסיכום טקסטים',
+      english:
+          'A Chrome extension prototype that extracts webpage text and displays a generated summary.',
+      hebrew:
+          'אב־טיפוס לתוסף Chrome שמחלץ טקסט מדפי אינטרנט ומציג סיכום שנוצר עבורו.',
     ),
     programmingLanguage: 'JavaScript',
     githubUrl: 'https://github.com/lubani/Summarizer-Extension',
@@ -1155,8 +1213,10 @@ const _githubProjects = <PortfolioProject>[
     owner: 'lubani',
     name: 'bert-extractive-summarizer',
     description: LocalizedString(
-      english: 'Easy to use extractive text summarization with BERT',
-      hebrew: 'כלי פשוט לשימוש לסיכום טקסטים בשיטה חילוצית עם BERT',
+      english:
+          'A fork of a BERT-based extractive summarization library that selects representative sentences.',
+      hebrew:
+          'עותק מפוצל של ספרייה לסיכום טקסט מבוסס BERT, הבוחרת משפטים מייצגים.',
     ),
     githubUrl: 'https://github.com/lubani/bert-extractive-summarizer',
     isFork: true,
@@ -1165,11 +1225,71 @@ const _githubProjects = <PortfolioProject>[
     owner: 'lubani',
     name: 'HebrewSumy',
     description: LocalizedString(
-      english: 'A Hebrew Summarizer',
-      hebrew: 'מסכם טקסטים בעברית',
+      english:
+          'A Hebrew text summarization experiment using Sumy and Hebrew-language tools.',
+      hebrew: 'ניסוי לסיכום טקסטים בעברית באמצעות Sumy וכלי עיבוד לשפה העברית.',
     ),
     programmingLanguage: 'Python',
     githubUrl: 'https://github.com/lubani/HebrewSumy',
+  ),
+  PortfolioProject(
+    owner: 'lubacareer',
+    name: 'electricity',
+    description: LocalizedString(
+      english:
+          'SMD Twin Lab is a desktop learning tool for exploring PCB behavior and simulated component faults, with an early PCB design workspace.',
+      hebrew:
+          'SMD Twin Lab הוא כלי לימודי למחשב לחקר התנהגות כרטיסים אלקטרוניים ותקלות רכיבים בסימולציה, לצד סביבת תכנון PCB ראשונית.',
+    ),
+    programmingLanguage: 'Python',
+    githubUrl: 'https://github.com/lubacareer/electricity',
+  ),
+  PortfolioProject(
+    owner: 'lubacareer',
+    name: 'finance1',
+    description: LocalizedString(
+      english:
+          'A local-first Flutter financial diary for tracking accounts, income and expenses, reviewing imported statements, and exploring cash flow.',
+      hebrew:
+          'יומן פיננסי ב־Flutter השומר מידע מקומית ומאפשר מעקב אחר חשבונות, הכנסות והוצאות, סקירת דפי חשבון מיובאים ובחינת תזרים מזומנים.',
+    ),
+    programmingLanguage: 'Dart',
+    githubUrl: 'https://github.com/lubacareer/finance1',
+  ),
+  PortfolioProject(
+    owner: 'lubacareer',
+    name: 'jupiter',
+    description: LocalizedString(
+      english:
+          'An early research prototype exploring Jupiter\'s moons through orbital simulations and a separate, simplified Europa ice–ocean model.',
+      hebrew:
+          'אב־טיפוס מחקרי ראשוני לחקר ירחי צדק באמצעות סימולציות מסלול ומודל נפרד ומפושט של הקרח והאוקיינוס באירופה.',
+    ),
+    programmingLanguage: 'TypeScript',
+    githubUrl: 'https://github.com/lubacareer/jupiter',
+  ),
+  PortfolioProject(
+    owner: 'lubacareer',
+    name: 'Nasa2',
+    description: LocalizedString(
+      english:
+          'An exploratory surface-change visualization inspired by NISAR radar observations, currently using synthetic preview data.',
+      hebrew:
+          'כלי ניסיוני להדמיית שינויים על פני השטח בהשראת תצפיות המכ״ם של NISAR, המבוסס כרגע על נתוני הדגמה סינתטיים.',
+    ),
+    programmingLanguage: 'TypeScript',
+    githubUrl: 'https://github.com/lubacareer/Nasa2',
+  ),
+  PortfolioProject(
+    owner: 'lubacareer',
+    name: 'nasaCLPS-releases',
+    description: LocalizedString(
+      english:
+          'The public distribution repository for Trend Detective desktop releases, update manifests, checksums, and release notes.',
+      hebrew:
+          'מאגר ההפצה הציבורי של גרסאות Trend Detective למחשב, הכולל מניפסטים לעדכונים, סכומי ביקורת והערות גרסה.',
+    ),
+    githubUrl: 'https://github.com/lubacareer/nasaCLPS-releases',
   ),
 ];
 

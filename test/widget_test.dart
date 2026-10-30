@@ -47,7 +47,7 @@ void main() {
     expect(find.text('Education'), findsOneWidget);
     expect(
       find.text(
-        'Software Engineer | Python | TypeScript | Flutter | Backend | AI/NLP',
+        'AOI | Software Engineer | Python | TypeScript | Flutter | Backend | AI/NLP',
       ),
       findsOneWidget,
     );
@@ -240,6 +240,27 @@ void main() {
       findsOneWidget,
     );
     expect(find.text('ניסיון חוזר'), findsOneWidget);
+  });
+
+  testWidgets('AOI skills are prominent in both languages', (tester) async {
+    await pumpPortfolio(tester);
+    await tester.tap(find.text('Skills'));
+    await tester.pumpAndSettle();
+    expect(selectableTextContaining('AOI process support'), findsNWidgets(2));
+    await tester.tap(find.text('Close'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('עברית'));
+    await tester.pumpAndSettle();
+    expect(
+      find.text(
+        'AOI | מהנדסת תוכנה | Python | TypeScript | Flutter | Backend | AI/NLP',
+      ),
+      findsOneWidget,
+    );
+    await tester.tap(find.text('כישורים'));
+    await tester.pumpAndSettle();
+    expect(selectableTextContaining('תמיכה בתהליכי AOI'), findsNWidgets(2));
   });
 
   testWidgets('Experience shows the approved Flex role in both languages', (
