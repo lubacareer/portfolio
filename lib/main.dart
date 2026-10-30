@@ -1285,9 +1285,9 @@ const _githubProjects = <PortfolioProject>[
     name: 'nasaCLPS-releases',
     description: LocalizedString(
       english:
-          'The public distribution repository for Trend Detective desktop releases, update manifests, checksums, and release notes.',
+          'A planned public distribution repository for Trend Detective desktop downloads.',
       hebrew:
-          'מאגר ההפצה הציבורי של גרסאות Trend Detective למחשב, הכולל מניפסטים לעדכונים, סכומי ביקורת והערות גרסה.',
+          'מאגר ציבורי מתוכנן להפצת Trend Detective למחשבים.',
     ),
     githubUrl: 'https://github.com/lubacareer/nasaCLPS-releases',
   ),
