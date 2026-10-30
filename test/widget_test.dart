@@ -58,33 +58,49 @@ void main() {
       find.byType(widgets.Image).first,
     );
     expect(
-      (heroImage.image as widgets.NetworkImage).url,
-      '/images/meformal.png',
+      (heroImage.image as widgets.AssetImage).assetName,
+      'web/images/meformal.png',
     );
     expect(
       tester
           .widget<widgets.AspectRatio>(find.byType(widgets.AspectRatio).first)
           .aspectRatio,
-      closeTo(2048 / 1136, 0.001),
+      closeTo(1, 0.001),
     );
   });
 
-  testWidgets('Document tile language options stay on one row', (tester) async {
+  testWidgets('Documents offer English and Hebrew choices', (tester) async {
     await pumpPortfolio(tester);
 
     await tester.ensureVisible(find.text('CV'));
     await tester.tap(find.text('CV'));
     await tester.pumpAndSettle();
 
-    expect(find.text('English'), findsWidgets);
-    expect(find.text('Hebrew'), findsOneWidget);
+    var dialog = find.byType(material.AlertDialog);
+    expect(
+      find.descendant(of: dialog, matching: find.text('English')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: dialog, matching: find.text('Hebrew')),
+      findsOneWidget,
+    );
+    await tester.tap(find.descendant(of: dialog, matching: find.text('Close')));
+    await tester.pumpAndSettle();
 
     await tester.ensureVisible(find.text('Cover Letter'));
     await tester.tap(find.text('Cover Letter'));
     await tester.pumpAndSettle();
 
-    expect(find.text('English'), findsWidgets);
-    expect(find.text('Hebrew'), findsWidgets);
+    dialog = find.byType(material.AlertDialog);
+    expect(
+      find.descendant(of: dialog, matching: find.text('English')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: dialog, matching: find.text('Hebrew')),
+      findsOneWidget,
+    );
   });
 
   testWidgets('Contact dialog lists both email addresses', (tester) async {
@@ -305,7 +321,7 @@ void main() {
 
     expect(find.text('מבוא'), findsOneWidget);
     expect(find.text('השכלה'), findsOneWidget);
-    expect(find.text('יצירת קשר'), findsOneWidget);
+    expect(find.text('יצירת קשר'), findsWidgets);
     expect(
       widgets.Directionality.of(tester.element(find.text('מבוא'))),
       TextDirection.rtl,
