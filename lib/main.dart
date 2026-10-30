@@ -4,27 +4,27 @@ import 'package:url_launcher/url_launcher.dart';
 import 'github_repositories.dart';
 
 class AppPalette {
-  static const background = Color(0xFFEAFBF2);
-  static const backgroundWarm = Color(0xFFFFFAEA);
-  static const backgroundCool = Color(0xFFDFF7FF);
-  static const surface = Color(0xFFF8FFF9);
-  static const tileSurface = Color(0xF2FFFFFF);
-  static const tileHover = Color(0xFFE0FFF3);
-  static const tilePressed = Color(0xFFFFECE7);
-  static const primary = Color(0xFF0EAD8B);
-  static const primaryDeep = Color(0xFF103C36);
-  static const accent = Color(0xFFFF7F6E);
-  static const text = Color(0xFF123B35);
-  static const mutedText = Color(0xFF4C7068);
-  static const subtleText = Color(0xFF78918A);
-  static const border = Color(0x6637C8A2);
-  static const hoverBorder = Color(0x9937C8A2);
-  static const pressedBorder = Color(0x99FF7F6E);
-  static const primaryGlow = Color(0x3337C8A2);
-  static const accentGlow = Color(0x33FF7F6E);
-  static const tileShadow = Color(0x1F0EAD8B);
-  static const imageFallback = Color(0xFFE3F8EF);
-  static const onAccent = Color(0xFFFFFFFF);
+  static const background = Color(0xFF080F22);
+  static const backgroundWarm = Color(0xFF101934);
+  static const backgroundCool = Color(0xFF111C3C);
+  static const surface = Color(0xFF101A32);
+  static const tileSurface = Color(0xFF111A30);
+  static const tileHover = Color(0xFF1B2848);
+  static const tilePressed = Color(0xFF242F53);
+  static const primary = Color(0xFFB9B4FF);
+  static const primaryDeep = Color(0xFFE0DFFF);
+  static const accent = Color(0xFF92A6FF);
+  static const text = Color(0xFFF1F1FF);
+  static const mutedText = Color(0xFFC1C9E2);
+  static const subtleText = Color(0xFFA6B5D4);
+  static const border = Color(0xFF4D5E96);
+  static const hoverBorder = Color(0xFF9EABFF);
+  static const pressedBorder = Color(0xFFCBC7FF);
+  static const primaryGlow = Color(0x339EABFF);
+  static const accentGlow = Color(0x3392A6FF);
+  static const tileShadow = Color(0x22000000);
+  static const imageFallback = Color(0xFF1B2848);
+  static const onAccent = Color(0xFF090F22);
 }
 
 const _dialogRadius = 24.0;
@@ -143,18 +143,18 @@ class _PortfolioAppState extends State<PortfolioApp> {
       locale: _language.locale,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        brightness: Brightness.light,
+        brightness: Brightness.dark,
         scaffoldBackgroundColor: AppPalette.background,
-        colorScheme: const ColorScheme.light(
+        colorScheme: const ColorScheme.dark(
           surface: AppPalette.surface,
           primary: AppPalette.primary,
           onPrimary: AppPalette.onAccent,
           secondary: AppPalette.accent,
-          onSecondary: AppPalette.primaryDeep,
+          onSecondary: AppPalette.onAccent,
           onSurface: AppPalette.text,
           outline: AppPalette.border,
         ),
-        fontFamily: 'PlaypenSansThai',
+        fontFamily: 'Rubik',
         fontFamilyFallback: const ['Segoe UI', 'Arial', 'Noto Sans Hebrew'],
         useMaterial3: true,
         textButtonTheme: TextButtonThemeData(
@@ -198,211 +198,789 @@ class PortfolioHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final tiles = <Widget>[
+    void openProjects() => showProjects(
+      context,
+      language,
+      loadGitHubRepositories: loadGitHubRepositories,
+    );
+    final navigation = <_OrbitNavigationItem>[
+      _OrbitNavigationItem(
+        label: _localized(language, english: 'Projects', hebrew: 'פרויקטים'),
+        icon: Icons.grid_view_rounded,
+        onPressed: openProjects,
+      ),
       for (final section in _longSections)
-        HoverTile(
-          title: section.title.resolve(language),
-          subtitle: section.subtitle.resolve(language),
-          onTap: () => showLongSection(context, language, section),
+        _OrbitNavigationItem(
+          label: section.title.resolve(language),
           icon: section.icon,
+          onPressed: () => showLongSection(context, language, section),
         ),
-      HoverTile(
-        title: _localized(language, english: 'Projects', hebrew: 'פרויקטים'),
-        subtitle: _localized(
-          language,
-          english: 'My builds',
-          hebrew: 'הפרויקטים שלי',
-        ),
-        onTap: () => showProjects(
-          context,
-          language,
-          loadGitHubRepositories: loadGitHubRepositories,
-        ),
-        icon: Icons.dashboard_customize,
+      _OrbitNavigationItem(
+        label: _localized(language, english: 'Hobbies', hebrew: 'תחביבים'),
+        icon: Icons.favorite_outline_rounded,
+        onPressed: () => showLongSection(context, language, _hobbiesSection),
       ),
-      HoverTile(
-        title: _localized(language, english: 'Hobbies', hebrew: 'תחביבים'),
-        subtitle: _localized(
-          language,
-          english: 'Yoga, audio, and books',
-          hebrew: 'יוגה, אודיו וספרים',
-        ),
-        onTap: () => showLongSection(context, language, _hobbiesSection),
-        icon: Icons.interests,
+      _OrbitNavigationItem(
+        label: _localized(language, english: 'Contact', hebrew: 'יצירת קשר'),
+        icon: Icons.mail_outline_rounded,
+        onPressed: () => showContact(context, language),
       ),
-      HoverTile(
-        title: _localized(language, english: 'Contact', hebrew: 'יצירת קשר'),
-        subtitle: _localized(
-          language,
-          english: 'Email me',
-          hebrew: 'שלחו לי מייל',
-        ),
-        onTap: () => showContact(context, language),
-        icon: Icons.email_outlined,
+      _OrbitNavigationItem(
+        label: _localized(language, english: 'CV', hebrew: 'קורות חיים'),
+        icon: Icons.description_outlined,
+        onPressed: () => _showDocumentLanguages(context, language, false),
       ),
-      CvTile(language: language),
-      CoverLetterTile(language: language),
-      HoverTile(
-        title: _localized(
+      _OrbitNavigationItem(
+        label: _localized(
+          language,
+          english: 'Cover Letter',
+          hebrew: 'מכתב מקדים',
+        ),
+        icon: Icons.article_outlined,
+        onPressed: () => _showDocumentLanguages(context, language, true),
+      ),
+      _OrbitNavigationItem(
+        label: _localized(
           language,
           english: "Master's Diploma",
           hebrew: 'תעודת תואר שני',
         ),
-        subtitle: _localized(
-          language,
-          english: 'M.Sc. certificate',
-          hebrew: 'אישור תואר M.Sc.',
-        ),
-        onTap: () => openPublic('/docs/masters_public.pdf'),
         icon: Icons.workspace_premium_outlined,
+        onPressed: () => openPublic('/docs/masters_public.pdf'),
       ),
     ];
 
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              AppPalette.background,
-              AppPalette.backgroundWarm,
-              AppPalette.backgroundCool,
+      backgroundColor: AppPalette.background,
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final desktop = constraints.maxWidth >= 900;
+          final content = SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                if (!desktop)
+                  _OrbitMobileNavigation(
+                    language: language,
+                    onLanguageChanged: onLanguageChanged,
+                    items: navigation,
+                  ),
+                _OrbitHero(
+                  language: language,
+                  onProjects: openProjects,
+                  onCv: () => _showDocumentLanguages(context, language, false),
+                ),
+                _OrbitFeaturedProjects(
+                  language: language,
+                  onProjects: openProjects,
+                ),
+                _OrbitContactStrip(language: language),
+              ],
+            ),
+          );
+          if (!desktop) return content;
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _OrbitDesktopNavigation(
+                language: language,
+                onLanguageChanged: onLanguageChanged,
+                items: navigation,
+              ),
+              Expanded(child: content),
             ],
-          ),
-        ),
-        child: Center(
-          child: SingleChildScrollView(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 1100),
-              child: Padding(
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 520),
-                      child: AspectRatio(
-                        aspectRatio: 2048 / 1136,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(32),
-                          child: Image.network(
-                            '/images/meformal.png',
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stack) => Container(
-                              alignment: Alignment.center,
-                              color: AppPalette.imageFallback,
-                              child: const Icon(
-                                Icons.person,
-                                color: AppPalette.subtleText,
-                                size: 80,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      _localized(
-                        language,
-                        english: "Luba Ira Korlat",
-                        hebrew: 'לובה אירה קורלט',
-                      ),
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        color: AppPalette.primaryDeep,
-                        fontSize: 32,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      _localized(
-                        language,
-                        english:
-                            'Software Engineer | Python | TypeScript | Flutter | Backend | AI/NLP',
-                        hebrew:
-                            'מהנדסת תוכנה | Python | TypeScript | Flutter | Backend | AI/NLP',
-                      ),
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: AppPalette.text,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 720),
-                      child: Text(
-                        _localized(
-                          language,
-                          english:
-                              'M.Sc. Software Engineering graduate building practical apps, backend systems, AI/NLP tools, and polished client projects.',
-                          hebrew:
-                              'בוגרת תואר שני בהנדסת תוכנה שבונה אפליקציות, מערכות Backend, כלי AI/NLP ופרויקטים מלוטשים ללקוחות.',
-                        ),
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: AppPalette.mutedText,
-                          height: 1.35,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    _LanguageSelector(
-                      language: language,
-                      onLanguageChanged: onLanguageChanged,
-                    ),
-                    const SizedBox(height: 24),
-                    LayoutBuilder(
-                      builder: (context, constraints) {
-                        final w = constraints.maxWidth;
-                        int cols;
-                        if (w >= 1000) {
-                          cols = 4;
-                        } else if (w >= 600) {
-                          cols = 2;
-                        } else {
-                          cols = 1;
-                        }
-                        const spacing = 24.0;
-                        const tileHeight = 150.0;
-                        final tileWidth = (w - (spacing * (cols - 1))) / cols;
-                        final documentTileWidth = cols >= 4
-                            ? (w - tileWidth - (spacing * 2)) / 2
-                            : cols == 2
-                            ? w
-                            : tileWidth;
+          );
+        },
+      ),
+    );
+  }
+}
 
-                        return Wrap(
-                          alignment: WrapAlignment.center,
-                          spacing: spacing,
-                          runSpacing: spacing,
-                          children: tiles.map((tile) {
-                            final isDocumentTile =
-                                tile is CvTile || tile is CoverLetterTile;
+class _OrbitNavigationItem {
+  final String label;
+  final IconData icon;
+  final VoidCallback onPressed;
 
-                            return SizedBox(
-                              width: isDocumentTile
-                                  ? documentTileWidth
-                                  : tileWidth,
-                              height: tileHeight,
-                              child: tile,
-                            );
-                          }).toList(),
-                        );
-                      },
+  const _OrbitNavigationItem({
+    required this.label,
+    required this.icon,
+    required this.onPressed,
+  });
+}
+
+class _OrbitDesktopNavigation extends StatelessWidget {
+  final PortfolioLanguage language;
+  final ValueChanged<PortfolioLanguage> onLanguageChanged;
+  final List<_OrbitNavigationItem> items;
+
+  const _OrbitDesktopNavigation({
+    required this.language,
+    required this.onLanguageChanged,
+    required this.items,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 174,
+      decoration: BoxDecoration(
+        color: AppPalette.surface,
+        border: BorderDirectional(end: BorderSide(color: AppPalette.border)),
+      ),
+      child: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(12, 20, 12, 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Center(
+                child: Container(
+                  width: 55,
+                  height: 55,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(color: AppPalette.primary),
+                  ),
+                  child: Text(
+                    'LK',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: AppPalette.primary,
+                      fontWeight: FontWeight.w700,
                     ),
-                  ],
+                  ),
                 ),
               ),
-            ),
+              const SizedBox(height: 24),
+              for (final item in items) ...[
+                TextButton(
+                  onPressed: item.onPressed,
+                  style: TextButton.styleFrom(
+                    alignment: AlignmentDirectional.centerStart,
+                    foregroundColor: AppPalette.text,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 12,
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(item.icon, size: 20),
+                      const SizedBox(width: 9),
+                      Expanded(
+                        child: Text(
+                          item.label,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: Theme.of(context).textTheme.labelLarge,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 3),
+              ],
+              const SizedBox(height: 16),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: _LanguageSelector(
+                  language: language,
+                  onLanguageChanged: onLanguageChanged,
+                ),
+              ),
+            ],
           ),
         ),
       ),
     );
   }
+}
+
+class _OrbitMobileNavigation extends StatelessWidget {
+  final PortfolioLanguage language;
+  final ValueChanged<PortfolioLanguage> onLanguageChanged;
+  final List<_OrbitNavigationItem> items;
+
+  const _OrbitMobileNavigation({
+    required this.language,
+    required this.onLanguageChanged,
+    required this.items,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: AppPalette.surface,
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
+      child: SafeArea(
+        bottom: false,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    _localized(
+                      language,
+                      english: 'Luba Ira Korlat',
+                      hebrew: 'לובה אירה קורלט',
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: AppPalette.text,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Flexible(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: _LanguageSelector(
+                      language: language,
+                      onLanguageChanged: onLanguageChanged,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Wrap(
+              spacing: 4,
+              runSpacing: 2,
+              children: [
+                for (final item in items)
+                  TextButton(
+                    onPressed: item.onPressed,
+                    style: TextButton.styleFrom(
+                      foregroundColor: AppPalette.text,
+                      visualDensity: VisualDensity.compact,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                    ),
+                    child: Text(item.label),
+                  ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _OrbitHero extends StatelessWidget {
+  final PortfolioLanguage language;
+  final VoidCallback onProjects;
+  final VoidCallback onCv;
+
+  const _OrbitHero({
+    required this.language,
+    required this.onProjects,
+    required this.onCv,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        color: AppPalette.background,
+        image: DecorationImage(
+          image: AssetImage('web/images/night-orbit-hero.png'),
+          fit: BoxFit.cover,
+          opacity: 0.65,
+        ),
+      ),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final wide = constraints.maxWidth >= 720;
+          final portrait = Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: wide ? 460 : 320),
+              child: AspectRatio(
+                aspectRatio: 1,
+                child: ClipOval(
+                  child: Image.asset(
+                    'web/images/meformal.png',
+                    fit: BoxFit.cover,
+                    alignment: const Alignment(0.4, 0),
+                    semanticLabel: _localized(
+                      language,
+                      english: 'Portrait of Luba Ira Korlat',
+                      hebrew: 'דיוקן של לובה אירה קורלט',
+                    ),
+                    errorBuilder: (context, error, stack) => Container(
+                      alignment: Alignment.center,
+                      color: AppPalette.imageFallback,
+                      child: const Icon(
+                        Icons.person,
+                        color: AppPalette.subtleText,
+                        size: 80,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+          final copy = Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                _localized(
+                  language,
+                  english: 'AOI PROCESS SUPPORT',
+                  hebrew: 'תמיכה בתהליכי AOI',
+                ),
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                  color: AppPalette.primary,
+                  letterSpacing: language.isHebrew ? 0 : 2,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                _localized(
+                  language,
+                  english: 'Luba Ira Korlat',
+                  hebrew: 'לובה אירה קורלט',
+                ),
+                style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                  color: AppPalette.text,
+                  fontWeight: FontWeight.w700,
+                  height: 1.04,
+                  fontSize: wide ? 60 : 40,
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                _localized(
+                  language,
+                  english: 'AOI Process Support & Software Engineering',
+                  hebrew: 'תמיכה בתהליכי AOI והנדסת תוכנה',
+                ),
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  color: AppPalette.primary,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 18),
+              Text(
+                _localized(
+                  language,
+                  english:
+                      'M.Sc. Software Engineering graduate building practical apps, backend systems, AI/NLP tools, and polished client projects.',
+                  hebrew:
+                      'בוגרת תואר שני בהנדסת תוכנה שבונה אפליקציות, מערכות Backend, כלי AI/NLP ופרויקטים מלוטשים ללקוחות.',
+                ),
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  color: AppPalette.mutedText,
+                  height: 1.5,
+                ),
+              ),
+              const SizedBox(height: 26),
+              Wrap(
+                spacing: 12,
+                runSpacing: 10,
+                children: [
+                  FilledButton.icon(
+                    onPressed: onProjects,
+                    style: FilledButton.styleFrom(
+                      backgroundColor: AppPalette.primary,
+                      foregroundColor: AppPalette.background,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 22,
+                        vertical: 17,
+                      ),
+                      shape: const StadiumBorder(),
+                    ),
+                    icon: const Icon(Icons.arrow_forward_rounded, size: 19),
+                    label: Text(
+                      _localized(
+                        language,
+                        english: 'Explore Projects',
+                        hebrew: 'לכל הפרויקטים',
+                      ),
+                    ),
+                  ),
+                  OutlinedButton.icon(
+                    onPressed: onCv,
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 22,
+                        vertical: 17,
+                      ),
+                      shape: const StadiumBorder(),
+                    ),
+                    icon: const Icon(Icons.download_rounded, size: 19),
+                    label: Text(
+                      _localized(
+                        language,
+                        english: 'Download CV',
+                        hebrew: 'הורדת קורות חיים',
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 26),
+              Text(
+                _localized(
+                  language,
+                  english:
+                      'AOI | Software Engineer | Python | TypeScript | Flutter | Backend | AI/NLP',
+                  hebrew:
+                      'AOI | מהנדסת תוכנה | Python | TypeScript | Flutter | Backend | AI/NLP',
+                ),
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: AppPalette.mutedText,
+                  height: 1.6,
+                ),
+              ),
+            ],
+          );
+          return Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: wide ? 50 : 24,
+              vertical: wide ? 46 : 32,
+            ),
+            child: wide
+                ? Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(flex: 6, child: copy),
+                      const SizedBox(width: 24),
+                      Expanded(flex: 5, child: portrait),
+                    ],
+                  )
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      copy,
+                      const SizedBox(height: 28),
+                      Center(child: portrait),
+                    ],
+                  ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _OrbitFeaturedProjects extends StatelessWidget {
+  final PortfolioLanguage language;
+  final VoidCallback onProjects;
+
+  const _OrbitFeaturedProjects({
+    required this.language,
+    required this.onProjects,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    const names = ['CML', 'HeatEquationSimulator', 'HebrewSumy'];
+    const images = [
+      'web/images/project-cml.png',
+      'web/images/project-heat.png',
+      'web/images/project-summary.png',
+    ];
+    final projects = [
+      for (final name in names)
+        _githubProjects.firstWhere((project) => project.name == name),
+    ];
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(32, 34, 32, 40),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            _localized(
+              language,
+              english: 'SELECTED PROJECTS',
+              hebrew: 'פרויקטים נבחרים',
+            ),
+            style: Theme.of(context).textTheme.labelLarge?.copyWith(
+              color: AppPalette.primary,
+              letterSpacing: language.isHebrew ? 0 : 1.8,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Wrap(
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: 24,
+            runSpacing: 10,
+            children: [
+              Text(
+                _localized(
+                  language,
+                  english: 'Turning ideas into working solutions',
+                  hebrew: 'מרעיון לפתרון מעשי',
+                ),
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                  color: AppPalette.text,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              TextButton.icon(
+                onPressed: onProjects,
+                icon: const Icon(Icons.arrow_forward_rounded, size: 18),
+                label: Text(
+                  _localized(
+                    language,
+                    english: 'View all projects',
+                    hebrew: 'לכל הפרויקטים',
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final width = constraints.maxWidth;
+              final columns = width >= 900
+                  ? 3
+                  : width >= 600
+                  ? 2
+                  : 1;
+              const gap = 16.0;
+              final cardWidth = (width - gap * (columns - 1)) / columns;
+              return Wrap(
+                spacing: gap,
+                runSpacing: gap,
+                children: [
+                  for (var i = 0; i < projects.length; i++)
+                    SizedBox(
+                      width: cardWidth,
+                      child: _OrbitProjectCard(
+                        language: language,
+                        project: projects[i],
+                        image: images[i],
+                      ),
+                    ),
+                ],
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _OrbitProjectCard extends StatelessWidget {
+  final PortfolioLanguage language;
+  final PortfolioProject project;
+  final String image;
+
+  const _OrbitProjectCard({
+    required this.language,
+    required this.project,
+    required this.image,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: AppPalette.tileSurface,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(18),
+        side: const BorderSide(color: AppPalette.border),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: () => showProjectDetails(context, language, project),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          project.name,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: Theme.of(context).textTheme.titleMedium
+                              ?.copyWith(
+                                color: AppPalette.text,
+                                fontWeight: FontWeight.w700,
+                              ),
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          project.summary(language),
+                          maxLines: 4,
+                          overflow: TextOverflow.ellipsis,
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(
+                                color: AppPalette.mutedText,
+                                height: 1.45,
+                              ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Image.asset(
+                      image,
+                      width: 72,
+                      height: 72,
+                      fit: BoxFit.cover,
+                      excludeFromSemantics: true,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              Text(
+                project.metadata(language),
+                style: Theme.of(
+                  context,
+                ).textTheme.labelSmall?.copyWith(color: AppPalette.subtleText),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    _localized(
+                      language,
+                      english: 'View project',
+                      hebrew: 'הצגת הפרויקט',
+                    ),
+                    style: TextStyle(
+                      color: AppPalette.primary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  const Icon(
+                    Icons.arrow_forward_rounded,
+                    color: AppPalette.primary,
+                    size: 16,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _OrbitContactStrip extends StatelessWidget {
+  final PortfolioLanguage language;
+  const _OrbitContactStrip({required this.language});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: AppPalette.surface,
+      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 30),
+      child: Wrap(
+        crossAxisAlignment: WrapCrossAlignment.center,
+        alignment: WrapAlignment.spaceBetween,
+        spacing: 24,
+        runSpacing: 16,
+        children: [
+          Text(
+            _localized(
+              language,
+              english: 'Let’s connect about projects and opportunities.',
+              hebrew: 'מוזמנים ליצור קשר בנוגע לפרויקטים ולהזדמנויות.',
+            ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(color: AppPalette.text),
+          ),
+          FilledButton.icon(
+            onPressed: () => showContact(context, language),
+            style: FilledButton.styleFrom(
+              backgroundColor: AppPalette.primary,
+              foregroundColor: AppPalette.background,
+              shape: const StadiumBorder(),
+              padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 17),
+            ),
+            icon: const Icon(Icons.mail_outline_rounded, size: 19),
+            label: Text(
+              _localized(
+                language,
+                english: 'Get in touch',
+                hebrew: 'יצירת קשר',
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+void _showDocumentLanguages(
+  BuildContext context,
+  PortfolioLanguage language,
+  bool coverLetter,
+) {
+  showDialog<void>(
+    context: context,
+    builder: (dialogContext) => Directionality(
+      textDirection: language.direction,
+      child: AlertDialog(
+        backgroundColor: AppPalette.surface,
+        shape: _dialogShape(),
+        titleTextStyle: _dialogTitleStyle(dialogContext),
+        title: Text(
+          _localized(
+            language,
+            english: 'Choose a language',
+            hebrew: 'בחירת שפה',
+          ),
+        ),
+        content: Wrap(
+          spacing: 10,
+          runSpacing: 10,
+          children: [
+            OutlinedButton(
+              onPressed: () =>
+                  openPublic(coverLetter ? '/docs/CL1.pdf' : '/docs/CV1.pdf'),
+              child: Text(
+                _localized(language, english: 'English', hebrew: 'אנגלית'),
+              ),
+            ),
+            OutlinedButton(
+              onPressed: () => openPublic(
+                coverLetter ? '/docs/CL1heb.pdf' : '/docs/CV1heb.pdf',
+              ),
+              child: Text(
+                _localized(language, english: 'Hebrew', hebrew: 'עברית'),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: Text(_closeLabel(language)),
+          ),
+        ],
+      ),
+    ),
+  );
 }
 
 class _LanguageSelector extends StatelessWidget {
@@ -545,11 +1123,17 @@ const _skillsSection = PortfolioSection(
   icon: Icons.handyman,
   summary: LocalizedString(
     english:
-        'Broad software foundation across Python, C, C++, Java, SQL, Linux, machine learning, Flutter, and practical teaching-oriented problem solving.',
+        'AOI process support and program threshold configuration, alongside a broad software foundation across Python, C, C++, Java, SQL, Linux, machine learning, Flutter, and practical teaching-oriented problem solving.',
     hebrew:
-        'בסיס תוכנה רחב הכולל Python, C, C++, Java, SQL, Linux, למידת מכונה, Flutter ופתרון בעיות מעשי עם אוריינטציה להוראה.',
+        'תמיכה בתהליכי AOI והגדרת ערכי סף בתוכניות, לצד בסיס תוכנה רחב הכולל Python, C, C++, Java, SQL, Linux, למידת מכונה, Flutter ופתרון בעיות מעשי עם אוריינטציה להוראה.',
   ),
   paragraphs: [
+    LocalizedString(
+      english:
+          '''My skills include AOI process support, handling PCBAs, and configuring program thresholds.''',
+      hebrew:
+          '''הכישורים שלי כוללים תמיכה בתהליכי AOI, טיפול בכרטיסים אלקטרוניים מורכבים (PCBAs) והגדרת ערכי סף בתוכניות.''',
+    ),
     LocalizedString(
       english:
           '''My journey with computers started early: in fact, as early as three or four years old when I first encountered the command-line interface of MS-DOS. Even then, typing short commands sparked a lifelong passion for technology. Throughout the 90s, with Microsoft Windows dominating the landscape, I eagerly explored office software, particularly MS Word, where I channeled my love for storytelling and verbal expression.''',
@@ -605,9 +1189,9 @@ const _experienceSection = PortfolioSection(
   paragraphs: [
     LocalizedString(
       english:
-          '''At Flex, I work in Process Support AOI (24 June 2026–Present). My role includes handling PCBAs and configuring program thresholds.''',
+          '''At Flex, I’m excited to work in Process Support AOI (24 June 2026–Present), handling PCBAs and configuring program thresholds. This hands-on role brings together electronics and automated optical inspection, with an emphasis on careful, detail-oriented configuration. I enjoy developing my skills in a field where technology and precision meet.''',
       hebrew:
-          '''ב-Flex אני עובדת בתפקיד תמיכה בתהליכי AOI (24 ביוני 2026–היום). התפקיד כולל טיפול בכרטיסים אלקטרוניים מורכבים (PCBAs) והגדרת ערכי סף בתוכניות.''',
+          '''ב-Flex אני שמחה לעבוד בתפקיד תמיכה בתהליכי AOI (24 ביוני 2026–היום). התפקיד כולל טיפול בכרטיסים אלקטרוניים מורכבים (PCBAs) והגדרת ערכי סף בתוכניות. העבודה המעשית משלבת אלקטרוניקה ובדיקה אופטית אוטומטית, עם דגש על הגדרות מדויקות ותשומת לב לפרטים. אני נהנית לפתח את הכישורים שלי בתחום שמחבר בין טכנולוגיה לדיוק.''',
     ),
     LocalizedString(
       english:
@@ -968,9 +1552,9 @@ const _githubProjects = <PortfolioProject>[
     name: 'CML',
     description: LocalizedString(
       english:
-          'The Case of the Missing Logic is a 2D point-and-click comedy mystery built with Phaser, TypeScript, and Vite. The current slice includes scene navigation, character movement, branching dialogue, inventory, map gating, and a playable puzzle chain.',
+          'A point-and-click comedy mystery built with Phaser and TypeScript, featuring interactive scenes, dialogue, inventory, and puzzles.',
       hebrew:
-          'The Case of the Missing Logic הוא משחק מסתורין קומי דו-ממדי בסגנון point-and-click, שנבנה עם Phaser, TypeScript ו-Vite. החתך הנוכחי כולל ניווט בין סצנות, תנועת דמות, דיאלוג מסתעף, מלאי, פתיחת מפה ושרשרת חידות משחקית.',
+          'משחק תעלומת קומדיה בסגנון הצבעה ולחיצה, שנבנה עם Phaser ו־TypeScript ומשלב סצנות אינטראקטיביות, דיאלוגים, מלאי וחידות.',
     ),
     programmingLanguage: 'TypeScript',
     githubUrl: 'https://github.com/lubacareer/CML',
@@ -980,9 +1564,9 @@ const _githubProjects = <PortfolioProject>[
     name: 'spritebury',
     description: LocalizedString(
       english:
-          'A nostalgic browser-based virtual city and social web game in early Next.js/Supabase development. The design focuses on accounts, static pixel avatars, profiles, inventory ownership, shops, jobs, fake currency, homes, presence, and server-authoritative game actions.',
+          'A virtual city web game with avatar creation, profiles, and a marketplace, built with Next.js and TypeScript.',
       hebrew:
-          'משחק עיר וירטואלית וחברתית בדפדפן, בסגנון נוסטלגי, בשלבי פיתוח ראשונים עם Next.js ו-Supabase. התכנון מתמקד בחשבונות, אווטארים סטטיים בפיקסל-ארט, פרופילים, בעלות על מלאי, חנויות, עבודות, מטבע משחקי, בתים, נוכחות ופעולות משחק שמאומתות בשרת.',
+          'משחק עיר וירטואלית ברשת הכולל יצירת דמויות, פרופילים ושוק מקוון, שנבנה עם Next.js ו־TypeScript.',
     ),
     programmingLanguage: 'TypeScript',
     githubUrl: 'https://github.com/lubacareer/spritebury',
@@ -1014,8 +1598,10 @@ const _githubProjects = <PortfolioProject>[
     owner: 'lubacareer',
     name: 'HeatEquationSimulator',
     description: LocalizedString(
-      english: 'Heat equation and Stefan problem addressed.',
-      hebrew: 'סימולציה ופתרון של משוואת החום ובעיית סטפן.',
+      english:
+          'An experimental Python desktop simulator for exploring heat transfer, phase changes, and related physics through interactive visualizations.',
+      hebrew:
+          'סימולטור ניסיוני למחשב ב־Python לחקר מעבר חום, שינויי פאזה ותופעות פיזיקליות קשורות באמצעות הדמיות אינטראקטיביות.',
     ),
     programmingLanguage: 'Python',
     githubUrl: 'https://github.com/lubacareer/HeatEquationSimulator',
@@ -1024,8 +1610,10 @@ const _githubProjects = <PortfolioProject>[
     owner: 'lubacareer',
     name: 'portfolio',
     description: LocalizedString(
-      english: 'My new portfolio website',
-      hebrew: 'אתר הפורטפוליו החדש שלי',
+      english:
+          'A bilingual Flutter portfolio presenting professional experience, projects, education, and contact information.',
+      hebrew:
+          'אתר תיק עבודות דו־לשוני ב־Flutter המציג ניסיון מקצועי, פרויקטים, השכלה ופרטי קשר.',
     ),
     programmingLanguage: 'Dart',
     githubUrl: 'https://github.com/lubacareer/portfolio',
@@ -1034,8 +1622,10 @@ const _githubProjects = <PortfolioProject>[
     owner: 'lubacareer',
     name: 'ccomp',
     description: LocalizedString(
-      english: 'A robust C compiler',
-      hebrew: 'מהדר C יציב ורחב יכולות',
+      english:
+          'An educational C compiler that parses a subset of C, performs semantic checks, and generates intermediate code and x86-64 assembly.',
+      hebrew:
+          'מהדר לימודי לשפת C שמנתח תת־קבוצה של השפה, מבצע בדיקות סמנטיות ומפיק קוד ביניים ואסמבלי ל־x86-64.',
     ),
     programmingLanguage: 'C',
     githubUrl: 'https://github.com/lubacareer/ccomp',
@@ -1044,8 +1634,10 @@ const _githubProjects = <PortfolioProject>[
     owner: 'lubani',
     name: 'astro',
     description: LocalizedString(
-      english: 'An Astrology App',
-      hebrew: 'אפליקציית אסטרולוגיה',
+      english:
+          'A Flutter astrology app with screens for natal charts and aspects.',
+      hebrew:
+          'אפליקציית אסטרולוגיה ב־Flutter עם מסכים למפות לידה ולהיבטים אסטרולוגיים.',
     ),
     programmingLanguage: 'C++',
     githubUrl: 'https://github.com/lubani/astro',
@@ -1054,8 +1646,8 @@ const _githubProjects = <PortfolioProject>[
     owner: 'lubani',
     name: 'Portfolio',
     description: LocalizedString(
-      english: 'My personal portfolio source code.',
-      hebrew: 'קוד המקור של הפורטפוליו האישי שלי.',
+      english: 'An earlier personal portfolio built with Next.js and React.',
+      hebrew: 'גרסה קודמת של תיק עבודות אישי שנבנתה באמצעות Next.js ו־React.',
     ),
     programmingLanguage: 'JavaScript',
     githubUrl: 'https://github.com/lubani/Portfolio',
@@ -1064,8 +1656,9 @@ const _githubProjects = <PortfolioProject>[
     owner: 'lubani',
     name: 'math',
     description: LocalizedString(
-      english: 'Some Python scripts for mathematical demonstrations',
-      hebrew: 'סקריפטים ב-Python להדגמות מתמטיות',
+      english:
+          'Python scripts illustrating mathematical concepts, calculations, and visualizations.',
+      hebrew: 'אוסף סקריפטים ב־Python להמחשת מושגים מתמטיים, חישובים והדמיות.',
     ),
     programmingLanguage: 'Python',
     githubUrl: 'https://github.com/lubani/math',
@@ -1073,24 +1666,46 @@ const _githubProjects = <PortfolioProject>[
   PortfolioProject(
     owner: 'lubani',
     name: 'scientificProject',
+    description: LocalizedString(
+      english:
+          'A Python desktop research application exploring two-phase Stefan problems with physics-informed neural networks and analytical and numerical methods.',
+      hebrew:
+          'יישום מחקרי לשולחן העבודה ב־Python לחקר בעיית סטפן דו־פאזית באמצעות רשתות נוירונים מונחות פיזיקה ושיטות אנליטיות ונומריות.',
+    ),
     programmingLanguage: 'Python',
     githubUrl: 'https://github.com/lubani/scientificProject',
   ),
   PortfolioProject(
     owner: 'lubani',
     name: 'HebSum',
+    description: LocalizedString(
+      english:
+          'A Hebrew text summarization prototype with a Flask service and browser extension.',
+      hebrew: 'אב־טיפוס לסיכום טקסט בעברית הכולל שירות Flask ותוסף לדפדפן.',
+    ),
     programmingLanguage: 'Python',
     githubUrl: 'https://github.com/lubani/HebSum',
   ),
   PortfolioProject(
     owner: 'lubani',
     name: 'MySoftware',
+    description: LocalizedString(
+      english:
+          'A small Python practice repository with simple interaction functions.',
+      hebrew:
+          'מאגר תרגול קטן ב־Python עם פונקציות בסיסיות המדמות פעולות משתמש.',
+    ),
     programmingLanguage: 'Python',
     githubUrl: 'https://github.com/lubani/MySoftware',
   ),
   PortfolioProject(
     owner: 'lubani',
     name: 'DevOps2412',
+    description: LocalizedString(
+      english:
+          'DevOps course exercises featuring Python scripts and a Jenkins pipeline.',
+      hebrew: 'תרגילי קורס DevOps הכוללים סקריפטים ב־Python ותהליך Jenkins.',
+    ),
     programmingLanguage: 'Python',
     githubUrl: 'https://github.com/lubani/DevOps2412',
   ),
@@ -1098,8 +1713,9 @@ const _githubProjects = <PortfolioProject>[
     owner: 'lubani',
     name: 'hw6',
     description: LocalizedString(
-      english: 'A repository for the 6th lesson in the DevOps course',
-      hebrew: 'מאגר לשיעור השישי בקורס DevOps',
+      english:
+          'A small Python exercise from the sixth lesson of a DevOps course.',
+      hebrew: 'תרגיל Python קצר מהשיעור השישי בקורס DevOps.',
     ),
     programmingLanguage: 'Python',
     githubUrl: 'https://github.com/lubani/hw6',
@@ -1107,14 +1723,20 @@ const _githubProjects = <PortfolioProject>[
   PortfolioProject(
     owner: 'lubani',
     name: '2412-first-repo2',
+    description: LocalizedString(
+      english: 'An introductory Git repository containing a simple text file.',
+      hebrew: 'מאגר Git ראשוני הכולל קובץ טקסט פשוט.',
+    ),
     githubUrl: 'https://github.com/lubani/2412-first-repo2',
   ),
   PortfolioProject(
     owner: 'lubani',
     name: 'IRCourse',
     description: LocalizedString(
-      english: 'Information Retrieval Course',
-      hebrew: 'קורס אחזור מידע',
+      english:
+          'An information retrieval course project exploring review sentiment classification and BART-based text summarization.',
+      hebrew:
+          'פרויקט בקורס אחזור מידע הבוחן סיווג רגשות בביקורות וסיכום טקסט באמצעות BART.',
     ),
     programmingLanguage: 'Python',
     githubUrl: 'https://github.com/lubani/IRCourse',
@@ -1122,12 +1744,23 @@ const _githubProjects = <PortfolioProject>[
   PortfolioProject(
     owner: 'lubani',
     name: 'DeepStefan',
+    description: LocalizedString(
+      english:
+          'A fork of research code by Sifan Wang and Paris Perdikaris exploring physics-informed neural networks for Stefan problems.',
+      hebrew:
+          'עותק מפוצל של קוד מחקר מאת Sifan Wang ו־Paris Perdikaris, הבוחן רשתות נוירונים מונחות פיזיקה לפתרון בעיות סטפן.',
+    ),
     githubUrl: 'https://github.com/lubani/DeepStefan',
     isFork: true,
   ),
   PortfolioProject(
     owner: 'lubani',
     name: 'DjangoMS',
+    description: LocalizedString(
+      english:
+          'A Django REST API for managing countries and their local currencies.',
+      hebrew: 'ממשק REST ב־Django לניהול מדינות והמטבעות המקומיים שלהן.',
+    ),
     programmingLanguage: 'Python',
     githubUrl: 'https://github.com/lubani/DjangoMS',
   ),
@@ -1135,8 +1768,9 @@ const _githubProjects = <PortfolioProject>[
     owner: 'lubani',
     name: 'DjangoMSA',
     description: LocalizedString(
-      english: 'Microservices Website',
-      hebrew: 'אתר מבוסס מיקרו-שירותים',
+      english:
+          'A Django website prototype with registration, authentication, and a user forum.',
+      hebrew: 'אב־טיפוס לאתר Django הכולל הרשמה, אימות משתמשים ופורום.',
     ),
     programmingLanguage: 'Python',
     githubUrl: 'https://github.com/lubani/DjangoMSA',
@@ -1145,8 +1779,10 @@ const _githubProjects = <PortfolioProject>[
     owner: 'lubani',
     name: 'Summarizer-Extension',
     description: LocalizedString(
-      english: 'Accessability Plugin',
-      hebrew: 'תוסף נגישות לסיכום טקסטים',
+      english:
+          'A Chrome extension prototype that extracts webpage text and displays a generated summary.',
+      hebrew:
+          'אב־טיפוס לתוסף Chrome שמחלץ טקסט מדפי אינטרנט ומציג סיכום שנוצר עבורו.',
     ),
     programmingLanguage: 'JavaScript',
     githubUrl: 'https://github.com/lubani/Summarizer-Extension',
@@ -1155,8 +1791,10 @@ const _githubProjects = <PortfolioProject>[
     owner: 'lubani',
     name: 'bert-extractive-summarizer',
     description: LocalizedString(
-      english: 'Easy to use extractive text summarization with BERT',
-      hebrew: 'כלי פשוט לשימוש לסיכום טקסטים בשיטה חילוצית עם BERT',
+      english:
+          'A fork of a BERT-based extractive summarization library that selects representative sentences.',
+      hebrew:
+          'עותק מפוצל של ספרייה לסיכום טקסט מבוסס BERT, הבוחרת משפטים מייצגים.',
     ),
     githubUrl: 'https://github.com/lubani/bert-extractive-summarizer',
     isFork: true,
@@ -1165,11 +1803,70 @@ const _githubProjects = <PortfolioProject>[
     owner: 'lubani',
     name: 'HebrewSumy',
     description: LocalizedString(
-      english: 'A Hebrew Summarizer',
-      hebrew: 'מסכם טקסטים בעברית',
+      english:
+          'A Hebrew text summarization experiment using Sumy and Hebrew-language tools.',
+      hebrew: 'ניסוי לסיכום טקסטים בעברית באמצעות Sumy וכלי עיבוד לשפה העברית.',
     ),
     programmingLanguage: 'Python',
     githubUrl: 'https://github.com/lubani/HebrewSumy',
+  ),
+  PortfolioProject(
+    owner: 'lubacareer',
+    name: 'electricity',
+    description: LocalizedString(
+      english:
+          'SMD Twin Lab is a desktop learning tool for exploring PCB behavior and simulated component faults, with an early PCB design workspace.',
+      hebrew:
+          'SMD Twin Lab הוא כלי לימודי למחשב לחקר התנהגות כרטיסים אלקטרוניים ותקלות רכיבים בסימולציה, לצד סביבת תכנון PCB ראשונית.',
+    ),
+    programmingLanguage: 'Python',
+    githubUrl: 'https://github.com/lubacareer/electricity',
+  ),
+  PortfolioProject(
+    owner: 'lubacareer',
+    name: 'finance1',
+    description: LocalizedString(
+      english:
+          'A local-first Flutter financial diary for tracking accounts, income and expenses, reviewing imported statements, and exploring cash flow.',
+      hebrew:
+          'יומן פיננסי ב־Flutter השומר מידע מקומית ומאפשר מעקב אחר חשבונות, הכנסות והוצאות, סקירת דפי חשבון מיובאים ובחינת תזרים מזומנים.',
+    ),
+    programmingLanguage: 'Dart',
+    githubUrl: 'https://github.com/lubacareer/finance1',
+  ),
+  PortfolioProject(
+    owner: 'lubacareer',
+    name: 'jupiter',
+    description: LocalizedString(
+      english:
+          'An early research prototype exploring Jupiter\'s moons through orbital simulations and a separate, simplified Europa ice–ocean model.',
+      hebrew:
+          'אב־טיפוס מחקרי ראשוני לחקר ירחי צדק באמצעות סימולציות מסלול ומודל נפרד ומפושט של הקרח והאוקיינוס באירופה.',
+    ),
+    programmingLanguage: 'TypeScript',
+    githubUrl: 'https://github.com/lubacareer/jupiter',
+  ),
+  PortfolioProject(
+    owner: 'lubacareer',
+    name: 'Nasa2',
+    description: LocalizedString(
+      english:
+          'An exploratory surface-change visualization inspired by NISAR radar observations, currently using synthetic preview data.',
+      hebrew:
+          'כלי ניסיוני להדמיית שינויים על פני השטח בהשראת תצפיות המכ״ם של NISAR, המבוסס כרגע על נתוני הדגמה סינתטיים.',
+    ),
+    programmingLanguage: 'TypeScript',
+    githubUrl: 'https://github.com/lubacareer/Nasa2',
+  ),
+  PortfolioProject(
+    owner: 'lubacareer',
+    name: 'nasaCLPS-releases',
+    description: LocalizedString(
+      english:
+          'A planned public distribution repository for Trend Detective desktop downloads.',
+      hebrew: 'מאגר ציבורי מתוכנן להפצת Trend Detective למחשבים.',
+    ),
+    githubUrl: 'https://github.com/lubacareer/nasaCLPS-releases',
   ),
 ];
 
