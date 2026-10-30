@@ -55,17 +55,28 @@ Future<List<GitHubRepository>> loadPublicGitHubRepositories(
       for (final item in data) {
         if (item is! Map<String, dynamic> ||
             item['name'] is! String ||
-            item['html_url'] is! String ||
             item['fork'] is! bool ||
             (item['description'] != null && item['description'] is! String) ||
             (item['language'] != null && item['language'] is! String)) {
           throw const FormatException('Invalid repository metadata');
         }
         if (item['private'] == true) continue;
+        final name = item['name'] as String;
+        if (name.isEmpty ||
+            name.length > 100 ||
+            name == '.' ||
+            name == '..' ||
+            RegExp(r'[^A-Za-z0-9._-]').hasMatch(name)) {
+          throw const FormatException('Invalid repository name');
+        }
         repositories.add(
           GitHubRepository(
-            name: item['name'] as String,
-            htmlUrl: item['html_url'] as String,
+            name: name,
+            htmlUrl: Uri(
+              scheme: 'https',
+              host: 'github.com',
+              pathSegments: [owner, name],
+            ).toString(),
             isFork: item['fork'] as bool,
             description: item['description'] as String?,
             language: item['language'] as String?,
