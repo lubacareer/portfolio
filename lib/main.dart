@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'github_repositories.dart';
+
 class AppPalette {
   static const background = Color(0xFFEAFBF2);
   static const backgroundWarm = Color(0xFFFFFAEA);
@@ -117,7 +119,9 @@ void main() {
 }
 
 class PortfolioApp extends StatefulWidget {
-  const PortfolioApp({super.key});
+  const PortfolioApp({super.key, this.loadGitHubRepositories});
+
+  final GitHubRepositoryLoader? loadGitHubRepositories;
 
   @override
   State<PortfolioApp> createState() => _PortfolioAppState();
@@ -170,6 +174,7 @@ class _PortfolioAppState extends State<PortfolioApp> {
         textDirection: _language.direction,
         child: PortfolioHome(
           language: _language,
+          loadGitHubRepositories: widget.loadGitHubRepositories,
           onLanguageChanged: (language) {
             setState(() => _language = language);
           },
@@ -182,11 +187,13 @@ class _PortfolioAppState extends State<PortfolioApp> {
 class PortfolioHome extends StatelessWidget {
   final PortfolioLanguage language;
   final ValueChanged<PortfolioLanguage> onLanguageChanged;
+  final GitHubRepositoryLoader? loadGitHubRepositories;
 
   const PortfolioHome({
     super.key,
     required this.language,
     required this.onLanguageChanged,
+    this.loadGitHubRepositories,
   });
 
   @override
@@ -206,7 +213,11 @@ class PortfolioHome extends StatelessWidget {
           english: 'My builds',
           hebrew: 'הפרויקטים שלי',
         ),
-        onTap: () => showProjects(context, language),
+        onTap: () => showProjects(
+          context,
+          language,
+          loadGitHubRepositories: loadGitHubRepositories,
+        ),
         icon: Icons.dashboard_customize,
       ),
       HoverTile(
@@ -587,11 +598,17 @@ const _experienceSection = PortfolioSection(
   icon: Icons.work_outline,
   summary: LocalizedString(
     english:
-        'Teaching, accessibility support, cybersecurity instruction, and freelance software development form a practical path centered on clear technical problem solving.',
+        'AOI process support at Flex (24 June 2026–Present), teaching, accessibility support, cybersecurity instruction, and freelance software development form a practical path centered on clear technical problem solving.',
     hebrew:
-        'הוראה, נגישות, הדרכת סייבר ופיתוח תוכנה עצמאי יוצרים מסלול מעשי שממוקד בפתרון בעיות טכניות בצורה ברורה.',
+        'תמיכה בתהליכי AOI ב-Flex (24 ביוני 2026–היום), הוראה, נגישות, הדרכת סייבר ופיתוח תוכנה עצמאי יוצרים מסלול מעשי שממוקד בפתרון בעיות טכניות בצורה ברורה.',
   ),
   paragraphs: [
+    LocalizedString(
+      english:
+          '''At Flex, I work in Process Support AOI (24 June 2026–Present). My role includes handling PCBAs and configuring program thresholds.''',
+      hebrew:
+          '''ב-Flex אני עובדת בתפקיד תמיכה בתהליכי AOI (24 ביוני 2026–היום). התפקיד כולל טיפול בכרטיסים אלקטרוניים מורכבים (PCBAs) והגדרת ערכי סף בתוכניות.''',
+    ),
     LocalizedString(
       english:
           '''My formal teaching experience began in 2021 at Achva Academic College, where I led database practice sessions for Information Systems students. In that role, I helped students strengthen their understanding of SQL and normalization through focused exercises and step-by-step guidance. This early position established the foundation for my approach as an educator: combining technical clarity with practical problem-solving.''',
@@ -1156,7 +1173,11 @@ const _githubProjects = <PortfolioProject>[
   ),
 ];
 
-void showProjects(BuildContext context, PortfolioLanguage language) {
+void showProjects(
+  BuildContext context,
+  PortfolioLanguage language, {
+  GitHubRepositoryLoader? loadGitHubRepositories,
+}) {
   showDialog(
     context: context,
     builder: (_) => Directionality(
@@ -1192,9 +1213,19 @@ void showProjects(BuildContext context, PortfolioLanguage language) {
                     textAlign: language.paragraphAlign,
                   ),
                   const SizedBox(height: 16),
-                  _ProjectOwnerSection(owner: 'lubacareer', language: language),
+                  _ProjectOwnerSection(
+                    owner: 'lubacareer',
+                    language: language,
+                    loadRepositories:
+                        loadGitHubRepositories ?? loadPublicGitHubRepositories,
+                  ),
                   const SizedBox(height: 18),
-                  _ProjectOwnerSection(owner: 'lubani', language: language),
+                  _ProjectOwnerSection(
+                    owner: 'lubani',
+                    language: language,
+                    loadRepositories:
+                        loadGitHubRepositories ?? loadPublicGitHubRepositories,
+                  ),
                 ],
               ),
             ),
@@ -1211,32 +1242,120 @@ void showProjects(BuildContext context, PortfolioLanguage language) {
   );
 }
 
-class _ProjectOwnerSection extends StatelessWidget {
+class _ProjectOwnerSection extends StatefulWidget {
   final String owner;
   final PortfolioLanguage language;
+  final GitHubRepositoryLoader loadRepositories;
 
-  const _ProjectOwnerSection({required this.owner, required this.language});
+  const _ProjectOwnerSection({
+    required this.owner,
+    required this.language,
+    required this.loadRepositories,
+  });
+
+  @override
+  State<_ProjectOwnerSection> createState() => _ProjectOwnerSectionState();
+}
+
+class _ProjectOwnerSectionState extends State<_ProjectOwnerSection> {
+  late Future<List<GitHubRepository>> _repositories;
+
+  @override
+  void initState() {
+    super.initState();
+    _repositories = widget.loadRepositories(widget.owner);
+  }
+
+  void _retry() {
+    setState(() {
+      _repositories = widget.loadRepositories(widget.owner);
+    });
+  }
+
+  PortfolioProject _toProject(GitHubRepository repository) {
+    PortfolioProject? curated;
+    for (final project in _githubProjects) {
+      if (project.owner.toLowerCase() == widget.owner.toLowerCase() &&
+          project.name.toLowerCase() == repository.name.toLowerCase()) {
+        curated = project;
+        break;
+      }
+    }
+    final description = repository.description?.trim();
+    return PortfolioProject(
+      owner: widget.owner,
+      name: repository.name,
+      githubUrl: repository.htmlUrl,
+      description:
+          curated?.description ??
+          (description == null || description.isEmpty
+              ? null
+              : LocalizedString(english: description, hebrew: description)),
+      programmingLanguage: repository.language,
+      isFork: repository.isFork,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    final projects = _githubProjects
-        .where((project) => project.owner == owner)
-        .toList();
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          '$owner (${projects.length})',
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-            color: AppPalette.text,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-        const SizedBox(height: 8),
-        for (final project in projects)
-          _ProjectListItem(project: project, language: language),
-      ],
+    final language = widget.language;
+    return FutureBuilder<List<GitHubRepository>>(
+      future: _repositories,
+      builder: (context, snapshot) {
+        final loading = snapshot.connectionState != ConnectionState.done;
+        final failed = snapshot.hasError;
+        final projects = failed
+            ? _githubProjects
+                  .where((project) => project.owner == widget.owner)
+                  .toList()
+            : (snapshot.data ?? []).map(_toProject).toList();
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              loading ? widget.owner : '${widget.owner} (${projects.length})',
+              style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                color: AppPalette.text,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(height: 8),
+            if (loading)
+              Text(
+                _localized(
+                  language,
+                  english: 'Loading repositories...',
+                  hebrew: 'טוען מאגרים...',
+                ),
+              )
+            else if (failed) ...[
+              Text(
+                _localized(
+                  language,
+                  english:
+                      'Could not load repositories. Showing saved projects.',
+                  hebrew: 'לא ניתן לטעון מאגרים. מוצגים פרויקטים שמורים.',
+                ),
+              ),
+              TextButton(
+                onPressed: _retry,
+                child: Text(
+                  _localized(language, english: 'Retry', hebrew: 'ניסיון חוזר'),
+                ),
+              ),
+            ] else if (projects.isEmpty)
+              Text(
+                _localized(
+                  language,
+                  english: 'No public repositories found.',
+                  hebrew: 'לא נמצאו מאגרים ציבוריים.',
+                ),
+              ),
+            for (final project in projects)
+              _ProjectListItem(project: project, language: language),
+          ],
+        );
+      },
     );
   }
 }
