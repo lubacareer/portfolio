@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'github_repositories.dart';
+import 'project_media.dart';
+import 'youtube_player.dart';
 
 class AppPalette {
   static const background = Color(0xFF080F22);
@@ -684,15 +686,19 @@ class _OrbitFeaturedProjects extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const names = ['CML', 'HeatEquationSimulator', 'HebrewSumy'];
-    const images = [
-      'web/images/project-cml.png',
-      'web/images/project-heat.png',
-      'web/images/project-summary.png',
+    const featured = [
+      ('lubacareer', 'HeatEquationSimulator'),
+      ('lubacareer', 'jupiter'),
+      ('lubacareer', 'Nasa2'),
+      ('lubacareer', 'nasaCLPS-releases'),
+      ('lubacareer', 'CML'),
+      ('lubacareer', 'electricity'),
     ];
     final projects = [
-      for (final name in names)
-        _githubProjects.firstWhere((project) => project.name == name),
+      for (final (owner, name) in featured)
+        _githubProjects.firstWhere(
+          (project) => project.owner == owner && project.name == name,
+        ),
     ];
     return Padding(
       padding: const EdgeInsets.fromLTRB(32, 34, 32, 40),
@@ -761,7 +767,10 @@ class _OrbitFeaturedProjects extends StatelessWidget {
                       child: _OrbitProjectCard(
                         language: language,
                         project: projects[i],
-                        image: images[i],
+                        image: mediaForProject(
+                          projects[i].owner,
+                          projects[i].name,
+                        )?.screenshots.firstOrNull?.asset,
                       ),
                     ),
                 ],
@@ -777,7 +786,7 @@ class _OrbitFeaturedProjects extends StatelessWidget {
 class _OrbitProjectCard extends StatelessWidget {
   final PortfolioLanguage language;
   final PortfolioProject project;
-  final String image;
+  final String? image;
 
   const _OrbitProjectCard({
     required this.language,
@@ -833,16 +842,27 @@ class _OrbitProjectCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 12),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child: Image.asset(
-                      image,
+                  if (image != null)
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image.asset(
+                        image!,
+                        width: 72,
+                        height: 72,
+                        fit: BoxFit.cover,
+                        excludeFromSemantics: true,
+                      ),
+                    )
+                  else
+                    const SizedBox(
                       width: 72,
                       height: 72,
-                      fit: BoxFit.cover,
-                      excludeFromSemantics: true,
+                      child: Icon(
+                        Icons.science_outlined,
+                        color: AppPalette.primary,
+                        size: 36,
+                      ),
                     ),
-                  ),
                 ],
               ),
               const SizedBox(height: 20),
@@ -2134,6 +2154,7 @@ void showProjectDetails(
   PortfolioLanguage language,
   PortfolioProject project,
 ) {
+  final media = mediaForProject(project.owner, project.name);
   showDialog(
     context: context,
     builder: (_) => Directionality(
@@ -2162,6 +2183,76 @@ void showProjectDetails(
                   project.summary(language),
                   textAlign: language.paragraphAlign,
                 ),
+                if (media != null && media.screenshots.isNotEmpty) ...[
+                  const SizedBox(height: 20),
+                  Text(
+                    _localized(
+                      language,
+                      english: 'Project screenshots',
+                      hebrew: 'צילומי מסך של הפרויקט',
+                    ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.titleSmall?.copyWith(color: AppPalette.text),
+                  ),
+                  for (final screenshot in media.screenshots) ...[
+                    const SizedBox(height: 12),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: InkWell(
+                        onTap: () => _showScreenshotViewer(
+                          context,
+                          language,
+                          screenshot,
+                        ),
+                        child: Image.asset(
+                          screenshot.asset,
+                          semanticLabel: language.isHebrew
+                              ? screenshot.hebrewLabel
+                              : screenshot.englishLabel,
+                          fit: BoxFit.contain,
+                          errorBuilder: (_, _, _) => const SizedBox.shrink(),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      language.isHebrew
+                          ? screenshot.hebrewLabel
+                          : screenshot.englishLabel,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: AppPalette.subtleText,
+                      ),
+                    ),
+                    TextButton.icon(
+                      onPressed: () =>
+                          _showScreenshotViewer(context, language, screenshot),
+                      icon: const Icon(Icons.zoom_in),
+                      label: Text(
+                        _localized(
+                          language,
+                          english: 'Enlarge screenshot',
+                          hebrew: 'הגדלת צילום המסך',
+                        ),
+                      ),
+                    ),
+                  ],
+                ],
+                if (media != null && media.videos.isNotEmpty) ...[
+                  const SizedBox(height: 20),
+                  Text(
+                    _localized(
+                      language,
+                      english: 'Magnetic torus simulation demonstrations',
+                      hebrew: 'הדגמות סימולציה של טורוס מגנטי',
+                    ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.titleSmall?.copyWith(color: AppPalette.text),
+                  ),
+                  for (final video in media.videos)
+                    _ProjectVideo(video: video, language: language),
+                ],
                 const SizedBox(height: 12),
                 Center(
                   child: OutlinedButton.icon(
@@ -2197,6 +2288,438 @@ void showProjectDetails(
       ),
     ),
   );
+}
+
+void _showScreenshotViewer(
+  BuildContext context,
+  PortfolioLanguage language,
+  ProjectScreenshot screenshot,
+) {
+  showDialog<void>(
+    context: context,
+    builder: (_) => Directionality(
+      textDirection: language.direction,
+      child: _ProjectScreenshotViewer(
+        language: language,
+        screenshot: screenshot,
+      ),
+    ),
+  );
+}
+
+class _ProjectScreenshotViewer extends StatefulWidget {
+  const _ProjectScreenshotViewer({
+    required this.language,
+    required this.screenshot,
+  });
+
+  final PortfolioLanguage language;
+  final ProjectScreenshot screenshot;
+
+  @override
+  State<_ProjectScreenshotViewer> createState() =>
+      _ProjectScreenshotViewerState();
+}
+
+class _ProjectScreenshotViewerState extends State<_ProjectScreenshotViewer> {
+  final _transform = TransformationController();
+  late final ImageStreamListener _imageListener;
+  ImageStream? _imageStream;
+  Size? _imageSize;
+  Size? _viewport;
+  bool _imageFailed = false;
+  bool _correctingTransform = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _imageListener = ImageStreamListener(
+      (info, _) {
+        final size = Size(
+          info.image.width.toDouble(),
+          info.image.height.toDouble(),
+        );
+        info.dispose();
+        if (!mounted) return;
+        setState(() {
+          _imageSize = size;
+          _imageFailed = false;
+        });
+        _constrainCurrentTransform();
+      },
+      onError: (_, _) {
+        if (!mounted) return;
+        setState(() {
+          _imageSize = null;
+          _imageFailed = true;
+        });
+      },
+      reportErrors: false,
+    );
+    _transform.addListener(_refresh);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _resolveImage();
+  }
+
+  @override
+  void didUpdateWidget(covariant _ProjectScreenshotViewer oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.screenshot.asset != widget.screenshot.asset) _resolveImage();
+  }
+
+  void _resolveImage() {
+    final stream = AssetImage(
+      widget.screenshot.asset,
+    ).resolve(createLocalImageConfiguration(context));
+    if (_imageStream?.key == stream.key) return;
+    _imageStream?.removeListener(_imageListener);
+    _imageSize = null;
+    _imageFailed = false;
+    _imageStream = stream;
+    stream.addListener(_imageListener);
+  }
+
+  void _refresh() {
+    if (_correctingTransform) return;
+    _constrainCurrentTransform();
+    if (mounted) setState(() {});
+  }
+
+  void _constrainCurrentTransform() {
+    final imageSize = _imageSize;
+    final viewport = _viewport;
+    if (imageSize == null || viewport == null || viewport.isEmpty) return;
+    final current = _transform.value;
+    final scale = current.getMaxScaleOnAxis();
+    final fitted = applyBoxFit(BoxFit.contain, imageSize, viewport).destination;
+    double constrainAxis(double position, double extent, double imageExtent) {
+      final offset = (extent - imageExtent) / 2;
+      final scaledExtent = scale * imageExtent;
+      if (scaledExtent <= extent) {
+        return (extent - scaledExtent) / 2 - scale * offset;
+      }
+      return position.clamp(
+        extent - scale * (offset + imageExtent),
+        -scale * offset,
+      );
+    }
+
+    final x = constrainAxis(current.storage[12], viewport.width, fitted.width);
+    final y = constrainAxis(
+      current.storage[13],
+      viewport.height,
+      fitted.height,
+    );
+    if ((x - current.storage[12]).abs() < 0.000001 &&
+        (y - current.storage[13]).abs() < 0.000001) {
+      return;
+    }
+    _correctingTransform = true;
+    _transform.value = current.clone()..setTranslationRaw(x, y, 0);
+    _correctingTransform = false;
+  }
+
+  @override
+  void dispose() {
+    _imageStream?.removeListener(_imageListener);
+    _transform.removeListener(_refresh);
+    _transform.dispose();
+    super.dispose();
+  }
+
+  void _setTransform(double scale, double x, double y) {
+    _transform.value = Matrix4.diagonal3Values(scale, scale, 1)
+      ..setTranslationRaw(x, y, 0);
+  }
+
+  void _zoom(double factor, Size viewport) {
+    final current = _transform.value;
+    final oldScale = current.getMaxScaleOnAxis();
+    final nextScale = (oldScale * factor).clamp(1.0, 4.0);
+    final ratio = nextScale / oldScale;
+    _setTransform(
+      nextScale,
+      current.storage[12] * ratio + viewport.width * (1 - ratio) / 2,
+      current.storage[13] * ratio + viewport.height * (1 - ratio) / 2,
+    );
+  }
+
+  void _pan(double dx, double dy) {
+    final current = _transform.value;
+    _setTransform(
+      current.getMaxScaleOnAxis(),
+      current.storage[12] + dx,
+      current.storage[13] + dy,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final language = widget.language;
+    final caption = language.isHebrew
+        ? widget.screenshot.hebrewLabel
+        : widget.screenshot.englishLabel;
+    final scale = _transform.value.getMaxScaleOnAxis();
+    final ready = _imageSize != null && !_imageFailed;
+    return Dialog(
+      backgroundColor: AppPalette.surface,
+      insetPadding: const EdgeInsets.all(16),
+      child: SizedBox(
+        width: 1100,
+        height: MediaQuery.sizeOf(context).height * 0.85,
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return Column(
+                children: [
+                  Row(
+                    children: [
+                      Expanded(child: Text(caption)),
+                      IconButton(
+                        tooltip: _closeLabel(language),
+                        onPressed: () => Navigator.of(context).pop(),
+                        icon: const Icon(Icons.close),
+                      ),
+                    ],
+                  ),
+                  Expanded(
+                    child: LayoutBuilder(
+                      builder: (context, imageConstraints) {
+                        var viewport = imageConstraints.biggest;
+                        String label(String english, String hebrew) =>
+                            _localized(
+                              language,
+                              english: english,
+                              hebrew: hebrew,
+                            );
+                        return Column(
+                          children: [
+                            Expanded(
+                              child: LayoutBuilder(
+                                builder: (context, viewerConstraints) {
+                                  viewport = viewerConstraints.biggest;
+                                  if (_viewport != viewport) {
+                                    final newViewport = viewport;
+                                    _viewport = newViewport;
+                                    WidgetsBinding.instance
+                                        .addPostFrameCallback((_) {
+                                          if (mounted &&
+                                              _viewport == newViewport) {
+                                            _constrainCurrentTransform();
+                                          }
+                                        });
+                                  }
+                                  if (!ready) {
+                                    return Center(
+                                      child: _imageFailed
+                                          ? Text(
+                                              label(
+                                                'Unable to load screenshot.',
+                                                'לא ניתן לטעון את צילום המסך.',
+                                              ),
+                                              textAlign: TextAlign.center,
+                                            )
+                                          : Text(
+                                              label(
+                                                'Loading screenshot…',
+                                                'טוען צילום מסך…',
+                                              ),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                    );
+                                  }
+                                  return InteractiveViewer(
+                                    transformationController: _transform,
+                                    minScale: 1,
+                                    maxScale: 4,
+                                    child: SizedBox.expand(
+                                      child: Image.asset(
+                                        widget.screenshot.asset,
+                                        semanticLabel: caption,
+                                        fit: BoxFit.contain,
+                                        errorBuilder: (_, _, _) => Center(
+                                          child: Text(
+                                            label(
+                                              'Unable to load screenshot.',
+                                              'לא ניתן לטעון את צילום המסך.',
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                            Wrap(
+                              alignment: WrapAlignment.center,
+                              children: [
+                                IconButton(
+                                  tooltip: label('Zoom in', 'הגדלה'),
+                                  onPressed: ready && scale < 4
+                                      ? () => _zoom(1.5, viewport)
+                                      : null,
+                                  icon: const Icon(Icons.zoom_in),
+                                ),
+                                IconButton(
+                                  tooltip: label('Zoom out', 'הקטנה'),
+                                  onPressed: ready && scale > 1
+                                      ? () => _zoom(1 / 1.5, viewport)
+                                      : null,
+                                  icon: const Icon(Icons.zoom_out),
+                                ),
+                                IconButton(
+                                  tooltip: label('Reset zoom', 'איפוס תצוגה'),
+                                  onPressed: ready && scale > 1
+                                      ? () => _transform.value =
+                                            Matrix4.identity()
+                                      : null,
+                                  icon: const Icon(Icons.fit_screen),
+                                ),
+                                for (final direction in [
+                                  (
+                                    Icons.arrow_left,
+                                    -100.0,
+                                    0.0,
+                                    'Move image left',
+                                    'הזזת התמונה שמאלה',
+                                  ),
+                                  (
+                                    Icons.arrow_right,
+                                    100.0,
+                                    0.0,
+                                    'Move image right',
+                                    'הזזת התמונה ימינה',
+                                  ),
+                                  (
+                                    Icons.arrow_upward,
+                                    0.0,
+                                    -100.0,
+                                    'Move image up',
+                                    'הזזת התמונה למעלה',
+                                  ),
+                                  (
+                                    Icons.arrow_downward,
+                                    0.0,
+                                    100.0,
+                                    'Move image down',
+                                    'הזזת התמונה למטה',
+                                  ),
+                                ])
+                                  IconButton(
+                                    tooltip: label(direction.$4, direction.$5),
+                                    onPressed: ready && scale > 1
+                                        ? () => _pan(direction.$2, direction.$3)
+                                        : null,
+                                    icon: Icon(direction.$1),
+                                  ),
+                              ],
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ProjectVideo extends StatefulWidget {
+  const _ProjectVideo({required this.video, required this.language});
+
+  final ProjectVideo video;
+  final PortfolioLanguage language;
+
+  @override
+  State<_ProjectVideo> createState() => _ProjectVideoState();
+}
+
+class _ProjectVideoState extends State<_ProjectVideo> {
+  bool _loaded = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final language = widget.language;
+    final title = language.isHebrew
+        ? widget.video.hebrewLabel
+        : widget.video.englishLabel;
+    return Padding(
+      padding: const EdgeInsets.only(top: 14),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: Theme.of(context).textTheme.bodyMedium),
+          const SizedBox(height: 8),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final width = constraints.maxWidth;
+              if (width < 200) return const SizedBox.shrink();
+              final height = (width * 9 / 16).clamp(200.0, double.infinity);
+              return SizedBox(
+                width: width,
+                height: height,
+                child: _loaded
+                    ? YouTubePlayer(
+                        key: ValueKey('youtube-player-${widget.video.id}'),
+                        videoId: widget.video.id,
+                        title: title,
+                        fallbackMessage: _localized(
+                          language,
+                          english:
+                              'Embedded playback is unavailable on this device. Use Watch on YouTube below.',
+                          hebrew:
+                              'הנגן המוטמע אינו זמין במכשיר זה. אפשר לצפות ב-YouTube באמצעות הקישור למטה.',
+                        ),
+                      )
+                    : Material(
+                        color: AppPalette.tileSurface,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          side: const BorderSide(color: AppPalette.border),
+                        ),
+                        child: Center(
+                          child: TextButton.icon(
+                            onPressed: () => setState(() => _loaded = true),
+                            icon: const Icon(Icons.play_circle_outline),
+                            label: Text(
+                              _localized(
+                                language,
+                                english: 'Load video',
+                                hebrew: 'טעינת סרטון',
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+              );
+            },
+          ),
+          TextButton.icon(
+            onPressed: () => openPublic(widget.video.watchUrl),
+            icon: const Icon(Icons.open_in_new, size: 18),
+            label: Text(
+              _localized(
+                language,
+                english: 'Watch on YouTube',
+                hebrew: 'צפייה ב-YouTube',
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class HoverTile extends StatefulWidget {
