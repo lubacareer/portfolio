@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'github_repositories.dart';
+import 'project_media.dart';
+import 'youtube_player.dart';
 
 class AppPalette {
   static const background = Color(0xFF080F22);
@@ -761,7 +763,12 @@ class _OrbitFeaturedProjects extends StatelessWidget {
                       child: _OrbitProjectCard(
                         language: language,
                         project: projects[i],
-                        image: images[i],
+                        image:
+                            mediaForProject(
+                              projects[i].owner,
+                              projects[i].name,
+                            )?.screenshots.firstOrNull?.asset ??
+                            images[i],
                       ),
                     ),
                 ],
@@ -2134,6 +2141,7 @@ void showProjectDetails(
   PortfolioLanguage language,
   PortfolioProject project,
 ) {
+  final media = mediaForProject(project.owner, project.name);
   showDialog(
     context: context,
     builder: (_) => Directionality(
@@ -2162,6 +2170,57 @@ void showProjectDetails(
                   project.summary(language),
                   textAlign: language.paragraphAlign,
                 ),
+                if (media != null && media.screenshots.isNotEmpty) ...[
+                  const SizedBox(height: 20),
+                  Text(
+                    _localized(
+                      language,
+                      english: 'Project screenshots',
+                      hebrew: 'צילומי מסך של הפרויקט',
+                    ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.titleSmall?.copyWith(color: AppPalette.text),
+                  ),
+                  for (final screenshot in media.screenshots) ...[
+                    const SizedBox(height: 12),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image.asset(
+                        screenshot.asset,
+                        semanticLabel: language.isHebrew
+                            ? screenshot.hebrewLabel
+                            : screenshot.englishLabel,
+                        fit: BoxFit.contain,
+                        errorBuilder: (_, _, _) => const SizedBox.shrink(),
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      language.isHebrew
+                          ? screenshot.hebrewLabel
+                          : screenshot.englishLabel,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: AppPalette.subtleText,
+                      ),
+                    ),
+                  ],
+                ],
+                if (media != null && media.videos.isNotEmpty) ...[
+                  const SizedBox(height: 20),
+                  Text(
+                    _localized(
+                      language,
+                      english: 'Magnetic torus simulation demonstrations',
+                      hebrew: 'הדגמות סימולציה של טורוס מגנטי',
+                    ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.titleSmall?.copyWith(color: AppPalette.text),
+                  ),
+                  for (final video in media.videos)
+                    _ProjectVideo(video: video, language: language),
+                ],
                 const SizedBox(height: 12),
                 Center(
                   child: OutlinedButton.icon(
@@ -2197,6 +2256,86 @@ void showProjectDetails(
       ),
     ),
   );
+}
+
+class _ProjectVideo extends StatefulWidget {
+  const _ProjectVideo({required this.video, required this.language});
+
+  final ProjectVideo video;
+  final PortfolioLanguage language;
+
+  @override
+  State<_ProjectVideo> createState() => _ProjectVideoState();
+}
+
+class _ProjectVideoState extends State<_ProjectVideo> {
+  bool _loaded = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final language = widget.language;
+    final title = language.isHebrew
+        ? widget.video.hebrewLabel
+        : widget.video.englishLabel;
+    return Padding(
+      padding: const EdgeInsets.only(top: 14),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: Theme.of(context).textTheme.bodyMedium),
+          const SizedBox(height: 8),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final width = constraints.maxWidth;
+              if (width < 200) return const SizedBox.shrink();
+              final height = (width * 9 / 16).clamp(200.0, double.infinity);
+              return SizedBox(
+                width: width,
+                height: height,
+                child: _loaded
+                    ? YouTubePlayer(
+                        key: ValueKey('youtube-player-${widget.video.id}'),
+                        videoId: widget.video.id,
+                        title: title,
+                      )
+                    : Material(
+                        color: AppPalette.tileSurface,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          side: const BorderSide(color: AppPalette.border),
+                        ),
+                        child: Center(
+                          child: TextButton.icon(
+                            onPressed: () => setState(() => _loaded = true),
+                            icon: const Icon(Icons.play_circle_outline),
+                            label: Text(
+                              _localized(
+                                language,
+                                english: 'Load video',
+                                hebrew: 'טעינת סרטון',
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+              );
+            },
+          ),
+          TextButton.icon(
+            onPressed: () => openPublic(widget.video.watchUrl),
+            icon: const Icon(Icons.open_in_new, size: 18),
+            label: Text(
+              _localized(
+                language,
+                english: 'Watch on YouTube',
+                hebrew: 'צפייה ב-YouTube',
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class HoverTile extends StatefulWidget {
