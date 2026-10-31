@@ -688,7 +688,6 @@ class _OrbitFeaturedProjects extends StatelessWidget {
   Widget build(BuildContext context) {
     const featured = [
       ('lubacareer', 'HeatEquationSimulator'),
-      ('lubani', 'scientificProject'),
       ('lubacareer', 'jupiter'),
       ('lubacareer', 'Nasa2'),
       ('lubacareer', 'nasaCLPS-releases'),

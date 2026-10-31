@@ -4,7 +4,6 @@ import 'package:port/main.dart';
 
 const featuredProjects = <(String, String)>[
   ('HeatEquationSimulator', 'lubacareer'),
-  ('scientificProject', 'lubani'),
   ('jupiter', 'lubacareer'),
   ('Nasa2', 'lubacareer'),
   ('nasaCLPS-releases', 'lubacareer'),
@@ -53,6 +52,7 @@ void main() {
       await tester.pumpAndSettle();
     }
     expect(find.text('HebrewSumy'), findsNothing);
+    expect(find.text('scientificProject'), findsNothing);
     expect(tester.takeException(), isNull);
   });
 
@@ -71,13 +71,14 @@ void main() {
       expect(tester.takeException(), isNull);
     }
     expect(find.text('HebrewSumy'), findsNothing);
-    await tester.ensureVisible(find.text('scientificProject'));
-    await tester.tap(find.text('scientificProject'));
+    expect(find.text('scientificProject'), findsNothing);
+    await tester.ensureVisible(find.text('HeatEquationSimulator'));
+    await tester.tap(find.text('HeatEquationSimulator'));
     await tester.pumpAndSettle();
     final dialog = find.byType(AlertDialog);
     final metadata = find.descendant(
       of: dialog,
-      matching: find.textContaining('lubani'),
+      matching: find.textContaining('lubacareer'),
     );
     expect(metadata, findsOneWidget);
     expect(Directionality.of(tester.element(metadata)), TextDirection.rtl);
