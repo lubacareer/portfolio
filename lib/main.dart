@@ -2323,27 +2323,117 @@ class _ProjectScreenshotViewer extends StatefulWidget {
 
 class _ProjectScreenshotViewerState extends State<_ProjectScreenshotViewer> {
   final _transform = TransformationController();
+  late final ImageStreamListener _imageListener;
+  ImageStream? _imageStream;
+  Size? _imageSize;
+  Size? _viewport;
+  bool _imageFailed = false;
+  bool _correctingTransform = false;
 
   @override
   void initState() {
     super.initState();
+    _imageListener = ImageStreamListener(
+      (info, _) {
+        final size = Size(
+          info.image.width.toDouble(),
+          info.image.height.toDouble(),
+        );
+        info.dispose();
+        if (!mounted) return;
+        setState(() {
+          _imageSize = size;
+          _imageFailed = false;
+        });
+        _constrainCurrentTransform();
+      },
+      onError: (_, _) {
+        if (!mounted) return;
+        setState(() {
+          _imageSize = null;
+          _imageFailed = true;
+        });
+      },
+      reportErrors: false,
+    );
     _transform.addListener(_refresh);
   }
 
-  void _refresh() => setState(() {});
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _resolveImage();
+  }
+
+  @override
+  void didUpdateWidget(covariant _ProjectScreenshotViewer oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.screenshot.asset != widget.screenshot.asset) _resolveImage();
+  }
+
+  void _resolveImage() {
+    final stream = AssetImage(
+      widget.screenshot.asset,
+    ).resolve(createLocalImageConfiguration(context));
+    if (_imageStream?.key == stream.key) return;
+    _imageStream?.removeListener(_imageListener);
+    _imageSize = null;
+    _imageFailed = false;
+    _imageStream = stream;
+    stream.addListener(_imageListener);
+  }
+
+  void _refresh() {
+    if (_correctingTransform) return;
+    _constrainCurrentTransform();
+    if (mounted) setState(() {});
+  }
+
+  void _constrainCurrentTransform() {
+    final imageSize = _imageSize;
+    final viewport = _viewport;
+    if (imageSize == null || viewport == null || viewport.isEmpty) return;
+    final current = _transform.value;
+    final scale = current.getMaxScaleOnAxis();
+    final fitted = applyBoxFit(BoxFit.contain, imageSize, viewport).destination;
+    double constrainAxis(double position, double extent, double imageExtent) {
+      final offset = (extent - imageExtent) / 2;
+      final scaledExtent = scale * imageExtent;
+      if (scaledExtent <= extent) {
+        return (extent - scaledExtent) / 2 - scale * offset;
+      }
+      return position.clamp(
+        extent - scale * (offset + imageExtent),
+        -scale * offset,
+      );
+    }
+
+    final x = constrainAxis(current.storage[12], viewport.width, fitted.width);
+    final y = constrainAxis(
+      current.storage[13],
+      viewport.height,
+      fitted.height,
+    );
+    if ((x - current.storage[12]).abs() < 0.000001 &&
+        (y - current.storage[13]).abs() < 0.000001) {
+      return;
+    }
+    _correctingTransform = true;
+    _transform.value = current.clone()..setTranslationRaw(x, y, 0);
+    _correctingTransform = false;
+  }
 
   @override
   void dispose() {
+    _imageStream?.removeListener(_imageListener);
     _transform.removeListener(_refresh);
     _transform.dispose();
     super.dispose();
   }
 
-  void _setTransform(double scale, double x, double y, Size viewport) {
-    final maxX = (scale - 1) * viewport.width;
-    final maxY = (scale - 1) * viewport.height;
+  void _setTransform(double scale, double x, double y) {
     _transform.value = Matrix4.diagonal3Values(scale, scale, 1)
-      ..setTranslationRaw(x.clamp(-maxX, 0), y.clamp(-maxY, 0), 0);
+      ..setTranslationRaw(x, y, 0);
   }
 
   void _zoom(double factor, Size viewport) {
@@ -2355,17 +2445,15 @@ class _ProjectScreenshotViewerState extends State<_ProjectScreenshotViewer> {
       nextScale,
       current.storage[12] * ratio + viewport.width * (1 - ratio) / 2,
       current.storage[13] * ratio + viewport.height * (1 - ratio) / 2,
-      viewport,
     );
   }
 
-  void _pan(double dx, double dy, Size viewport) {
+  void _pan(double dx, double dy) {
     final current = _transform.value;
     _setTransform(
       current.getMaxScaleOnAxis(),
       current.storage[12] + dx,
       current.storage[13] + dy,
-      viewport,
     );
   }
 
@@ -2376,6 +2464,7 @@ class _ProjectScreenshotViewerState extends State<_ProjectScreenshotViewer> {
         ? widget.screenshot.hebrewLabel
         : widget.screenshot.englishLabel;
     final scale = _transform.value.getMaxScaleOnAxis();
+    final ready = _imageSize != null && !_imageFailed;
     return Dialog(
       backgroundColor: AppPalette.surface,
       insetPadding: const EdgeInsets.all(16),
@@ -2414,6 +2503,36 @@ class _ProjectScreenshotViewerState extends State<_ProjectScreenshotViewer> {
                               child: LayoutBuilder(
                                 builder: (context, viewerConstraints) {
                                   viewport = viewerConstraints.biggest;
+                                  if (_viewport != viewport) {
+                                    final newViewport = viewport;
+                                    _viewport = newViewport;
+                                    WidgetsBinding.instance
+                                        .addPostFrameCallback((_) {
+                                          if (mounted &&
+                                              _viewport == newViewport) {
+                                            _constrainCurrentTransform();
+                                          }
+                                        });
+                                  }
+                                  if (!ready) {
+                                    return Center(
+                                      child: _imageFailed
+                                          ? Text(
+                                              label(
+                                                'Unable to load screenshot.',
+                                                'לא ניתן לטעון את צילום המסך.',
+                                              ),
+                                              textAlign: TextAlign.center,
+                                            )
+                                          : Text(
+                                              label(
+                                                'Loading screenshot…',
+                                                'טוען צילום מסך…',
+                                              ),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                    );
+                                  }
                                   return InteractiveViewer(
                                     transformationController: _transform,
                                     minScale: 1,
@@ -2423,6 +2542,14 @@ class _ProjectScreenshotViewerState extends State<_ProjectScreenshotViewer> {
                                         widget.screenshot.asset,
                                         semanticLabel: caption,
                                         fit: BoxFit.contain,
+                                        errorBuilder: (_, _, _) => Center(
+                                          child: Text(
+                                            label(
+                                              'Unable to load screenshot.',
+                                              'לא ניתן לטעון את צילום המסך.',
+                                            ),
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   );
@@ -2434,21 +2561,21 @@ class _ProjectScreenshotViewerState extends State<_ProjectScreenshotViewer> {
                               children: [
                                 IconButton(
                                   tooltip: label('Zoom in', 'הגדלה'),
-                                  onPressed: scale < 4
+                                  onPressed: ready && scale < 4
                                       ? () => _zoom(1.5, viewport)
                                       : null,
                                   icon: const Icon(Icons.zoom_in),
                                 ),
                                 IconButton(
                                   tooltip: label('Zoom out', 'הקטנה'),
-                                  onPressed: scale > 1
+                                  onPressed: ready && scale > 1
                                       ? () => _zoom(1 / 1.5, viewport)
                                       : null,
                                   icon: const Icon(Icons.zoom_out),
                                 ),
                                 IconButton(
                                   tooltip: label('Reset zoom', 'איפוס תצוגה'),
-                                  onPressed: scale > 1
+                                  onPressed: ready && scale > 1
                                       ? () => _transform.value =
                                             Matrix4.identity()
                                       : null,
@@ -2486,12 +2613,8 @@ class _ProjectScreenshotViewerState extends State<_ProjectScreenshotViewer> {
                                 ])
                                   IconButton(
                                     tooltip: label(direction.$4, direction.$5),
-                                    onPressed: scale > 1
-                                        ? () => _pan(
-                                            direction.$2,
-                                            direction.$3,
-                                            viewport,
-                                          )
+                                    onPressed: ready && scale > 1
+                                        ? () => _pan(direction.$2, direction.$3)
                                         : null,
                                     icon: Icon(direction.$1),
                                   ),
