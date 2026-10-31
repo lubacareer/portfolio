@@ -2538,6 +2538,13 @@ class _ProjectVideoState extends State<_ProjectVideo> {
                         key: ValueKey('youtube-player-${widget.video.id}'),
                         videoId: widget.video.id,
                         title: title,
+                        fallbackMessage: _localized(
+                          language,
+                          english:
+                              'Embedded playback is unavailable on this device. Use Watch on YouTube below.',
+                          hebrew:
+                              'הנגן המוטמע אינו זמין במכשיר זה. אפשר לצפות ב-YouTube באמצעות הקישור למטה.',
+                        ),
                       )
                     : Material(
                         color: AppPalette.tileSurface,

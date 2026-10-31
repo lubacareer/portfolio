@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:port/github_repositories.dart';
@@ -113,7 +114,6 @@ void main() {
       find.byKey(const ValueKey('youtube-player-QYacq8NXiZY')),
       findsNothing,
     );
-
     await tester.ensureVisible(inDetails(find.text('Load video')).first);
     await tester.tap(inDetails(find.text('Load video')).first);
     await tester.pumpAndSettle();
@@ -125,6 +125,25 @@ void main() {
       find.byKey(const ValueKey('youtube-player-QYacq8NXiZY')),
       findsNothing,
     );
+    if (!kIsWeb) {
+      expect(
+        inDetails(
+          find.text(
+            'Embedded playback is unavailable on this device. Use Watch on YouTube below.',
+          ),
+        ),
+        findsOneWidget,
+      );
+      expect(inDetails(find.text('Watch on YouTube')), findsNWidgets(2));
+      final watchButtons = find.ancestor(
+        of: inDetails(find.text('Watch on YouTube')),
+        matching: find.byType(TextButton),
+      );
+      expect(watchButtons, findsNWidgets(2));
+      for (final button in tester.widgetList<TextButton>(watchButtons)) {
+        expect(button.onPressed, isNotNull);
+      }
+    }
 
     await tester.tap(inDetails(find.text('Close')));
     await tester.pumpAndSettle();
@@ -206,6 +225,27 @@ void main() {
     );
     expect(inDetails(find.text('טעינת סרטון')), findsNWidgets(2));
     expect(inDetails(find.text('צפייה ב-YouTube')), findsNWidgets(2));
+    await tester.ensureVisible(inDetails(find.text('טעינת סרטון')).first);
+    await tester.tap(inDetails(find.text('טעינת סרטון')).first);
+    await tester.pumpAndSettle();
+    if (!kIsWeb) {
+      final fallback = inDetails(
+        find.text(
+          'הנגן המוטמע אינו זמין במכשיר זה. אפשר לצפות ב-YouTube באמצעות הקישור למטה.',
+        ),
+      );
+      expect(fallback, findsOneWidget);
+      expect(Directionality.of(tester.element(fallback)), TextDirection.rtl);
+      expect(inDetails(find.text('צפייה ב-YouTube')), findsNWidgets(2));
+      final watchButtons = find.ancestor(
+        of: inDetails(find.text('צפייה ב-YouTube')),
+        matching: find.byType(TextButton),
+      );
+      expect(watchButtons, findsNWidgets(2));
+      for (final button in tester.widgetList<TextButton>(watchButtons)) {
+        expect(button.onPressed, isNotNull);
+      }
+    }
   });
 
   testWidgets('Video controls remain available in a narrow mobile dialog', (
@@ -242,6 +282,18 @@ void main() {
 
     expect(find.text('Load video'), findsNWidgets(2));
     expect(find.text('Watch on YouTube'), findsNWidgets(2));
+    await tester.ensureVisible(find.text('Load video').first);
+    await tester.tap(find.text('Load video').first);
+    await tester.pumpAndSettle();
+    if (!kIsWeb) {
+      expect(
+        find.text(
+          'Embedded playback is unavailable on this device. Use Watch on YouTube below.',
+        ),
+        findsOneWidget,
+      );
+      expect(find.text('Watch on YouTube'), findsNWidgets(2));
+    }
     expect(tester.takeException(), isNull);
   });
 }
