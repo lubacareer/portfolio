@@ -686,15 +686,20 @@ class _OrbitFeaturedProjects extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const names = ['CML', 'HeatEquationSimulator', 'HebrewSumy'];
-    const images = [
-      'web/images/project-cml.png',
-      'web/images/project-heat.png',
-      'web/images/project-summary.png',
+    const featured = [
+      ('lubacareer', 'HeatEquationSimulator'),
+      ('lubani', 'scientificProject'),
+      ('lubacareer', 'jupiter'),
+      ('lubacareer', 'Nasa2'),
+      ('lubacareer', 'nasaCLPS-releases'),
+      ('lubacareer', 'CML'),
+      ('lubacareer', 'electricity'),
     ];
     final projects = [
-      for (final name in names)
-        _githubProjects.firstWhere((project) => project.name == name),
+      for (final (owner, name) in featured)
+        _githubProjects.firstWhere(
+          (project) => project.owner == owner && project.name == name,
+        ),
     ];
     return Padding(
       padding: const EdgeInsets.fromLTRB(32, 34, 32, 40),
@@ -763,12 +768,10 @@ class _OrbitFeaturedProjects extends StatelessWidget {
                       child: _OrbitProjectCard(
                         language: language,
                         project: projects[i],
-                        image:
-                            mediaForProject(
-                              projects[i].owner,
-                              projects[i].name,
-                            )?.screenshots.firstOrNull?.asset ??
-                            images[i],
+                        image: mediaForProject(
+                          projects[i].owner,
+                          projects[i].name,
+                        )?.screenshots.firstOrNull?.asset,
                       ),
                     ),
                 ],
@@ -784,7 +787,7 @@ class _OrbitFeaturedProjects extends StatelessWidget {
 class _OrbitProjectCard extends StatelessWidget {
   final PortfolioLanguage language;
   final PortfolioProject project;
-  final String image;
+  final String? image;
 
   const _OrbitProjectCard({
     required this.language,
@@ -840,16 +843,27 @@ class _OrbitProjectCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 12),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child: Image.asset(
-                      image,
+                  if (image != null)
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image.asset(
+                        image!,
+                        width: 72,
+                        height: 72,
+                        fit: BoxFit.cover,
+                        excludeFromSemantics: true,
+                      ),
+                    )
+                  else
+                    const SizedBox(
                       width: 72,
                       height: 72,
-                      fit: BoxFit.cover,
-                      excludeFromSemantics: true,
+                      child: Icon(
+                        Icons.science_outlined,
+                        color: AppPalette.primary,
+                        size: 36,
+                      ),
                     ),
-                  ),
                 ],
               ),
               const SizedBox(height: 20),
