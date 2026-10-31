@@ -33,6 +33,45 @@ class ProjectMedia {
 }
 
 const _mediaByRepository = <String, ProjectMedia>{
+  'lubacareer/finance1': ProjectMedia(
+    screenshots: [
+      ProjectScreenshot(
+        asset: 'web/images/projects/finance1-desktop.png',
+        englishLabel: 'Financial Diary desktop dashboard with synthetic data',
+        hebrewLabel: 'לוח הבקרה של Financial Diary במחשב עם נתונים סינתטיים',
+      ),
+    ],
+  ),
+  'lubacareer/nasaclps-releases': ProjectMedia(
+    screenshots: [
+      ProjectScreenshot(
+        asset: 'web/images/projects/nasaclps-desktop.png',
+        englishLabel:
+            'Trend Detective desktop with synthetic example data, not NASA observations',
+        hebrewLabel:
+            'Trend Detective במחשב עם נתונים סינתטיים לדוגמה, שאינם תצפיות של נאס״א',
+      ),
+    ],
+  ),
+  'lubacareer/electricity': ProjectMedia(
+    screenshots: [
+      ProjectScreenshot(
+        asset: 'web/images/projects/electricity-desktop.png',
+        englishLabel:
+            'SMD Twin Lab desktop simulation of a sample sensor board',
+        hebrewLabel: 'סימולציית לוח חיישנים לדוגמה ביישום המחשב SMD Twin Lab',
+      ),
+    ],
+  ),
+  'lubacareer/jupiter': ProjectMedia(
+    screenshots: [
+      ProjectScreenshot(
+        asset: 'web/images/projects/jupiter-desktop.png',
+        englishLabel: 'Europa Engine desktop orbital simulation prototype',
+        hebrewLabel: 'אב טיפוס לסימולציית מסלול ביישום המחשב Europa Engine',
+      ),
+    ],
+  ),
   'lubacareer/cml': ProjectMedia(
     screenshots: [
       ProjectScreenshot(

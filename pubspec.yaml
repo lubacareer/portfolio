@@ -70,6 +70,10 @@ flutter:
     - web/images/projects/magnetic-torus.jpg
     - web/images/projects/nasa2-synthetic-preview.png
     - web/images/projects/spritebury-interface.webp
+    - web/images/projects/jupiter-desktop.png
+    - web/images/projects/electricity-desktop.png
+    - web/images/projects/finance1-desktop.png
+    - web/images/projects/nasaclps-desktop.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

@@ -69,6 +69,15 @@ void main() {
       mediaForProject('lubacareer', 'spritebury')?.screenshots.single.asset,
       'web/images/projects/spritebury-interface.webp',
     );
+    for (final name in [
+      'electricity',
+      'jupiter',
+      'finance1',
+      'nasaCLPS-releases',
+    ]) {
+      expect(mediaForProject('LUBACAREER', name)?.screenshots, hasLength(1));
+      expect(mediaForProject('lubani', name), isNull);
+    }
   });
 
   testWidgets('Live results show videos only for the matching owner', (

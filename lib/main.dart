@@ -2186,13 +2186,20 @@ void showProjectDetails(
                     const SizedBox(height: 12),
                     ClipRRect(
                       borderRadius: BorderRadius.circular(12),
-                      child: Image.asset(
-                        screenshot.asset,
-                        semanticLabel: language.isHebrew
-                            ? screenshot.hebrewLabel
-                            : screenshot.englishLabel,
-                        fit: BoxFit.contain,
-                        errorBuilder: (_, _, _) => const SizedBox.shrink(),
+                      child: InkWell(
+                        onTap: () => _showScreenshotViewer(
+                          context,
+                          language,
+                          screenshot,
+                        ),
+                        child: Image.asset(
+                          screenshot.asset,
+                          semanticLabel: language.isHebrew
+                              ? screenshot.hebrewLabel
+                              : screenshot.englishLabel,
+                          fit: BoxFit.contain,
+                          errorBuilder: (_, _, _) => const SizedBox.shrink(),
+                        ),
                       ),
                     ),
                     const SizedBox(height: 6),
@@ -2202,6 +2209,18 @@ void showProjectDetails(
                           : screenshot.englishLabel,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: AppPalette.subtleText,
+                      ),
+                    ),
+                    TextButton.icon(
+                      onPressed: () =>
+                          _showScreenshotViewer(context, language, screenshot),
+                      icon: const Icon(Icons.zoom_in),
+                      label: Text(
+                        _localized(
+                          language,
+                          english: 'Enlarge screenshot',
+                          hebrew: 'הגדלת צילום המסך',
+                        ),
                       ),
                     ),
                   ],
@@ -2256,6 +2275,228 @@ void showProjectDetails(
       ),
     ),
   );
+}
+
+void _showScreenshotViewer(
+  BuildContext context,
+  PortfolioLanguage language,
+  ProjectScreenshot screenshot,
+) {
+  showDialog<void>(
+    context: context,
+    builder: (_) => Directionality(
+      textDirection: language.direction,
+      child: _ProjectScreenshotViewer(
+        language: language,
+        screenshot: screenshot,
+      ),
+    ),
+  );
+}
+
+class _ProjectScreenshotViewer extends StatefulWidget {
+  const _ProjectScreenshotViewer({
+    required this.language,
+    required this.screenshot,
+  });
+
+  final PortfolioLanguage language;
+  final ProjectScreenshot screenshot;
+
+  @override
+  State<_ProjectScreenshotViewer> createState() =>
+      _ProjectScreenshotViewerState();
+}
+
+class _ProjectScreenshotViewerState extends State<_ProjectScreenshotViewer> {
+  final _transform = TransformationController();
+
+  @override
+  void initState() {
+    super.initState();
+    _transform.addListener(_refresh);
+  }
+
+  void _refresh() => setState(() {});
+
+  @override
+  void dispose() {
+    _transform.removeListener(_refresh);
+    _transform.dispose();
+    super.dispose();
+  }
+
+  void _setTransform(double scale, double x, double y, Size viewport) {
+    final maxX = (scale - 1) * viewport.width;
+    final maxY = (scale - 1) * viewport.height;
+    _transform.value = Matrix4.diagonal3Values(scale, scale, 1)
+      ..setTranslationRaw(x.clamp(-maxX, 0), y.clamp(-maxY, 0), 0);
+  }
+
+  void _zoom(double factor, Size viewport) {
+    final current = _transform.value;
+    final oldScale = current.getMaxScaleOnAxis();
+    final nextScale = (oldScale * factor).clamp(1.0, 4.0);
+    final ratio = nextScale / oldScale;
+    _setTransform(
+      nextScale,
+      current.storage[12] * ratio + viewport.width * (1 - ratio) / 2,
+      current.storage[13] * ratio + viewport.height * (1 - ratio) / 2,
+      viewport,
+    );
+  }
+
+  void _pan(double dx, double dy, Size viewport) {
+    final current = _transform.value;
+    _setTransform(
+      current.getMaxScaleOnAxis(),
+      current.storage[12] + dx,
+      current.storage[13] + dy,
+      viewport,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final language = widget.language;
+    final caption = language.isHebrew
+        ? widget.screenshot.hebrewLabel
+        : widget.screenshot.englishLabel;
+    final scale = _transform.value.getMaxScaleOnAxis();
+    return Dialog(
+      backgroundColor: AppPalette.surface,
+      insetPadding: const EdgeInsets.all(16),
+      child: SizedBox(
+        width: 1100,
+        height: MediaQuery.sizeOf(context).height * 0.85,
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return Column(
+                children: [
+                  Row(
+                    children: [
+                      Expanded(child: Text(caption)),
+                      IconButton(
+                        tooltip: _closeLabel(language),
+                        onPressed: () => Navigator.of(context).pop(),
+                        icon: const Icon(Icons.close),
+                      ),
+                    ],
+                  ),
+                  Expanded(
+                    child: LayoutBuilder(
+                      builder: (context, imageConstraints) {
+                        var viewport = imageConstraints.biggest;
+                        String label(String english, String hebrew) =>
+                            _localized(
+                              language,
+                              english: english,
+                              hebrew: hebrew,
+                            );
+                        return Column(
+                          children: [
+                            Expanded(
+                              child: LayoutBuilder(
+                                builder: (context, viewerConstraints) {
+                                  viewport = viewerConstraints.biggest;
+                                  return InteractiveViewer(
+                                    transformationController: _transform,
+                                    minScale: 1,
+                                    maxScale: 4,
+                                    child: SizedBox.expand(
+                                      child: Image.asset(
+                                        widget.screenshot.asset,
+                                        semanticLabel: caption,
+                                        fit: BoxFit.contain,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                            Wrap(
+                              alignment: WrapAlignment.center,
+                              children: [
+                                IconButton(
+                                  tooltip: label('Zoom in', 'הגדלה'),
+                                  onPressed: scale < 4
+                                      ? () => _zoom(1.5, viewport)
+                                      : null,
+                                  icon: const Icon(Icons.zoom_in),
+                                ),
+                                IconButton(
+                                  tooltip: label('Zoom out', 'הקטנה'),
+                                  onPressed: scale > 1
+                                      ? () => _zoom(1 / 1.5, viewport)
+                                      : null,
+                                  icon: const Icon(Icons.zoom_out),
+                                ),
+                                IconButton(
+                                  tooltip: label('Reset zoom', 'איפוס תצוגה'),
+                                  onPressed: scale > 1
+                                      ? () => _transform.value =
+                                            Matrix4.identity()
+                                      : null,
+                                  icon: const Icon(Icons.fit_screen),
+                                ),
+                                for (final direction in [
+                                  (
+                                    Icons.arrow_left,
+                                    -100.0,
+                                    0.0,
+                                    'Move image left',
+                                    'הזזת התמונה שמאלה',
+                                  ),
+                                  (
+                                    Icons.arrow_right,
+                                    100.0,
+                                    0.0,
+                                    'Move image right',
+                                    'הזזת התמונה ימינה',
+                                  ),
+                                  (
+                                    Icons.arrow_upward,
+                                    0.0,
+                                    -100.0,
+                                    'Move image up',
+                                    'הזזת התמונה למעלה',
+                                  ),
+                                  (
+                                    Icons.arrow_downward,
+                                    0.0,
+                                    100.0,
+                                    'Move image down',
+                                    'הזזת התמונה למטה',
+                                  ),
+                                ])
+                                  IconButton(
+                                    tooltip: label(direction.$4, direction.$5),
+                                    onPressed: scale > 1
+                                        ? () => _pan(
+                                            direction.$2,
+                                            direction.$3,
+                                            viewport,
+                                          )
+                                        : null,
+                                    icon: Icon(direction.$1),
+                                  ),
+                              ],
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class _ProjectVideo extends StatefulWidget {
